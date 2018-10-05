@@ -26,11 +26,25 @@ class EntriesContainer extends React.Component {
   }
 
   update = async () => {
-    const newEntries = (await entries.allDocs({
-      include_docs: true,
+    const newEntries = (await entries.find({
+      selector: {},
+      sort: [{ date: 'desc' }],
       attachments: true
-    })).rows.map(row => row.doc);
+    })).docs;
+
     this.setState({ entries: newEntries });
+
+    setImmediate(async () => {
+      const entriesWithCover = await Promise.all(
+        newEntries.map(async entry => {
+          const cover = await entries.getAttachment(entry._id, 'cover');
+          entry.cover = cover;
+          return entry;
+        })
+      );
+
+      this.setState({ entries: entriesWithCover });
+    });
   };
 
   render() {

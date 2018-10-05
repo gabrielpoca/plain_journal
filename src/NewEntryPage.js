@@ -1,14 +1,12 @@
-import _ from 'lodash';
 import 'react-dates/initialize';
 import React from 'react';
-import ReactDropzone from 'react-dropzone';
 import styled from 'styled-components';
 import moment from 'moment';
 
-import placeholderImg from './placeholder-image.jpg';
 import Fab from './Fab';
 import Navbar from './Navbar';
 import Editor from './components/Editor';
+import CoverPicker from './components/CoverPicker';
 
 import entries from './entries';
 
@@ -32,29 +30,6 @@ const Root = styled.div`
     border: 0;
   }
 `;
-
-const Dropzone = styled(ReactDropzone)`
-  background-position: center 30px;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-image: url(${props => props.cover});
-  height: 300px;
-  position: relative;
-`;
-
-const CoverPicker = props => {
-  const cover = _.get(props, 'cover.preview', placeholderImg);
-
-  return (
-    <Dropzone
-      disabled={props.disabled}
-      acceptedFiles="image/*"
-      capture={true}
-      onDrop={props.onChange}
-      cover={cover}
-    />
-  );
-};
 
 const DateInput = styled.input`
   border: 0;
@@ -114,8 +89,11 @@ class NewEntryPage extends React.Component {
       if (this.state.cover) {
         changes._attachments = {
           cover: {
-            type: this.state.cover.type,
-            data: this.state.cover
+            content_type: this.state.coverType,
+            data: this.state.cover.replace(
+              `data:${this.state.coverType};base64,`,
+              ''
+            )
           }
         };
       }
@@ -124,17 +102,23 @@ class NewEntryPage extends React.Component {
 
       this.props.history.push('/');
     } catch (e) {
+      console.error(e);
       this.setState({ disabled: false });
     }
   };
 
   render() {
+    console.log(this.state);
+
     return (
       <Root innerRef={this.root}>
         <Navbar withBackButton />
         <React.Fragment>
           <CoverPicker
-            onChange={files => this.setState({ cover: files[0] })}
+            onChange={({ file, type }) =>
+              this.setState({ cover: file, coverType: type })
+            }
+            onPreview={file => this.setState({ coverPreview: file })}
             disabled={this.state.disabled}
             {...this.state}
           />

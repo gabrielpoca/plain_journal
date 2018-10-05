@@ -1,12 +1,12 @@
-import * as blobUtil from 'blob-util';
+import placeholder from './placeholder-image.jpg';
 
 const cache = {};
 
 export const getCoverFromEntry = entry => {
   if (cache[entry._id]) return cache[entry._id];
+  if (!entry.cover) return placeholder;
 
-  const blob = blobUtil.base64StringToBlob(entry._attachments.cover.data);
-  const url = URL.createObjectURL(blob);
+  const url = URL.createObjectURL(entry.cover);
   cache[entry._id] = url;
   return url;
 };
