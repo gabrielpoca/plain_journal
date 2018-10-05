@@ -58,7 +58,8 @@ const CoverPicker = props => {
   return (
     <Dropzone
       disabled={props.disabled}
-      acceptedFiles="image/*"
+      accept="image/*"
+      multiple={false}
       capture={true}
       onDrop={onChange}
       cover={props.cover || props.coverPreview || placeholderImg}
