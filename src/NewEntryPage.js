@@ -108,8 +108,6 @@ class NewEntryPage extends React.Component {
   };
 
   render() {
-    console.log(this.state);
-
     return (
       <Root innerRef={this.root}>
         <Navbar withBackButton />

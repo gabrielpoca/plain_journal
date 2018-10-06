@@ -13,6 +13,7 @@ const Root = styled.nav`
   width: 100%;
   padding: 0 16px;
   z-index: 1;
+  transition: all 0.4s ease-out;
 `;
 
 const BackButton = styled(Link)`
