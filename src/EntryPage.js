@@ -43,6 +43,14 @@ const Img = styled.img`
   height: 100%;
 `;
 
+const DeleteButton = styled.button`
+  height: 32px;
+  background: transparent;
+  border: 0;
+  color: white;
+  font-size: 16px;
+`;
+
 class EntryPage extends React.Component {
   state = { entry: null };
 
@@ -63,6 +71,12 @@ class EntryPage extends React.Component {
     });
 
     this.setState({ entry: doc });
+  };
+
+  onDelete = async () => {
+    console.log(this.state);
+    entries.remove(this.state.entry._id);
+    this.props.history.push('/');
   };
 
   render() {

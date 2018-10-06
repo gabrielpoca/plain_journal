@@ -28,10 +28,18 @@ const Title = styled.span`
   transform: translate(-50%, -50%);
 `;
 
+const Right = styled.span`
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+`;
+
 const Navbar = props => (
   <Root {...props}>
     {props.withBackButton ? <BackButton to="/">Back</BackButton> : null}
     <Title>Journal</Title>
+    <Right>{props.children}</Right>
   </Root>
 );
 
