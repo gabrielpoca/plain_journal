@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
+import back from './arrow-left.svg';
+
 const Root = styled.nav`
   align-items: center;
   background: ${({ light }) => (light ? 'rgba(0, 0, 0, 0.2)' : '#2B557C')};
@@ -19,6 +21,12 @@ const Root = styled.nav`
 const BackButton = styled(Link)`
   color: white;
   text-decoration: none;
+  width: 40px;
+  height: 40px;
+  background-image: url(${back});
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 32px;
 `;
 
 const Title = styled.span`
@@ -38,7 +46,7 @@ const Right = styled.span`
 
 const Navbar = props => (
   <Root {...props}>
-    {props.withBackButton ? <BackButton to="/">Back</BackButton> : null}
+    {props.withBackButton ? <BackButton to="/" /> : null}
     <Title>Journal</Title>
     <Right>{props.children}</Right>
   </Root>

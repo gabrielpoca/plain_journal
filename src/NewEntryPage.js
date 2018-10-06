@@ -149,9 +149,7 @@ class NewEntryPage extends React.Component {
             ]
           }}
         />
-        <Fab as="button" onClick={this.onSave} disabled={this.state.disabled}>
-          Save
-        </Fab>
+        <Fab as="button" onClick={this.onSave} disabled={this.state.disabled} />
       </Root>
     );
   }

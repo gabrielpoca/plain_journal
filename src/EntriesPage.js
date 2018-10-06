@@ -63,7 +63,7 @@ const EntriesPage = () => (
       {({ entries }) => <EntriesList entries={entries} />}
     </EntriesContainer>
     <Link to="/new">
-      <Fab as="span">Add</Fab>
+      <Fab as="span" aria-label="add" />
     </Link>
   </Root>
 );

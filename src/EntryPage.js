@@ -3,6 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 
+import trash from './trash-can.svg';
 import entries from './entries';
 
 import Navbar from './Navbar';
@@ -46,9 +47,13 @@ const Img = styled.img`
 const DeleteButton = styled.button`
   height: 32px;
   background: transparent;
+  background-image: url(${trash});
+  background-size: 32px;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 40px;
+  height: 40px;
   border: 0;
-  color: white;
-  font-size: 16px;
 `;
 
 class EntryPage extends React.Component {
@@ -92,7 +97,7 @@ class EntryPage extends React.Component {
             {({ inView, ref }) => (
               <React.Fragment>
                 <Navbar light={inView} withBackButton>
-                  <DeleteButton onClick={this.onDelete}>Delete</DeleteButton>
+                  <DeleteButton onClick={this.onDelete} />
                 </Navbar>
                 <Img innerRef={ref} src={getCoverFromEntry(this.state.entry)} />
               </React.Fragment>
