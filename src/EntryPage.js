@@ -74,9 +74,12 @@ class EntryPage extends React.Component {
   };
 
   onDelete = async () => {
-    console.log(this.state);
-    entries.remove(this.state.entry._id);
-    this.props.history.push('/');
+    try {
+      await entries.remove(this.state.entry._id, this.state.entry._rev);
+      this.props.history.push('/');
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   render() {
