@@ -52,7 +52,7 @@ const DeleteButton = styled.button`
 `;
 
 class EntryPage extends React.Component {
-  state = { entry: null };
+  state = { entry: null, el: React.createRef() };
 
   componentWillMount() {
     this.updateEntry();
@@ -84,14 +84,60 @@ class EntryPage extends React.Component {
 
     return (
       <Root>
-        <Navbar light withBackButton />
         <Header>
-          <Img src={getCoverFromEntry(this.state.entry)} />
+          <Observer root={this.state.el.current}>
+            {({ inView, ref }) => (
+              <React.Fragment>
+                <Navbar light={inView} withBackButton>
+                  <DeleteButton onClick={this.onDelete}>Delete</DeleteButton>
+                </Navbar>
+                <Img innerRef={ref} src={getCoverFromEntry(this.state.entry)} />
+              </React.Fragment>
+            )}
+          </Observer>
         </Header>
         <Title>{moment(this.state.entry.date).format('DD/MM/YY')}</Title>
         <Body dangerouslySetInnerHTML={{ __html: this.state.entry.body }} />
       </Root>
     );
+  }
+}
+
+class Observer extends React.Component {
+  constructor() {
+    super();
+
+    this.state = {
+      inView: true
+    };
+
+    this.ref = React.createRef();
+  }
+
+  componentDidMount() {
+    this.observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.intersectionRatio < 0.3) this.setState({ inView: false });
+          else this.setState({ inView: true });
+        });
+      },
+      {
+        root: this.props.root,
+        rootMargin: '0px',
+        threshold: 0.3
+      }
+    );
+
+    this.observer.observe(this.ref.current);
+  }
+
+  componentWillUnmount() {
+    this.observer.disconnect();
+  }
+
+  render() {
+    return this.props.children({ ...this.state, ref: this.ref });
   }
 }
 
