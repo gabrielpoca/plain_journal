@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { getCoverFromEntry } from './helpers';
 
 const Root = styled(Link)`
@@ -17,14 +17,18 @@ const Cover = styled.div`
 `;
 
 const Body = styled.div`
-  padding: 24px 16px;
+  padding: 0 16px;
   max-width: calc(100% - 104px);
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
 
 const LabelDate = styled.h2`
   font-weight: bold;
   margin-bottom: 8px;
+  margin: 0;
 `;
 
 const LabelBody = styled.div`

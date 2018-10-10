@@ -6,7 +6,10 @@ import back from './arrow-left.svg';
 
 const Root = styled.nav`
   align-items: center;
-  background: ${({ light }) => (light ? 'rgba(0, 0, 0, 0.2)' : '#2B557C')};
+  background: ${({ light }) =>
+    light
+      ? 'rgba(0, 0, 0, 0.2)'
+      : 'linear-gradient(180deg, #2B557C 0%, #396CA1 100%)'};
   display: flex;
   height: 64px;
   left: 0;

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import moment from 'moment';
 
 import trash from './trash-can.svg';
@@ -72,7 +72,7 @@ class EntryPage extends React.Component {
       return;
 
     const doc = await entries.get(this.props.match.params.id, {
-      attachments: true
+      attachments: true,
     });
 
     this.setState({ entry: doc });
@@ -99,7 +99,7 @@ class EntryPage extends React.Component {
                 <Navbar light={inView} withBackButton>
                   <DeleteButton onClick={this.onDelete} />
                 </Navbar>
-                <Img innerRef={ref} src={getCoverFromEntry(this.state.entry)} />
+                <Img ref={ref} src={getCoverFromEntry(this.state.entry)} />
               </React.Fragment>
             )}
           </Observer>
@@ -116,7 +116,7 @@ class Observer extends React.Component {
     super();
 
     this.state = {
-      inView: true
+      inView: true,
     };
 
     this.ref = React.createRef();
@@ -133,7 +133,7 @@ class Observer extends React.Component {
       {
         root: this.props.root,
         rootMargin: '0px',
-        threshold: 0.3
+        threshold: 0.3,
       }
     );
 

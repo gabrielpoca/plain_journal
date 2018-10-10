@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import Quill from 'quill';
 import styled from 'styled-components';
+import 'react-quill/dist/quill.snow.css';
 
 import MarkdownShortcuts from './markdown-shortcuts';
 
@@ -27,8 +28,8 @@ class EditorElement extends React.Component {
     this.quill = new Quill(this.el, {
       placeholder: 'Today I ...',
       modules: {
-        markdownShortcuts: {}
-      }
+        markdownShortcuts: {},
+      },
     });
     this.quill.on('text-change', this.onTextChange);
     this.quill.on(
@@ -72,7 +73,7 @@ class Editor extends React.Component {
   render() {
     return (
       <Root
-        innerRef={this.el}
+        ref={this.el}
         offset={_.get(this.el.current, 'offsetTop', 0)}
         expanded={this.props.expanded}
       >

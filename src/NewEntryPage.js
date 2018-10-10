@@ -1,6 +1,5 @@
-import 'react-dates/initialize';
 import React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import moment from 'moment';
 
 import Fab from './Fab';
@@ -11,7 +10,6 @@ import CoverPicker from './components/CoverPicker';
 import entries from './entries';
 
 import 'quill/dist/quill.core.css';
-import 'react-dates/lib/css/_datepicker.css';
 
 const newID = () => {
   return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
@@ -49,7 +47,7 @@ class NewEntryPage extends React.Component {
     date: moment(),
     bodyFocus: false,
     keyboardOpen: false,
-    disabled: false
+    disabled: false,
   };
 
   constructor() {
@@ -83,7 +81,7 @@ class NewEntryPage extends React.Component {
       const changes = {
         _id: newID(),
         date: this.state.date.toDate(),
-        body: this.state.body
+        body: this.state.body,
       };
 
       if (this.state.cover) {
@@ -93,8 +91,8 @@ class NewEntryPage extends React.Component {
             data: this.state.cover.replace(
               `data:${this.state.coverType};base64,`,
               ''
-            )
-          }
+            ),
+          },
         };
       }
 
@@ -109,7 +107,7 @@ class NewEntryPage extends React.Component {
 
   render() {
     return (
-      <Root innerRef={this.root}>
+      <Root ref={this.root}>
         <Navbar withBackButton />
         <React.Fragment>
           <CoverPicker
@@ -127,7 +125,7 @@ class NewEntryPage extends React.Component {
             value={this.state.date.format('YYYY-MM-DD')}
             onChange={event =>
               this.setState({
-                date: moment(event.target.value, 'YYYY-MM-DD')
+                date: moment(event.target.value, 'YYYY-MM-DD'),
               })
             }
           />
@@ -145,8 +143,8 @@ class NewEntryPage extends React.Component {
             toolbar: [
               [{ cover: [2, false] }],
               ['bold', 'italic'],
-              ['link', 'image']
-            ]
+              ['link', 'image'],
+            ],
           }}
         />
         <Fab as="button" onClick={this.onSave} disabled={this.state.disabled} />
