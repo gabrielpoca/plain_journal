@@ -2,14 +2,15 @@ import React from 'react';
 import ReactDropzone from 'react-dropzone';
 import styled from 'styled-components';
 
-import placeholderImg from '../placeholder-image.jpg';
+// import placeholderImg from '../placeholder-image.jpg';
+import placeholderImg from './CoverPicker.jpg';
 
 const Dropzone = styled(ReactDropzone)`
-  background-position: 50% calc(50% -30px);
+  background-position: center calc(50% + 30px);
   background-size: cover;
   background-repeat: no-repeat;
   background-image: url(${props => props.cover});
-  height: 300px;
+  height: 336px;
   position: relative;
 `;
 
