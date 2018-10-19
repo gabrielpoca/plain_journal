@@ -2,23 +2,17 @@ import React from 'react';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components/macro';
-import { getCoverFromEntry } from './helpers';
 
 const Root = styled(Link)`
   display: flex;
-  height: 80px;
   color: black;
   text-decoration: none;
-  margin-bottom: 4px;
-`;
-
-const Cover = styled.div`
-  width: 104px;
+  margin: 16px 0 24px;
 `;
 
 const Body = styled.div`
   padding: 0 16px;
-  max-width: calc(100% - 104px);
+  max-width: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -26,23 +20,20 @@ const Body = styled.div`
 `;
 
 const LabelDate = styled.h2`
+  font-size: 16px;
+  line-height: 24px;
+  height: 24px;
   font-weight: bold;
-  margin-bottom: 8px;
-  margin: 0;
+  margin: 0 0 4px;
 `;
 
 const LabelBody = styled.div`
+  line-height: 24px;
+  height: 24px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-`;
-
-const Img = styled.img`
-  object-fit: cover;
-  max-width: 100%;
-  max-height: 100%;
-  width: 100%;
-  height: 100%;
+  font-weight: 300;
 `;
 
 const Entry = ({ entry }) => {
@@ -51,9 +42,6 @@ const Entry = ({ entry }) => {
 
   return (
     <Root to={`/entry/${entry._id}`}>
-      <Cover>
-        <Img className="Entry-img" src={getCoverFromEntry(entry)} />
-      </Cover>
       <Body>
         <LabelDate>{moment(entry.date).format('DD/MM/YY')}</LabelDate>
         <LabelBody>{template.innerText}</LabelBody>

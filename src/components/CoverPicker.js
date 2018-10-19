@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import placeholderImg from '../placeholder-image.jpg';
 
 const Dropzone = styled(ReactDropzone)`
-  background-position: center 30px;
+  background-position: 50% calc(50% -30px);
   background-size: cover;
   background-repeat: no-repeat;
   background-image: url(${props => props.cover});

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import back from './arrow-left.svg';
 
@@ -11,7 +11,7 @@ const Root = styled.nav`
       ? 'rgba(0, 0, 0, 0.2)'
       : 'linear-gradient(180deg, #2B557C 0%, #396CA1 100%)'};
   display: flex;
-  height: 64px;
+  height: 56px;
   left: 0;
   position: fixed;
   top: 0;
@@ -38,6 +38,8 @@ const Title = styled.span`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  font-size: 16px;
+  text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.16);
 `;
 
 const Right = styled.span`
@@ -47,12 +49,16 @@ const Right = styled.span`
   transform: translateY(-50%);
 `;
 
-const Navbar = props => (
-  <Root {...props}>
-    {props.withBackButton ? <BackButton to="/" /> : null}
-    <Title>Journal</Title>
-    <Right>{props.children}</Right>
-  </Root>
-);
+class Navbar extends React.PureComponent {
+  render() {
+    return (
+      <Root {...this.props}>
+        {this.props.withBackButton ? <BackButton to="/" /> : null}
+        <Title>Journal</Title>
+        <Right>{this.props.children}</Right>
+      </Root>
+    );
+  }
+}
 
 export default Navbar;

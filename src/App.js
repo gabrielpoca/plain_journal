@@ -12,7 +12,7 @@ const GlobalStyle = createGlobalStyle`
   body,
   #root {
     -webkit-font-smoothing: antialised;
-    font-family: 'Exo 2', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-family: 16px;
     height: 100%;
     line-height: 1.25em;
