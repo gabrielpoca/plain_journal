@@ -16,7 +16,7 @@ const Root = styled.div`
 `;
 
 const Header = styled.div`
-  flex-basis: 300px;
+  flex-basis: ${props => (props.withCover ? '300px' : '56px')};
   flex-grow: 0;
   flex-shrink: 0;
   align-self: stretch;
@@ -32,6 +32,8 @@ const Body = styled.div`
 
 const Title = styled.h1`
   margin-top: 32px;
+  font-size: 16px;
+  line-height: 24px;
   padding: 0 16px;
 `;
 
@@ -72,7 +74,7 @@ class EntryPage extends React.Component {
       return;
 
     const doc = await entries.get(this.props.match.params.id, {
-      attachments: true,
+      attachments: true
     });
 
     this.setState({ entry: doc });
@@ -87,22 +89,38 @@ class EntryPage extends React.Component {
     }
   };
 
+  renderWithCover() {
+    return (
+      <Observer root={this.state.el.current}>
+        {({ inView, ref }) => (
+          <React.Fragment>
+            <Navbar light={inView} withBackButton>
+              <DeleteButton onClick={this.onDelete} />
+            </Navbar>
+            <Img ref={ref} src={getCoverFromEntry(this.state.entry)} />
+          </React.Fragment>
+        )}
+      </Observer>
+    );
+  }
+
+  renderWithoutCover() {
+    return (
+      <Navbar withBackButton>
+        <DeleteButton onClick={this.onDelete} />
+      </Navbar>
+    );
+  }
+
   render() {
     if (!this.state.entry) return null;
 
     return (
       <Root>
-        <Header>
-          <Observer root={this.state.el.current}>
-            {({ inView, ref }) => (
-              <React.Fragment>
-                <Navbar light={inView} withBackButton>
-                  <DeleteButton onClick={this.onDelete} />
-                </Navbar>
-                <Img ref={ref} src={getCoverFromEntry(this.state.entry)} />
-              </React.Fragment>
-            )}
-          </Observer>
+        <Header withCover={!!this.state.entry._attachments}>
+          {!!this.state.entry._attachments
+            ? this.renderWithCover()
+            : this.renderWithoutCover()}
         </Header>
         <Title>{moment(this.state.entry.date).format('DD/MM/YY')}</Title>
         <Body dangerouslySetInnerHTML={{ __html: this.state.entry.body }} />
@@ -116,7 +134,7 @@ class Observer extends React.Component {
     super();
 
     this.state = {
-      inView: true,
+      inView: true
     };
 
     this.ref = React.createRef();
@@ -133,7 +151,7 @@ class Observer extends React.Component {
       {
         root: this.props.root,
         rootMargin: '0px',
-        threshold: 0.3,
+        threshold: 0.3
       }
     );
 

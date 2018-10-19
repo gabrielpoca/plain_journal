@@ -47,7 +47,7 @@ class NewEntryPage extends React.Component {
     date: moment(),
     bodyFocus: false,
     keyboardOpen: false,
-    disabled: false,
+    disabled: false
   };
 
   constructor() {
@@ -73,7 +73,7 @@ class NewEntryPage extends React.Component {
   };
 
   onSave = async () => {
-    if (!this.state.body || !this.state.date || !this.state.cover) return false;
+    if (!this.state.body || !this.state.date) return false;
 
     this.setState({ disabled: true });
 
@@ -81,7 +81,7 @@ class NewEntryPage extends React.Component {
       const changes = {
         _id: newID(),
         date: this.state.date.toDate(),
-        body: this.state.body,
+        body: this.state.body
       };
 
       if (this.state.cover) {
@@ -91,8 +91,8 @@ class NewEntryPage extends React.Component {
             data: this.state.cover.replace(
               `data:${this.state.coverType};base64,`,
               ''
-            ),
-          },
+            )
+          }
         };
       }
 
@@ -125,7 +125,7 @@ class NewEntryPage extends React.Component {
             value={this.state.date.format('YYYY-MM-DD')}
             onChange={event =>
               this.setState({
-                date: moment(event.target.value, 'YYYY-MM-DD'),
+                date: moment(event.target.value, 'YYYY-MM-DD')
               })
             }
           />
@@ -143,8 +143,8 @@ class NewEntryPage extends React.Component {
             toolbar: [
               [{ cover: [2, false] }],
               ['bold', 'italic'],
-              ['link', 'image'],
-            ],
+              ['link', 'image']
+            ]
           }}
         />
         <Fab as="button" onClick={this.onSave} disabled={this.state.disabled} />
