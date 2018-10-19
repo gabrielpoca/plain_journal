@@ -10,12 +10,12 @@ Quill.register('modules/markdownShortcuts', MarkdownShortcuts);
 
 const Root = styled.div`
   height: ${({ expanded }) =>
-    expanded ? 'calc(100% - 64px)' : 'calc(100% - 340px)'};
+    expanded ? 'calc(100% - 64px)' : 'calc(100% - 376px)'};
   position: fixed;
-  top: 64px;
+  top: 56px;
   background: white;
   width: 100%;
-  transform: translateY(${({ expanded }) => (expanded ? 0 : '276px')});
+  transform: translateY(${({ expanded }) => (expanded ? 0 : '316px')});
   overflow: scroll;
 
   .quill-container {
@@ -28,8 +28,8 @@ class EditorElement extends React.Component {
     this.quill = new Quill(this.el, {
       placeholder: 'Today I ...',
       modules: {
-        markdownShortcuts: {},
-      },
+        markdownShortcuts: {}
+      }
     });
     this.quill.on('text-change', this.onTextChange);
     this.quill.on(

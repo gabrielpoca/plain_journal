@@ -32,7 +32,7 @@ const Root = styled.div`
 const DateInput = styled.input`
   border: 0;
   width: 100%;
-  height: 4jpx;
+  height: 40px;
   color: inherit;
   font-size: 16px;
   font-family: inherit;
