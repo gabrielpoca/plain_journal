@@ -39,7 +39,7 @@ class EditorElement extends React.Component {
       range => (range !== null ? this.props.onFocus() : this.props.onBlur())
     );
 
-    this.quill.clipboard.dangerouslyPasteHTML(0, this.props.value);
+    this.quill.setContents(this.quill.clipboard.convert(this.props.value));
   }
 
   shouldComponentUpdate(props) {
