@@ -60,7 +60,7 @@ class NewEntryPage extends React.Component {
 
     return (
       <Root ref={this.root}>
-        <Navbar withBackButton />
+        <Navbar light={cover || coverPreview} withBackButton />
         <React.Fragment>
           <CoverPicker
             onChange={({ file, type }) =>

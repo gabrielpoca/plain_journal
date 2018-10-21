@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 import Quill from 'quill';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import 'quill/dist/quill.core.css';
 import 'react-quill/dist/quill.snow.css';
@@ -17,6 +17,7 @@ const Root = styled.div`
   top: 56px;
   background: white;
   width: 100%;
+  max-width: var(--max-width);
   transform: translateY(${({ expanded }) => (expanded ? 0 : '316px')});
   overflow: scroll;
 

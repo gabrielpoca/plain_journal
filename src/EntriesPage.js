@@ -1,13 +1,18 @@
 import _ from 'lodash';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import EntriesList from './EntriesList';
 import Fab from './components/Fab';
 import Navbar from './components/Navbar';
+import Layout from './components/Layout';
 
 import entries from './entries';
+
+const Root = styled.div`
+  padding-top: var(--nav-height);
+`;
 
 class EntriesContainer extends React.Component {
   constructor() {
@@ -93,25 +98,23 @@ const Search = props => (
   </SearchRoot>
 );
 
-const Root = styled.div`
-  padding-top: 56px;
-`;
-
 const EntriesPage = () => (
-  <Root>
-    <EntriesContainer>
-      {({ entries, onSearch, searchQuery }) => (
-        <React.Fragment>
-          <Navbar />
-          <Search value={searchQuery} onChange={onSearch} />
-          {<EntriesList entries={entries} />}
-          <Link to="/new">
-            <Fab as="span" aria-label="add" />
-          </Link>
-        </React.Fragment>
-      )}
-    </EntriesContainer>
-  </Root>
+  <Layout>
+    <Root>
+      <EntriesContainer>
+        {({ entries, onSearch, searchQuery }) => (
+          <React.Fragment>
+            <Navbar />
+            <Search value={searchQuery} onChange={onSearch} />
+            {<EntriesList entries={entries} />}
+            <Link to="/new">
+              <Fab as="span" aria-label="add" />
+            </Link>
+          </React.Fragment>
+        )}
+      </EntriesContainer>
+    </Root>
+  </Layout>
 );
 
 export default EntriesPage;

@@ -1,3 +1,5 @@
+import React from 'react';
+import ReactDom from 'react-dom';
 import styled from 'styled-components';
 
 import plus from '../icons/plus.svg';
@@ -7,7 +9,7 @@ const Fab = styled.button`
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  position: fixed;
+  position: absolute;
   bottom: 20px;
   right: 20px;
   font-size: 20px;
@@ -24,4 +26,24 @@ const Fab = styled.button`
   padding: 0;
 `;
 
-export default Fab;
+class FabButton extends React.PureComponent {
+  constructor() {
+    super();
+    this.el = document.createElement('div');
+  }
+
+  componentDidMount() {
+    this.actionsRoot = document.getElementById('layout-main');
+    this.actionsRoot.appendChild(this.el);
+  }
+
+  componentWillUnmount() {
+    this.actionsRoot.removeChild(this.el);
+  }
+
+  render() {
+    return ReactDom.createPortal(<Fab {...this.props} />, this.el);
+  }
+}
+
+export default FabButton;

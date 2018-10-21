@@ -11,6 +11,7 @@ import edit from './icons/edit.svg';
 import Navbar from './components/Navbar';
 import Fab from './components/Fab';
 import Observer from './components/Observer';
+import Layout from './components/Layout';
 import { getCoverFromEntry } from './helpers';
 
 const Root = styled.div`
@@ -116,18 +117,20 @@ class EntryPage extends React.Component {
     if (!this.state.entry) return null;
 
     return (
-      <Root>
-        <Header withCover={!!this.state.entry._attachments}>
-          {!!this.state.entry._attachments
-            ? this.renderWithCover()
-            : this.renderWithoutCover()}
-        </Header>
-        <Title>{moment(this.state.entry.date).format('DD/MM/YY')}</Title>
-        <Body dangerouslySetInnerHTML={{ __html: this.state.entry.body }} />
-        <Link to={`${this.props.match.url}/edit`}>
-          <Fab as="span" arial-label="edit" icon={edit} />
-        </Link>
-      </Root>
+      <Layout>
+        <Root>
+          <Header withCover={!!this.state.entry._attachments}>
+            {!!this.state.entry._attachments
+              ? this.renderWithCover()
+              : this.renderWithoutCover()}
+          </Header>
+          <Title>{moment(this.state.entry.date).format('DD/MM/YY')}</Title>
+          <Body dangerouslySetInnerHTML={{ __html: this.state.entry.body }} />
+          <Link to={`${this.props.match.url}/edit`}>
+            <Fab as="span" arial-label="edit" icon={edit} />
+          </Link>
+        </Root>
+      </Layout>
     );
   }
 }

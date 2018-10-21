@@ -34,12 +34,17 @@ const GlobalStyle = createGlobalStyle`
     margin: 16px 0 8px;
     line-height: 1.25em;
   }
+  
+  :root {
+    --max-width: 640px;
+    --nav-height: 56px;
+  }
 `;
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
+      <React.Fragment>
         <GlobalStyle />
         <Switch>
           <Route exact path="/new">
@@ -49,7 +54,7 @@ class App extends Component {
           <Route path="/entry/:id" component={EntryPage} />
           <Route exact path="/" component={EntriesPage} />
         </Switch>
-      </div>
+      </React.Fragment>
     );
   }
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import moment from 'moment';
 
 import EntryForm from './components/EntryForm';
+import Layout from './components/Layout';
 
 import entries from './entries';
 
@@ -58,11 +59,13 @@ class NewEntryPage extends React.Component {
 
   render() {
     return (
-      <EntryForm
-        onChange={change => this.setState(change)}
-        onSave={this.onSave}
-        {...this.state}
-      />
+      <Layout>
+        <EntryForm
+          onChange={change => this.setState(change)}
+          onSave={this.onSave}
+          {...this.state}
+        />
+      </Layout>
     );
   }
 }

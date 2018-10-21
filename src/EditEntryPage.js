@@ -3,6 +3,7 @@ import React from 'react';
 import moment from 'moment';
 
 import EntryForm from './components/EntryForm';
+import Layout from './components/Layout';
 
 import entries from './entries';
 import { getCoverFromEntry } from './helpers';
@@ -78,11 +79,13 @@ class EditEntryPage extends React.Component {
     if (!this.state.body) return null;
 
     return (
-      <EntryForm
-        onChange={change => this.setState(change)}
-        onSave={this.onSave}
-        {...this.state}
-      />
+      <Layout>
+        <EntryForm
+          onChange={change => this.setState(change)}
+          onSave={this.onSave}
+          {...this.state}
+        />
+      </Layout>
     );
   }
 }
