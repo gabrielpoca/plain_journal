@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import EntriesList from './EntriesList';
-import Fab from './Fab';
-import Navbar from './Navbar';
+import Fab from './components/Fab';
+import Navbar from './components/Navbar';
 
 import entries from './entries';
 

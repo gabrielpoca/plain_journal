@@ -2,6 +2,8 @@ import _ from 'lodash';
 import React from 'react';
 import Quill from 'quill';
 import styled from 'styled-components';
+
+import 'quill/dist/quill.core.css';
 import 'react-quill/dist/quill.snow.css';
 
 import MarkdownShortcuts from './markdown-shortcuts';
@@ -37,7 +39,7 @@ class EditorElement extends React.Component {
       range => (range !== null ? this.props.onFocus() : this.props.onBlur())
     );
 
-    this.props.onQuill(this.quill);
+    this.quill.clipboard.dangerouslyPasteHTML(0, this.props.value);
   }
 
   shouldComponentUpdate(props) {

@@ -2,11 +2,15 @@ import _ from 'lodash';
 import React from 'react';
 import styled from 'styled-components/macro';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 
-import trash from './trash-can.svg';
+import trash from './icons/trash-can.svg';
 import entries from './entries';
 
-import Navbar from './Navbar';
+import edit from './icons/edit.svg';
+import Navbar from './components/Navbar';
+import Fab from './components/Fab';
+import Observer from './components/Observer';
 import { getCoverFromEntry } from './helpers';
 
 const Root = styled.div`
@@ -65,10 +69,6 @@ class EntryPage extends React.Component {
     this.updateEntry();
   }
 
-  componentDidUpdate() {
-    this.updateEntry();
-  }
-
   updateEntry = async () => {
     if (_.get(this.state.entry, '_id', false) === this.props.match.params.id)
       return;
@@ -124,46 +124,11 @@ class EntryPage extends React.Component {
         </Header>
         <Title>{moment(this.state.entry.date).format('DD/MM/YY')}</Title>
         <Body dangerouslySetInnerHTML={{ __html: this.state.entry.body }} />
+        <Link to={`${this.props.match.url}/edit`}>
+          <Fab as="span" arial-label="edit" icon={edit} />
+        </Link>
       </Root>
     );
-  }
-}
-
-class Observer extends React.Component {
-  constructor() {
-    super();
-
-    this.state = {
-      inView: true
-    };
-
-    this.ref = React.createRef();
-  }
-
-  componentDidMount() {
-    this.observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.intersectionRatio < 0.3) this.setState({ inView: false });
-          else this.setState({ inView: true });
-        });
-      },
-      {
-        root: this.props.root,
-        rootMargin: '0px',
-        threshold: 0.3
-      }
-    );
-
-    this.observer.observe(this.ref.current);
-  }
-
-  componentWillUnmount() {
-    this.observer.disconnect();
-  }
-
-  render() {
-    return this.props.children({ ...this.state, ref: this.ref });
   }
 }
 

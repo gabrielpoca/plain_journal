@@ -1,36 +1,55 @@
+import _ from 'lodash';
 import React from 'react';
 import moment from 'moment';
 
 import EntryForm from './components/EntryForm';
 
 import entries from './entries';
+import { getCoverFromEntry } from './helpers';
 
-const newID = () => {
-  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
-    (
-      c ^
-      (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
-    ).toString(16)
-  );
-};
-
-class NewEntryPage extends React.Component {
+class EditEntryPage extends React.Component {
   state = {
-    body: '',
+    _id: null,
+    _rev: null,
+    body: null,
     cover: null,
+    coverType: null,
     coverPreview: null,
-    date: moment(),
+    date: null,
     disabled: false
+  };
+
+  componentWillMount() {
+    this.updateEntry();
+  }
+
+  updateEntry = async () => {
+    if (_.get(this.state.entry, '_id', false) === this.props.match.params.id)
+      return;
+
+    const doc = await entries.get(this.props.match.params.id, {
+      attachments: true
+    });
+
+    this.setState({
+      doc: doc,
+      body: doc.body,
+      date: moment(doc.date)
+    });
+
+    if (doc._attachments) {
+      const coverPreview = getCoverFromEntry(doc);
+      this.setState({ coverPreview });
+    }
   };
 
   onSave = async () => {
     if (!this.state.body || !this.state.date) return false;
 
-    this.setState({ disabled: true });
-
     try {
+      this.setState({ disabled: true });
       const changes = {
-        _id: newID(),
+        ...this.state.doc,
         date: this.state.date.toDate(),
         body: this.state.body
       };
@@ -48,7 +67,6 @@ class NewEntryPage extends React.Component {
       }
 
       await entries.put(changes);
-
       this.props.history.push('/');
     } catch (e) {
       console.error(e);
@@ -57,6 +75,8 @@ class NewEntryPage extends React.Component {
   };
 
   render() {
+    if (!this.state.body) return null;
+
     return (
       <EntryForm
         onChange={change => this.setState(change)}
@@ -67,4 +87,4 @@ class NewEntryPage extends React.Component {
   }
 }
 
-export default NewEntryPage;
+export default EditEntryPage;
