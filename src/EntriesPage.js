@@ -39,7 +39,6 @@ class EntriesContainer extends React.Component {
           sort: [{ date: 'desc' }]
         })).docs;
       } else {
-        console.log(this.state.searchQuery);
         newEntries = (await entries.search({
           query: this.state.searchQuery,
           fields: ['body'],
@@ -48,8 +47,6 @@ class EntriesContainer extends React.Component {
           include_docs: true
         })).rows.map(r => r.doc);
       }
-
-      console.log(newEntries);
 
       this.setState({ entries: newEntries });
     },

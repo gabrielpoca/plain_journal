@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "blob-util": "^2.0.2",
+    "lunr": "^2.3.4",
+    "lunr-languages": "^1.0.0",
     "moment": "^2.22.2",
     "pouchdb": "^7.0.0",
     "pouchdb-find": "^7.0.0",
