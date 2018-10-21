@@ -1,6 +1,6 @@
 {
-  "short_name": "Diary",
-  "name": "Diary by Gabriel Poca",
+  "short_name": "Journal",
+  "name": "Journal by Gabriel Poca",
   "icons": [
     {
       "src": "icon-32.png",
@@ -20,6 +20,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#2B557C",
-  "background_color": "#2B557C"
+  "theme_color": "#38699C",
+  "background_color": "#38699C"
 }
