@@ -16,15 +16,15 @@ PouchDB.plugin(Find);
 const entries = new PouchDB('entries');
 
 entries.createIndex({
-  index: { fields: ['date'] }
+  index: { fields: ['date'] },
 });
 
 entries.search({
   fields: ['body'],
   build: true,
-  language: ['pt', 'en']
+  language: ['pt', 'en'],
 });
 
-window.db = entries;
+window.entries = entries;
 
 export default entries;
