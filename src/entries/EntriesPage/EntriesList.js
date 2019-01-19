@@ -7,10 +7,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-const Root = styled(Link)`
-  text-decoration: none;
-`;
-
 const Entry = ({ entry }) => {
   const template = document.createElement('div');
   template.innerHTML = entry.body;

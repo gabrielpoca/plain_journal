@@ -2,10 +2,6 @@ import _ from 'lodash';
 import React from 'react';
 import styled from 'styled-components/macro';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
-
-import Fab from '@material-ui/core/Fab';
-import EditIcon from '@material-ui/icons/Edit';
 
 import Navbar from './Navbar';
 
@@ -96,11 +92,6 @@ class EntryPage extends React.Component {
         </Header>
         <Title>{moment(this.state.entry.date).format('DD/MM/YY')}</Title>
         <Body dangerouslySetInnerHTML={{ __html: this.state.entry.body }} />
-        <Link to={`${this.props.match.url}/edit`}>
-          <Fab color="secondary" aria-label="Edit">
-            <EditIcon />
-          </Fab>
-        </Link>
       </Root>
     );
   }
