@@ -21,7 +21,6 @@ class Layout extends React.PureComponent {
   render() {
     return (
       <Root>
-        <aside />
         <Main id="layout-main">{this.props.children}</Main>
       </Root>
     );

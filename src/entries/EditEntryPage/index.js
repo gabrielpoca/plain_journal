@@ -2,11 +2,12 @@ import _ from 'lodash';
 import React from 'react';
 import moment from 'moment';
 
-import EntryForm from './components/EntryForm';
-import Layout from './components/Layout';
+import EntryForm from '../components/EntryForm';
+import Layout from '../components/Layout';
+import Navbar from './Navbar';
 
-import entries from './entries';
-import { getCoverFromEntry } from './helpers';
+import db from '../db';
+import { getCoverFromEntry } from '../helpers';
 
 class EditEntryPage extends React.Component {
   state = {
@@ -17,7 +18,7 @@ class EditEntryPage extends React.Component {
     coverType: null,
     coverPreview: null,
     date: null,
-    disabled: false
+    disabled: false,
   };
 
   componentWillMount() {
@@ -28,14 +29,14 @@ class EditEntryPage extends React.Component {
     if (_.get(this.state.entry, '_id', false) === this.props.match.params.id)
       return;
 
-    const doc = await entries.get(this.props.match.params.id, {
-      attachments: true
+    const doc = await db.get(this.props.match.params.id, {
+      attachments: true,
     });
 
     this.setState({
       doc: doc,
       body: doc.body,
-      date: moment(doc.date)
+      date: moment(doc.date),
     });
 
     if (doc._attachments) {
@@ -52,7 +53,7 @@ class EditEntryPage extends React.Component {
       const changes = {
         ...this.state.doc,
         date: this.state.date.toDate(),
-        body: this.state.body
+        body: this.state.body,
       };
 
       if (this.state.cover) {
@@ -62,12 +63,12 @@ class EditEntryPage extends React.Component {
             data: this.state.cover.replace(
               `data:${this.state.coverType};base64,`,
               ''
-            )
-          }
+            ),
+          },
         };
       }
 
-      await entries.put(changes);
+      await db.put(changes);
       this.props.history.push('/');
     } catch (e) {
       console.error(e);
@@ -80,11 +81,8 @@ class EditEntryPage extends React.Component {
 
     return (
       <Layout>
-        <EntryForm
-          onChange={change => this.setState(change)}
-          onSave={this.onSave}
-          {...this.state}
-        />
+        <Navbar onSave={this.onSave} />
+        <EntryForm onChange={change => this.setState(change)} {...this.state} />
       </Layout>
     );
   }

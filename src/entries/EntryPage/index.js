@@ -4,15 +4,16 @@ import styled from 'styled-components/macro';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 
-import trash from './icons/trash-can.svg';
-import entries from './entries';
+import Fab from '@material-ui/core/Fab';
+import EditIcon from '@material-ui/icons/Edit';
 
-import edit from './icons/edit.svg';
-import Navbar from './components/Navbar';
-import Fab from './components/Fab';
-import Observer from './components/Observer';
-import Layout from './components/Layout';
-import { getCoverFromEntry } from './helpers';
+import Navbar from './Navbar';
+
+import db from '../db';
+
+import Observer from '../components/Observer';
+import Layout from '../components/Layout';
+import { getCoverFromEntry } from '../helpers';
 
 const Root = styled.div`
   display: flex;
@@ -21,7 +22,7 @@ const Root = styled.div`
 `;
 
 const Header = styled.div`
-  flex-basis: ${props => (props.withCover ? '300px' : '56px')};
+  flex-basis: ${props => (props.withCover ? '300px' : '0px')};
   flex-grow: 0;
   flex-shrink: 0;
   align-self: stretch;
@@ -51,18 +52,6 @@ const Img = styled.img`
   height: 100%;
 `;
 
-const DeleteButton = styled.button`
-  height: 32px;
-  background: transparent;
-  background-image: url(${trash});
-  background-size: 32px;
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 40px;
-  height: 40px;
-  border: 0;
-`;
-
 class EntryPage extends React.Component {
   state = { entry: null, el: React.createRef() };
 
@@ -74,8 +63,8 @@ class EntryPage extends React.Component {
     if (_.get(this.state.entry, '_id', false) === this.props.match.params.id)
       return;
 
-    const doc = await entries.get(this.props.match.params.id, {
-      attachments: true
+    const doc = await db.get(this.props.match.params.id, {
+      attachments: true,
     });
 
     this.setState({ entry: doc });
@@ -83,51 +72,35 @@ class EntryPage extends React.Component {
 
   onDelete = async () => {
     try {
-      await entries.remove(this.state.entry._id, this.state.entry._rev);
+      await db.remove(this.state.entry._id, this.state.entry._rev);
       this.props.history.push('/');
     } catch (e) {
       console.error(e);
     }
   };
 
-  renderWithCover() {
-    return (
-      <Observer root={this.state.el.current}>
-        {({ inView, ref }) => (
-          <React.Fragment>
-            <Navbar light={inView} withBackButton>
-              <DeleteButton onClick={this.onDelete} />
-            </Navbar>
-            <Img ref={ref} src={getCoverFromEntry(this.state.entry)} />
-          </React.Fragment>
-        )}
-      </Observer>
-    );
-  }
-
-  renderWithoutCover() {
-    return (
-      <Navbar withBackButton>
-        <DeleteButton onClick={this.onDelete} />
-      </Navbar>
-    );
-  }
-
   render() {
     if (!this.state.entry) return null;
 
     return (
       <Layout>
+        <Navbar onDelete={this.onDelete} />
         <Root>
           <Header withCover={!!this.state.entry._attachments}>
-            {!!this.state.entry._attachments
-              ? this.renderWithCover()
-              : this.renderWithoutCover()}
+            {this.state.entry._attachments && (
+              <Observer root={this.state.el.current}>
+                {({ inView, ref }) => (
+                  <Img ref={ref} src={getCoverFromEntry(this.state.entry)} />
+                )}
+              </Observer>
+            )}
           </Header>
           <Title>{moment(this.state.entry.date).format('DD/MM/YY')}</Title>
           <Body dangerouslySetInnerHTML={{ __html: this.state.entry.body }} />
           <Link to={`${this.props.match.url}/edit`}>
-            <Fab as="span" arial-label="edit" icon={edit} />
+            <Fab color="secondary" aria-label="Edit">
+              <EditIcon />
+            </Fab>
           </Link>
         </Root>
       </Layout>

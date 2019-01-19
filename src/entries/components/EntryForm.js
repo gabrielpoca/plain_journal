@@ -2,8 +2,6 @@ import React from 'react';
 import styled from 'styled-components/macro';
 import moment from 'moment';
 
-import Fab from './Fab';
-import Navbar from './Navbar';
 import Editor from './Editor';
 import CoverPicker from './CoverPicker';
 
@@ -30,7 +28,7 @@ const DateInput = styled.input`
 class NewEntryPage extends React.Component {
   state = {
     bodyFocus: false,
-    keyboardOpen: false
+    keyboardOpen: false,
   };
 
   constructor() {
@@ -56,11 +54,10 @@ class NewEntryPage extends React.Component {
   };
 
   render() {
-    const { onSave, disabled, cover, coverPreview, body, date } = this.props;
+    const { disabled, cover, coverPreview, body, date } = this.props;
 
     return (
       <Root ref={this.root}>
-        <Navbar light={cover || coverPreview} withBackButton />
         <React.Fragment>
           <CoverPicker
             onChange={({ file, type }) =>
@@ -78,7 +75,7 @@ class NewEntryPage extends React.Component {
             value={date.format('YYYY-MM-DD')}
             onChange={event =>
               this.props.onChange({
-                date: moment(event.target.value, 'YYYY-MM-DD')
+                date: moment(event.target.value, 'YYYY-MM-DD'),
               })
             }
           />
@@ -95,11 +92,10 @@ class NewEntryPage extends React.Component {
             toolbar: [
               [{ cover: [2, false] }],
               ['bold', 'italic'],
-              ['link', 'image']
-            ]
+              ['link', 'image'],
+            ],
           }}
         />
-        <Fab as="button" onClick={onSave} disabled={disabled} />
       </Root>
     );
   }

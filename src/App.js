@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { createGlobalStyle } from 'styled-components';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
-import EntryPage from './EntryPage';
-import EditEntryPage from './EditEntryPage';
-import NewEntryPage from './NewEntryPage';
-import EntriesPage from './EntriesPage';
+import EntriesRouter from './entries/Router';
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -25,16 +22,6 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 
-  p {
-    margin-top: 8px;
-    margin-bottom: 8px;
-  }
-
-  h1, h2, h3, h4 {
-    margin: 16px 0 8px;
-    line-height: 1.25em;
-  }
-  
   :root {
     --max-width: 640px;
     --nav-height: 56px;
@@ -46,14 +33,8 @@ class App extends Component {
     return (
       <React.Fragment>
         <GlobalStyle />
-        <Switch>
-          <Route exact path="/new">
-            <NewEntryPage {...this.props} />
-          </Route>
-          <Route path="/entry/:id/edit" component={EditEntryPage} />
-          <Route path="/entry/:id" component={EntryPage} />
-          <Route exact path="/" component={EntriesPage} />
-        </Switch>
+        <CssBaseline />
+        <EntriesRouter />
       </React.Fragment>
     );
   }

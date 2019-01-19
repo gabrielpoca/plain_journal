@@ -1,10 +1,11 @@
 import React from 'react';
 import moment from 'moment';
 
-import EntryForm from './components/EntryForm';
-import Layout from './components/Layout';
+import EntryForm from '../components/EntryForm';
+import Layout from '../components/Layout';
+import Navbar from './Navbar';
 
-import entries from './entries';
+import db from '../db';
 
 const newID = () => {
   return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
@@ -21,7 +22,7 @@ class NewEntryPage extends React.Component {
     cover: null,
     coverPreview: null,
     date: moment(),
-    disabled: false
+    disabled: false,
   };
 
   onSave = async () => {
@@ -33,7 +34,7 @@ class NewEntryPage extends React.Component {
       const changes = {
         _id: newID(),
         date: this.state.date.toDate(),
-        body: this.state.body
+        body: this.state.body,
       };
 
       if (this.state.cover) {
@@ -43,12 +44,12 @@ class NewEntryPage extends React.Component {
             data: this.state.cover.replace(
               `data:${this.state.coverType};base64,`,
               ''
-            )
-          }
+            ),
+          },
         };
       }
 
-      await entries.put(changes);
+      await db.put(changes);
 
       this.props.history.push('/');
     } catch (e) {
@@ -60,11 +61,8 @@ class NewEntryPage extends React.Component {
   render() {
     return (
       <Layout>
-        <EntryForm
-          onChange={change => this.setState(change)}
-          onSave={this.onSave}
-          {...this.state}
-        />
+        <Navbar onSave={this.onSave} />
+        <EntryForm onChange={change => this.setState(change)} {...this.state} />
       </Layout>
     );
   }
