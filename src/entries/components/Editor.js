@@ -12,9 +12,9 @@ Quill.register('modules/markdownShortcuts', MarkdownShortcuts);
 
 const Root = styled.div`
   height: ${({ expanded }) =>
-    expanded ? 'calc(100% - 64px)' : 'calc(100% - 376px)'};
+    expanded ? 'calc(100% - 48px)' : 'calc(100% - 376px)'};
   position: fixed;
-  top: 56px;
+  top: 48px;
   background: white;
   width: 100%;
   max-width: var(--max-width);
@@ -31,13 +31,12 @@ class EditorElement extends React.Component {
     this.quill = new Quill(this.el, {
       placeholder: 'Today I ...',
       modules: {
-        markdownShortcuts: {}
-      }
+        markdownShortcuts: {},
+      },
     });
     this.quill.on('text-change', this.onTextChange);
-    this.quill.on(
-      'selection-change',
-      range => (range !== null ? this.props.onFocus() : this.props.onBlur())
+    this.quill.on('selection-change', range =>
+      range !== null ? this.props.onFocus() : this.props.onBlur()
     );
 
     this.quill.setContents(this.quill.clipboard.convert(this.props.value));
