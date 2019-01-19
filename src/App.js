@@ -5,7 +5,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
 import EntriesRouter from './entries/Router';
-import HabitTrackerRouter from './habitTracker/Router';
+import HabitsRouter from './habits/Router';
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -37,7 +37,7 @@ class App extends Component {
         <GlobalStyle />
         <CssBaseline />
         <Switch>
-          <Route path="/habits" component={HabitTrackerRouter} />
+          <Route path="/habits" component={HabitsRouter} />
           <Route path="/entries" component={EntriesRouter} />
           <Route render={() => <Redirect to="/entries" />} />
         </Switch>
