@@ -75,7 +75,7 @@ class EntriesContainer extends React.Component {
   }
 }
 
-const EntriesPage = ({ classes }) => (
+const EntriesPage = ({ classes, match }) => (
   <EntriesContainer>
     {({ entries, onSearch, searchQuery }) => (
       <>
@@ -87,7 +87,7 @@ const EntriesPage = ({ classes }) => (
             className={classes.fab}
             color="primary"
             component={Link}
-            to="/new"
+            to={`${match.url}/new`}
           >
             <AddIcon />
           </Fab>

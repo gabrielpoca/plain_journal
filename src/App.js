@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { createGlobalStyle } from 'styled-components';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 import EntriesRouter from './entries/Router';
+import HabitTrackerRouter from './habitTracker/Router';
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -34,7 +36,11 @@ class App extends Component {
       <React.Fragment>
         <GlobalStyle />
         <CssBaseline />
-        <EntriesRouter />
+        <Switch>
+          <Route path="/habits" component={HabitTrackerRouter} />
+          <Route path="/entries" component={EntriesRouter} />
+          <Route render={() => <Redirect to="/entries" />} />
+        </Switch>
       </React.Fragment>
     );
   }

@@ -6,11 +6,11 @@ import EditEntryPage from './EditEntryPage';
 import NewEntryPage from './NewEntryPage';
 import EntriesPage from './EntriesPage';
 
-export default () => (
+export default ({ match }) => (
   <Switch>
-    <Route exact path="/new" component={NewEntryPage} />
-    <Route path="/entry/:id/edit" component={EditEntryPage} />
-    <Route path="/entry/:id" component={EntryPage} />
-    <Route exact path="/" component={EntriesPage} />
+    <Route exact path={`${match.path}/new`} component={NewEntryPage} />
+    <Route path={`${match.path}/entry/:id/edit`} component={EditEntryPage} />
+    <Route path={`${match.path}/entry/:id`} component={EntryPage} />
+    <Route exact path={`${match.path}/`} component={EntriesPage} />
   </Switch>
 );

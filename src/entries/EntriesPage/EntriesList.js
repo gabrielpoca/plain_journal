@@ -16,14 +16,12 @@ const Entry = ({ entry }) => {
   template.innerHTML = entry.body;
 
   return (
-    <Root to={`/entry/${entry._id}`}>
-      <ListItem>
-        <ListItemText
-          primary={template.innerText}
-          secondary={moment(entry.date).format('DD/MM/YY')}
-        />
-      </ListItem>
-    </Root>
+    <ListItem component={Link} to={`/entries/entry/${entry._id}`}>
+      <ListItemText
+        primary={template.innerText}
+        secondary={moment(entry.date).format('DD/MM/YY')}
+      />
+    </ListItem>
   );
 };
 

@@ -20,7 +20,12 @@ const styles = theme => ({
 const Navbar = props => (
   <AppBar position="sticky">
     <Toolbar className={props.classes.toolbar}>
-      <IconButton color="inherit" component={Link} to="/" aria-label="Close">
+      <IconButton
+        color="inherit"
+        component={Link}
+        to="/entries"
+        aria-label="Close"
+      >
         <CloseIcon />
       </IconButton>
       <IconButton color="inherit" onClick={props.onSave} aria-label="Save">

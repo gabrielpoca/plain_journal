@@ -62,6 +62,7 @@ class EntryPage extends React.Component {
     if (_.get(this.state.entry, '_id', false) === this.props.match.params.id)
       return;
 
+    console.log(this.props);
     const doc = await db.get(this.props.match.params.id, {
       attachments: true,
     });
@@ -72,7 +73,7 @@ class EntryPage extends React.Component {
   onDelete = async () => {
     try {
       await db.remove(this.state.entry._id, this.state.entry._rev);
-      this.props.history.push('/');
+      this.props.history.push('/entries');
     } catch (e) {
       console.error(e);
     }

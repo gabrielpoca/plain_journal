@@ -50,7 +50,7 @@ class NewEntryPage extends React.Component {
 
       await db.put(changes);
 
-      this.props.history.push('/');
+      this.props.history.push('/entries');
     } catch (e) {
       console.error(e);
       this.setState({ disabled: false });
