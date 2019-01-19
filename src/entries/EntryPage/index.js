@@ -12,7 +12,6 @@ import Navbar from './Navbar';
 import db from '../db';
 
 import Observer from '../components/Observer';
-import Layout from '../components/Layout';
 import { getCoverFromEntry } from '../helpers';
 
 const Root = styled.div`
@@ -83,27 +82,25 @@ class EntryPage extends React.Component {
     if (!this.state.entry) return null;
 
     return (
-      <Layout>
+      <Root>
         <Navbar onDelete={this.onDelete} />
-        <Root>
-          <Header withCover={!!this.state.entry._attachments}>
-            {this.state.entry._attachments && (
-              <Observer root={this.state.el.current}>
-                {({ inView, ref }) => (
-                  <Img ref={ref} src={getCoverFromEntry(this.state.entry)} />
-                )}
-              </Observer>
-            )}
-          </Header>
-          <Title>{moment(this.state.entry.date).format('DD/MM/YY')}</Title>
-          <Body dangerouslySetInnerHTML={{ __html: this.state.entry.body }} />
-          <Link to={`${this.props.match.url}/edit`}>
-            <Fab color="secondary" aria-label="Edit">
-              <EditIcon />
-            </Fab>
-          </Link>
-        </Root>
-      </Layout>
+        <Header withCover={!!this.state.entry._attachments}>
+          {this.state.entry._attachments && (
+            <Observer root={this.state.el.current}>
+              {({ inView, ref }) => (
+                <Img ref={ref} src={getCoverFromEntry(this.state.entry)} />
+              )}
+            </Observer>
+          )}
+        </Header>
+        <Title>{moment(this.state.entry.date).format('DD/MM/YY')}</Title>
+        <Body dangerouslySetInnerHTML={{ __html: this.state.entry.body }} />
+        <Link to={`${this.props.match.url}/edit`}>
+          <Fab color="secondary" aria-label="Edit">
+            <EditIcon />
+          </Fab>
+        </Link>
+      </Root>
     );
   }
 }
