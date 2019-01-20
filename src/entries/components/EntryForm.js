@@ -6,7 +6,7 @@ import Editor from './Editor';
 import CoverPicker from './CoverPicker';
 
 const Root = styled.div`
-  height: 100%;
+  height: calc(100% - 56px);
   overflow: hidden;
 
   .DateInput_input__focused {

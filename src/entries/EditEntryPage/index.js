@@ -76,7 +76,7 @@ class EditEntryPage extends React.Component {
   };
 
   render() {
-    if (!this.state.body) return null;
+    if (!this.state.body) return <Navbar onSave={this.onSave} />;
 
     return (
       <>

@@ -12,13 +12,13 @@ Quill.register('modules/markdownShortcuts', MarkdownShortcuts);
 
 const Root = styled.div`
   height: ${({ expanded }) =>
-    expanded ? 'calc(100% - 48px)' : 'calc(100% - 376px)'};
+    expanded ? 'calc(100% - 56px)' : 'calc(100% - 432px)'};
   position: fixed;
-  top: 48px;
+  top: 56px;
   background: white;
   width: 100%;
   max-width: var(--max-width);
-  transform: translateY(${({ expanded }) => (expanded ? 0 : '316px')});
+  transform: translateY(${({ expanded }) => (expanded ? 0 : '376px')});
   overflow: scroll;
 
   .quill-container {

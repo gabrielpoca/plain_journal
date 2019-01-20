@@ -26,7 +26,7 @@ const Navbar = withStyles(styles)(({ classes, onSearch, searchQuery }) => {
   return (
     <AppBar position="sticky">
       <Toolbar>
-        <SidebarMenu classes={classes} />
+        <SidebarMenu />
         <InputBase
           onChange={onSearch}
           value={searchQuery}

@@ -20,7 +20,7 @@ const styles = theme => ({
   },
 });
 
-class LongMenu extends React.Component {
+class LongMenu extends React.PureComponent {
   state = {
     anchorEl: null,
   };
@@ -67,12 +67,12 @@ class LongMenu extends React.Component {
   }
 }
 
-const Navbar = props => (
+const Navbar = React.memo(props => (
   <AppBar position="sticky">
     <Toolbar className={props.classes.toolbar}>
       <LongMenu {...props} />
     </Toolbar>
   </AppBar>
-);
+));
 
 export default withRouter(withStyles(styles)(Navbar));

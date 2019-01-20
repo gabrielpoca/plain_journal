@@ -7,7 +7,6 @@ import Navbar from './Navbar';
 
 import db from '../db';
 
-import Observer from '../components/Observer';
 import { getCoverFromEntry } from '../helpers';
 
 const Root = styled.div`
@@ -58,7 +57,6 @@ class EntryPage extends React.Component {
     if (_.get(this.state.entry, '_id', false) === this.props.match.params.id)
       return;
 
-    console.log(this.props);
     const doc = await db.get(this.props.match.params.id, {
       attachments: true,
     });
@@ -76,18 +74,19 @@ class EntryPage extends React.Component {
   };
 
   render() {
-    if (!this.state.entry) return null;
+    if (!this.state.entry)
+      return (
+        <Root>
+          <Navbar onDelete={this.onDelete} />
+        </Root>
+      );
 
     return (
       <Root>
         <Navbar onDelete={this.onDelete} />
         <Header withCover={!!this.state.entry._attachments}>
           {this.state.entry._attachments && (
-            <Observer root={this.state.el.current}>
-              {({ inView, ref }) => (
-                <Img ref={ref} src={getCoverFromEntry(this.state.entry)} />
-              )}
-            </Observer>
+            <Img src={getCoverFromEntry(this.state.entry)} />
           )}
         </Header>
         <Title>{moment(this.state.entry.date).format('DD/MM/YY')}</Title>
