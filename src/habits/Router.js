@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 
 import { habits } from './db';
 import Navbar from './Navbar';
-import FormToggle from './FormToggle';
+import HabitFormButton from './HabitFormButton';
 
 class Dashboard extends React.Component {
   state = {
@@ -34,7 +34,7 @@ class Dashboard extends React.Component {
       <>
         <Navbar />
         <h1>Dashboard</h1>
-        <FormToggle />
+        <HabitFormButton />
       </>
     );
   }

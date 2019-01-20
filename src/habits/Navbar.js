@@ -2,7 +2,6 @@ import React from 'react';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import InputBase from '@material-ui/core/InputBase';
 import { withStyles } from '@material-ui/core/styles';
 
 import SidebarMenu from '../components/SidebarMenu';
@@ -22,20 +21,11 @@ const styles = theme => ({
   },
 });
 
-const Navbar = withStyles(styles)(({ classes, onSearch, searchQuery }) => {
+const Navbar = withStyles(styles)(({ classes }) => {
   return (
     <AppBar position="sticky">
       <Toolbar>
         <SidebarMenu />
-        <InputBase
-          onChange={onSearch}
-          value={searchQuery}
-          placeholder="Search…"
-          classes={{
-            root: classes.inputRoot,
-            input: classes.inputInput,
-          }}
-        />
       </Toolbar>
     </AppBar>
   );
