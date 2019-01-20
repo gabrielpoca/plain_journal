@@ -47,7 +47,7 @@ const styles = theme => ({
 
 class FormToggle extends React.Component {
   state = {
-    open: true,
+    open: false,
   };
 
   onToggle = () => this.setState({ open: !this.state.open });

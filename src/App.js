@@ -6,6 +6,7 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 
 import EntriesRouter from './entries/Router';
 import HabitsRouter from './habits/Router';
+import SettingsRouter from './settings/Router';
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -39,6 +40,7 @@ class App extends Component {
         <Switch>
           <Route path="/habits" component={HabitsRouter} />
           <Route path="/entries" component={EntriesRouter} />
+          <Route path="/settings" component={SettingsRouter} />
           <Route render={() => <Redirect to="/entries" />} />
         </Switch>
       </React.Fragment>

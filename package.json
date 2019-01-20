@@ -6,6 +6,7 @@
     "@material-ui/core": "^3.9.0",
     "@material-ui/icons": "^3.0.2",
     "blob-util": "^2.0.2",
+    "firebase": "^5.8.0",
     "lunr": "^2.3.4",
     "lunr-languages": "^1.0.0",
     "moment": "^2.22.2",
@@ -23,7 +24,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && npm run replace",
+    "replace": "sed -i.bak \"s/%REACT_APP_SENDER_ID%/$REACT_APP_SENDER_ID/\" build/firebase-messaging-sw.js",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },

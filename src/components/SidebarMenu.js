@@ -39,6 +39,9 @@ class SidebarMenu extends React.Component {
             <ListItem component={Link} to="/habits">
               Habits
             </ListItem>
+            <ListItem component={Link} to="/settings">
+              Settings
+            </ListItem>
           </List>
         </Drawer>
       </>
