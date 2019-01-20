@@ -4,10 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import {
-  initializeFirebase,
-  askForPermissioToReceiveNotifications,
-} from './notifications';
+import { initializeFirebase } from './notifications';
 
 ReactDOM.render(
   <BrowserRouter>
@@ -18,4 +15,3 @@ ReactDOM.render(
 
 initializeFirebase();
 registerServiceWorker();
-askForPermissioToReceiveNotifications();
