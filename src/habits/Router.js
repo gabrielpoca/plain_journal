@@ -1,13 +1,32 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
 
-import { habits } from './db';
-import Navbar from './Navbar';
-import HabitFormButton from './HabitFormButton';
+import { habits, toggleHabit } from './db';
+import HabitsList from './components/HabitsList';
+import Tabs from './components/Tabs';
+
+const styles = theme => ({
+  root: {
+    padding: theme.spacing.unit,
+  },
+  list: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: 0,
+  },
+  item: {
+    listStyleType: 'none',
+    flexBasis: '120px',
+    width: '120px',
+    display: 'flex',
+  },
+});
 
 class Dashboard extends React.Component {
   state = {
-    schedules: [],
+    habits: [],
   };
 
   componentWillMount() {
@@ -25,16 +44,31 @@ class Dashboard extends React.Component {
   }
 
   update = async () => {
-    const schedules = (await habits.allDocs()).docs || [];
-    this.setState({ schedules });
+    const docs = await habits.allDocs({ include_docs: true });
+    this.setState({ habits: docs.rows.map(r => r.doc) });
+  };
+
+  onToggle = async habit => {
+    await habits.put(toggleHabit(habit));
   };
 
   render() {
     return (
       <>
-        <Navbar />
-        <h1>Dashboard</h1>
-        <HabitFormButton />
+        <Tabs
+          renderDaily={
+            <HabitsList
+              onToggle={this.onToggle}
+              habits={this.state.habits.filter(h => h.type === 'daily')}
+            />
+          }
+          renderWeekly={
+            <HabitsList
+              onToggle={this.onToggle}
+              habits={this.state.habits.filter(h => h.type === 'weekly')}
+            />
+          }
+        />
       </>
     );
   }
@@ -42,6 +76,6 @@ class Dashboard extends React.Component {
 
 export default ({ match }) => (
   <Switch>
-    <Route path={`${match.path}/`} component={Dashboard} />
+    <Route path={`${match.path}/`} component={withStyles(styles)(Dashboard)} />
   </Switch>
 );
