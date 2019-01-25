@@ -4,11 +4,14 @@ import { Link } from 'react-router-dom';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import SettingsIcon from '@material-ui/icons/Settings';
 import Divider from '@material-ui/core/Divider';
 import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   list: {
@@ -30,17 +33,16 @@ class SidebarMenu extends React.Component {
         <Drawer open={this.state.open} onClose={this.onToggle}>
           <List className={this.props.classes.list}>
             <ListItem>
-              <ListItemText primary="Journal" />
+              <Typography variant="h5" inline>
+                Journal
+              </Typography>
             </ListItem>
             <Divider />
-            <ListItem component={Link} to="/entries">
-              Entries
-            </ListItem>
-            <ListItem component={Link} to="/habits">
-              Habits
-            </ListItem>
             <ListItem component={Link} to="/settings">
-              Settings
+              <ListItemIcon>
+                <SettingsIcon />
+              </ListItemIcon>
+              <ListItemText primary="Settings" />
             </ListItem>
           </List>
         </Drawer>

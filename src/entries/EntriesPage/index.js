@@ -6,6 +6,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from '@material-ui/core/styles';
 
+import BottomNavbar from '../../components/BottomNavbar';
 import EntriesList from './EntriesList';
 import Navbar from './Navbar';
 
@@ -13,9 +14,9 @@ import db from '../db';
 
 const styles = theme => ({
   fab: {
-    position: 'absolute',
-    bottom: theme.spacing.unit * 2,
-    right: theme.spacing.unit * 2,
+    position: 'fixed',
+    bottom: theme.spacing.unit * 10,
+    right: theme.spacing.unit * 3,
   },
 });
 
@@ -92,6 +93,7 @@ const EntriesPage = ({ classes, match }) => (
             <AddIcon />
           </Fab>
         </React.Fragment>
+        <BottomNavbar />
       </>
     )}
   </EntriesContainer>

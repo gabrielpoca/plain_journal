@@ -11,9 +11,9 @@ import { habits } from '../db';
 
 const styles = theme => ({
   fab: {
-    position: 'absolute',
-    bottom: theme.spacing.unit * 2,
-    right: theme.spacing.unit * 2,
+    position: 'fixed',
+    bottom: theme.spacing.unit * 10,
+    right: theme.spacing.unit * 3,
   },
 });
 
@@ -35,7 +35,7 @@ class HabitFormButton extends React.PureComponent {
         <Fab
           className={this.props.classes.fab}
           aria-label="Add"
-          color="secondary"
+          color="primary"
           onClick={this.onToggle}
         >
           <AddIcon />

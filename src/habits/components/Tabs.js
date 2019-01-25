@@ -33,7 +33,11 @@ class SimpleTabs extends React.Component {
             <Toolbar>
               <SidebarMenu />
             </Toolbar>
-            <Tabs value={value} onChange={this.handleChange}>
+            <Tabs
+              variant="fullWidth"
+              value={value}
+              onChange={this.handleChange}
+            >
               <Tab label="Daily" />
               <Tab label="Weekly" />
             </Tabs>
