@@ -13,11 +13,14 @@ import Navbar from './Navbar';
 import db from '../db';
 
 const styles = theme => ({
+  root: {
+    // height: '100%'
+  },
   fab: {
     position: 'fixed',
     bottom: theme.spacing.unit * 10,
-    right: theme.spacing.unit * 3,
-  },
+    right: theme.spacing.unit * 3
+  }
 });
 
 class EntriesContainer extends React.Component {
@@ -30,7 +33,7 @@ class EntriesContainer extends React.Component {
     this.sub = db
       .changes({
         since: 'now',
-        live: true,
+        live: true
       })
       .on('change', this.update);
     this.update();
@@ -47,7 +50,7 @@ class EntriesContainer extends React.Component {
       if (!this.state.searchQuery) {
         newEntries = (await db.find({
           selector: {},
-          sort: [{ date: 'desc' }],
+          sort: [{ date: 'desc' }]
         })).docs;
       } else {
         newEntries = (await db.search({
@@ -55,7 +58,7 @@ class EntriesContainer extends React.Component {
           fields: ['body'],
           mm: '50%',
           sort: [{ date: 'desc' }],
-          include_docs: true,
+          include_docs: true
         })).rows.map(r => r.doc);
       }
 
@@ -79,22 +82,21 @@ class EntriesContainer extends React.Component {
 const EntriesPage = ({ classes, match }) => (
   <EntriesContainer>
     {({ entries, onSearch, searchQuery }) => (
-      <>
+      <div className={classes.root}>
         <Navbar onSearch={onSearch} searchQuery={searchQuery} />
         <React.Fragment>
           {<EntriesList entries={entries} />}
           <Fab
-            aria-label="Add"
+            aria-label='Add'
             className={classes.fab}
-            color="primary"
+            color='primary'
             component={Link}
-            to={`${match.url}/new`}
-          >
+            to={`${match.url}/new`}>
             <AddIcon />
           </Fab>
         </React.Fragment>
         <BottomNavbar />
-      </>
+      </div>
     )}
   </EntriesContainer>
 );

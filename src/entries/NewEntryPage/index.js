@@ -1,11 +1,23 @@
 import React from 'react';
 import moment from 'moment';
+import { withStyles } from '@material-ui/core/styles';
 
 import EntryForm from '../components/EntryForm';
 import Navbar from './Navbar';
 import { newID } from '../../utils';
 
 import db from '../db';
+
+const styles = theme => ({
+  root: {
+    height: '100%',
+    zIndex: 1501,
+    position: 'fixed',
+    width: '100%',
+    top: 0,
+    left: 0
+  }
+});
 
 class NewEntryPage extends React.Component {
   state = {
@@ -14,7 +26,12 @@ class NewEntryPage extends React.Component {
     coverPreview: null,
     date: moment(),
     disabled: false,
+    in: true
   };
+
+  componentWillUnmount() {
+    this.setState({ in: false });
+  }
 
   onSave = async () => {
     if (!this.state.body || !this.state.date) return false;
@@ -25,7 +42,7 @@ class NewEntryPage extends React.Component {
       const changes = {
         _id: newID(),
         date: this.state.date.toDate(),
-        body: this.state.body,
+        body: this.state.body
       };
 
       if (this.state.cover) {
@@ -35,8 +52,8 @@ class NewEntryPage extends React.Component {
             data: this.state.cover.replace(
               `data:${this.state.coverType};base64,`,
               ''
-            ),
-          },
+            )
+          }
         };
       }
 
@@ -51,12 +68,12 @@ class NewEntryPage extends React.Component {
 
   render() {
     return (
-      <>
+      <div className={this.props.classes.root}>
         <Navbar onSave={this.onSave} />
         <EntryForm onChange={change => this.setState(change)} {...this.state} />
-      </>
+      </div>
     );
   }
 }
 
-export default NewEntryPage;
+export default withStyles(styles)(NewEntryPage);

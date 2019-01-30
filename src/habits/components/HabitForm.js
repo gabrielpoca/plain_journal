@@ -128,8 +128,7 @@ class HabitForm extends React.Component {
               onSubmit={handleSubmit}
             >
               <Typography
-                gutterBottom
-                variant="title"
+                variant="h5"
                 align="left"
                 className={classes.title}
               >

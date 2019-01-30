@@ -17,7 +17,7 @@ const styles = theme => ({
   },
 });
 
-class HabitFormButton extends React.PureComponent {
+class NewHabitForm extends React.PureComponent {
   state = {
     open: false,
   };
@@ -50,4 +50,4 @@ class HabitFormButton extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(HabitFormButton);
+export default withStyles(styles)(NewHabitForm);

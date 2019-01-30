@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { isDone } from '../db';
 import Habit from './Habit';
-import HabitFormButton from './HabitFormButton';
+import NewHabitForm from './NewHabitForm';
 
 const styles = theme => ({
   root: {
@@ -41,7 +41,7 @@ class HabitsList extends React.Component {
             </li>
           ))}
         </ul>
-        <HabitFormButton />
+        <NewHabitForm />
       </div>
     );
   }
