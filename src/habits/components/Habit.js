@@ -18,6 +18,7 @@ const styles = theme => {
       alignItems: 'center',
       background: theme.palette.common.white,
       borderColor: theme.palette.common.black,
+      borderStyle: 'solid',
       borderRadius: '50%',
       borderWidth: '3px',
       display: 'flex',
