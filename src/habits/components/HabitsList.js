@@ -1,7 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
-import { isDone } from '../db';
 import Habit from './Habit';
 import NewHabitForm from './NewHabitForm';
 
@@ -25,6 +24,8 @@ const styles = theme => ({
 });
 
 class HabitsList extends React.Component {
+  state = {};
+
   render() {
     const { classes } = this.props;
 
@@ -33,11 +34,7 @@ class HabitsList extends React.Component {
         <ul className={classes.list}>
           {this.props.habits.map(habit => (
             <li className={classes.item} key={habit._id}>
-              <Habit
-                done={isDone(habit)}
-                onClick={this.props.onToggle}
-                habit={habit}
-              />
+              <Habit onClick={this.props.onToggle} habit={habit} />
             </li>
           ))}
         </ul>

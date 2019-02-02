@@ -11,12 +11,12 @@ import db from '../db';
 const styles = theme => ({
   root: {
     height: '100%',
-    zIndex: 1501,
-    position: 'fixed',
-    width: '100%',
-    top: 0,
-    left: 0
-  }
+    //zIndex: 1501,
+    //position: 'fixed',
+    //width: '100%',
+    //top: 0,
+    //left: 0
+  },
 });
 
 class NewEntryPage extends React.Component {
@@ -26,7 +26,7 @@ class NewEntryPage extends React.Component {
     coverPreview: null,
     date: moment(),
     disabled: false,
-    in: true
+    in: true,
   };
 
   componentWillUnmount() {
@@ -42,7 +42,7 @@ class NewEntryPage extends React.Component {
       const changes = {
         _id: newID(),
         date: this.state.date.toDate(),
-        body: this.state.body
+        body: this.state.body,
       };
 
       if (this.state.cover) {
@@ -52,8 +52,8 @@ class NewEntryPage extends React.Component {
             data: this.state.cover.replace(
               `data:${this.state.coverType};base64,`,
               ''
-            )
-          }
+            ),
+          },
         };
       }
 

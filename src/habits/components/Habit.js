@@ -4,6 +4,8 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 
+import { isDone } from '../db';
+
 const styles = theme => {
   const size = theme.spacing.unit * 14;
 
@@ -42,13 +44,13 @@ const styles = theme => {
 
 class Habit extends React.PureComponent {
   render() {
-    const { classes, habit, done } = this.props;
+    const { classes, habit } = this.props;
 
     return (
       <div className={classes.root}>
         <button
           onClick={() => this.props.onClick(this.props.habit)}
-          className={`${classes.button} ${done ? classes.done : null}`}
+          className={`${classes.button} ${isDone(habit) ? classes.done : null}`}
         >
           <Typography className={classes.label} variant="button">
             {habit.title}

@@ -15,12 +15,18 @@ import db from '../db';
 const styles = theme => ({
   root: {
     // height: '100%'
+    height: '100%',
+    //zIndex: 1501,
+    position: 'fixed',
+    width: '100%',
+    top: 0,
+    left: 0,
   },
   fab: {
     position: 'fixed',
     bottom: theme.spacing.unit * 10,
-    right: theme.spacing.unit * 3
-  }
+    right: theme.spacing.unit * 3,
+  },
 });
 
 class EntriesContainer extends React.Component {
@@ -33,7 +39,7 @@ class EntriesContainer extends React.Component {
     this.sub = db
       .changes({
         since: 'now',
-        live: true
+        live: true,
       })
       .on('change', this.update);
     this.update();
@@ -50,7 +56,7 @@ class EntriesContainer extends React.Component {
       if (!this.state.searchQuery) {
         newEntries = (await db.find({
           selector: {},
-          sort: [{ date: 'desc' }]
+          sort: [{ date: 'desc' }],
         })).docs;
       } else {
         newEntries = (await db.search({
@@ -58,7 +64,7 @@ class EntriesContainer extends React.Component {
           fields: ['body'],
           mm: '50%',
           sort: [{ date: 'desc' }],
-          include_docs: true
+          include_docs: true,
         })).rows.map(r => r.doc);
       }
 
@@ -87,11 +93,12 @@ const EntriesPage = ({ classes, match }) => (
         <React.Fragment>
           {<EntriesList entries={entries} />}
           <Fab
-            aria-label='Add'
+            aria-label="Add"
             className={classes.fab}
-            color='primary'
+            color="primary"
             component={Link}
-            to={`${match.url}/new`}>
+            to={`${match.url}/new`}
+          >
             <AddIcon />
           </Fab>
         </React.Fragment>

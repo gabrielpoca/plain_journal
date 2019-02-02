@@ -3,7 +3,7 @@ import React from 'react';
 
 import entries from './entries';
 
-const SearchContext = React.createContext('light');
+const SearchContext = React.createContext();
 
 class Provider extends React.PureComponent {
   constructor() {

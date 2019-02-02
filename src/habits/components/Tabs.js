@@ -42,8 +42,8 @@ class SimpleTabs extends React.Component {
               <Tab label="Weekly" />
             </Tabs>
           </AppBar>
-          {value === 0 && this.props.renderDaily}
-          {value === 1 && this.props.renderWeekly}
+          {value === 0 && this.props.renderDaily()}
+          {value === 1 && this.props.renderWeekly()}
         </div>
       </>
     );

@@ -11,76 +11,93 @@ import SwitchInput from '@material-ui/core/Switch';
 import AlarmIcon from '@material-ui/icons/AccessAlarm';
 
 import { askForPermissioToReceiveNotifications } from '../notifications';
+import { KeyValueStorage } from '../KeyValueStorage';
 
 import ErrorNotification from './ErrorNotification';
 import Navbar from './Navbar';
 
-const remindersAllowed = () => {
-  return (
-    Notification.permission === 'granted' &&
-    localStorage.getItem('remindersAllowed') === 'true'
-  );
-};
-
 class Dashboard extends React.PureComponent {
+  static contextType = KeyValueStorage;
+
   constructor() {
     super();
 
     this.state = {
       error: null,
-      remindersAllowed: remindersAllowed(),
     };
   }
 
+  remindersAllowed = () => {
+    return (
+      Notification.permission === 'granted' &&
+      this.context.getItem('remindersAllowed')
+    );
+  };
+
   onErrorClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+    if (reason === 'clickaway') return;
 
     this.setState({ error: false });
   };
 
   onReminder = async () => {
     try {
-      if (!this.state.remindersAllowed) {
+      if (!this.remindersAllowed()) {
         await askForPermissioToReceiveNotifications();
-        localStorage.setItem('remindersAllowed', 'true');
+        this.context.setItem('remindersAllowed', true);
       } else {
-        localStorage.setItem('remindersAllowed', 'false');
+        this.context.setItem('remindersAllowed', false);
       }
     } catch (e) {
       this.setState({ error: 'Something nice' });
     }
-
-    this.setState({
-      remindersAllowed: remindersAllowed(),
-    });
   };
 
   render() {
     return (
-      <>
-        <Navbar />
-        <ErrorNotification
-          open={!!this.state.error}
-          message={this.state.error}
-          onClose={this.onErrorClose}
-        />
-        <List subheader={<ListSubheader>Settings</ListSubheader>}>
-          <ListItem>
-            <ListItemIcon>
-              <AlarmIcon />
-            </ListItemIcon>
-            <ListItemText primary="Journaling Reminders" />
-            <ListItemSecondaryAction>
-              <SwitchInput
-                onChange={this.onReminder}
-                checked={this.state.remindersAllowed}
+      <KeyValueStorage>
+        {({ getItem, setItem }) => {
+          const journaling = getItem('trackJournaling');
+          const reminders = getItem('remindersAllowed');
+
+          return (
+            <>
+              <Navbar />
+              <ErrorNotification
+                open={!!this.state.error}
+                message={this.state.error}
+                onClose={this.onErrorClose}
               />
-            </ListItemSecondaryAction>
-          </ListItem>
-        </List>
-      </>
+              <List subheader={<ListSubheader>Settings</ListSubheader>}>
+                <ListItem>
+                  <ListItemIcon>
+                    <AlarmIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Journaling Reminders" />
+                  <ListItemSecondaryAction>
+                    <SwitchInput
+                      onChange={this.onReminder}
+                      checked={reminders}
+                    />
+                  </ListItemSecondaryAction>
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon>
+                    <AlarmIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Track Journaling" />
+                  <ListItemSecondaryAction>
+                    <SwitchInput
+                      onChange={() => setItem('trackJournaling', !journaling)}
+                      checked={journaling}
+                    />
+                  </ListItemSecondaryAction>
+                </ListItem>
+              </List>
+            </>
+          );
+        }}
+      </KeyValueStorage>
     );
   }
 }
