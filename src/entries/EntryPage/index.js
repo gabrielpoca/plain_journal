@@ -5,6 +5,8 @@ import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
 
 import Navbar from './Navbar';
+import useKeyboardDetect from '../../hooks/useKeyboardDetect';
+import useJournalEntry from '../../hooks/useJournalEntry';
 
 import db from '../db';
 
@@ -55,54 +57,35 @@ const Img = styled.img`
   height: 100%;
 `;
 
-class EntryPage extends React.Component {
-  state = { entry: null, el: React.createRef() };
-
-  componentWillMount() {
-    this.updateEntry();
+const onDelete = async (entry, history) => {
+  try {
+    await db.remove(entry._id, entry._rev);
+    history.push('/entries');
+  } catch (e) {
+    console.error(e);
   }
+};
 
-  updateEntry = async () => {
-    if (_.get(this.state.entry, '_id', false) === this.props.match.params.id)
-      return;
+const EntryPage = ({ classes, history, match }) => {
+  const entry = useJournalEntry(_.get(match, 'params.id'));
 
-    const doc = await db.get(this.props.match.params.id, {
-      attachments: true,
-    });
-
-    this.setState({ entry: doc });
-  };
-
-  onDelete = async () => {
-    try {
-      await db.remove(this.state.entry._id, this.state.entry._rev);
-      this.props.history.push('/entries');
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  render() {
-    if (!this.state.entry)
-      return (
-        <div className={this.props.classes.root}>
-          <Navbar onDelete={this.onDelete} />
-        </div>
-      );
-
+  if (!entry)
     return (
-      <div className={this.props.classes.root}>
-        <Navbar onDelete={this.onDelete} />
-        <Header withCover={!!this.state.entry._attachments}>
-          {this.state.entry._attachments && (
-            <Img src={getCoverFromEntry(this.state.entry)} />
-          )}
-        </Header>
-        <Title>{moment(this.state.entry.date).format('DD/MM/YY')}</Title>
-        <Body dangerouslySetInnerHTML={{ __html: this.state.entry.body }} />
+      <div className={classes.root}>
+        <Navbar onDelete={() => null} />
       </div>
     );
-  }
-}
+
+  return (
+    <div className={classes.root}>
+      <Navbar onDelete={() => onDelete(entry, history)} />
+      <Header withCover={!!entry._attachments}>
+        {entry._attachments && <Img src={getCoverFromEntry(entry)} />}
+      </Header>
+      <Title>{moment(entry.date).format('DD/MM/YY')}</Title>
+      <Body dangerouslySetInnerHTML={{ __html: entry.body }} />
+    </div>
+  );
+};
 
 export default withStyles(styles)(EntryPage);

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import styled from 'styled-components/macro';
 import moment from 'moment';
 import { MuiPickersUtilsProvider } from 'material-ui-pickers';
@@ -9,6 +10,8 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Editor from './Editor';
 import CoverPicker from './CoverPicker';
+
+import useKeyboardDetect from '../../hooks/useKeyboardDetect';
 
 const Root = styled.div`
   height: calc(100% - 56px);
@@ -28,80 +31,55 @@ const styles = theme => ({
   },
 });
 
-class NewEntryPage extends React.Component {
-  state = {
-    bodyFocus: false,
-    keyboardOpen: false,
-  };
+const NewEntryPage = props => {
+  const [ref] = useState(React.createRef());
+  const [bodyFocus, setBodyFocus] = useState(false);
+  const keyboardOpen = useKeyboardDetect();
 
-  constructor() {
-    super();
-    this.root = React.createRef();
-  }
+  const { disabled, cover, coverPreview, body, date, classes } = props;
 
-  componentDidMount() {
-    this.baseWindowHeight = window.innerHeight;
-    window.addEventListener('resize', this.onResize);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.onResize);
-  }
-
-  onResize = () => {
-    if (window.innerHeight === this.baseWindowHeight) {
-      this.setState({ keyboardOpen: false });
-    } else {
-      this.setState({ keyboardOpen: true });
-    }
-  };
-
-  render() {
-    const { disabled, cover, coverPreview, body, date, classes } = this.props;
-
-    return (
-      <Root ref={this.root}>
-        <React.Fragment>
-          <CoverPicker
-            onChange={({ file, type }) =>
-              this.props.onChange({ cover: file, coverType: type })
-            }
-            onPreview={file => this.props.onChange({ coverPreview: file })}
-            disabled={disabled}
-            cover={cover}
-            coverPreview={coverPreview}
-          />
-          <MuiPickersUtilsProvider utils={MomentUtils}>
-            <div className={classes.date}>
-              <DatePicker
-                disabled={disabled}
-                disableFuture
-                value={date}
-                autoOk
-                onChange={date => this.props.onChange({ date })}
-              />
-            </div>
-          </MuiPickersUtilsProvider>
-        </React.Fragment>
-        <Editor
-          theme="snow"
+  return (
+    <Root ref={ref}>
+      <React.Fragment>
+        <CoverPicker
+          onChange={({ file, type }) =>
+            props.onChange({ cover: file, coverType: type })
+          }
+          onPreview={file => props.onChange({ coverPreview: file })}
           disabled={disabled}
-          value={body}
-          expanded={this.state.bodyFocus && this.state.keyboardOpen}
-          onChange={newBody => this.props.onChange({ body: newBody })}
-          onFocus={() => this.setState({ bodyFocus: true })}
-          onBlur={() => this.setState({ bodyFocus: false })}
-          modules={{
-            toolbar: [
-              [{ cover: [2, false] }],
-              ['bold', 'italic'],
-              ['link', 'image'],
-            ],
-          }}
+          cover={cover}
+          coverPreview={coverPreview}
         />
-      </Root>
-    );
-  }
-}
+        <MuiPickersUtilsProvider utils={MomentUtils}>
+          <div className={classes.date}>
+            <DatePicker
+              disabled={disabled}
+              disableFuture
+              value={date}
+              autoOk
+              onChange={date => props.onChange({ date })}
+            />
+          </div>
+        </MuiPickersUtilsProvider>
+      </React.Fragment>
+      <Editor
+        theme="snow"
+        disabled={disabled}
+        value={body}
+        expanded={bodyFocus && keyboardOpen}
+        onChange={newBody => props.onChange({ body: newBody })}
+        onFocus={() => setBodyFocus(true)}
+        onBlur={() => setBodyFocus(false)}
+        modules={{
+          toolbar: [
+            [{ cover: [2, false] }],
+            ['bold', 'italic'],
+            ['link', 'image'],
+          ],
+        }}
+      />
+    </Root>
+  );
+};
 
 export default withStyles(styles)(NewEntryPage);
