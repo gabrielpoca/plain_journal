@@ -7,15 +7,24 @@ import SmsIcon from '@material-ui/icons/Sms';
 import FitnessCenterIcon from '@material-ui/icons/FitnessCenter';
 import { withRouter } from 'react-router';
 
-const styles = theme => ({
-  root: {
-    position: 'fixed',
-    bottom: 0,
-    left: 0,
-    width: '100%',
-    backgroundColor: theme.palette.background.paper,
-  },
-});
+const styles = theme => {
+  return {
+    root: {
+      position: 'fixed',
+      bottom: 0,
+      left: 0,
+      width: '100%',
+      backgroundColor: theme.palette.background.default,
+    },
+    iconRoot: {
+      color: theme.palette.grey['300'],
+      '&$iconSelected': {
+        color: theme.palette.grey['700'],
+      },
+    },
+    iconSelected: {},
+  };
+};
 
 class BottomNavbar extends React.PureComponent {
   get value() {
@@ -23,20 +32,26 @@ class BottomNavbar extends React.PureComponent {
   }
 
   render() {
+    const {
+      classes: { root, iconRoot, iconSelected },
+    } = this.props;
+
     return (
       <BottomNavigation
         value={this.value}
-        showLabels
         color="primary"
-        classes={this.props.classes}
+        showLabels
+        classes={{ root }}
       >
         <BottomNavigationAction
+          classes={{ selected: iconSelected, root: iconRoot }}
           component={Link}
           label="Journal"
           to="/entries"
           icon={<SmsIcon />}
         />
         <BottomNavigationAction
+          classes={{ selected: iconSelected, root: iconRoot }}
           component={Link}
           label="Habits"
           to="/habits"

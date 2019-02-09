@@ -7,6 +7,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from '@material-ui/core/styles';
 
 import BottomNavbar from '../../components/BottomNavbar';
+import Background from '../../components/Background';
 import EntriesList from './EntriesList';
 import Navbar from './Navbar';
 
@@ -86,26 +87,28 @@ class EntriesContainer extends React.Component {
 }
 
 const EntriesPage = ({ classes, match }) => (
-  <EntriesContainer>
-    {({ entries, onSearch, searchQuery }) => (
-      <div className={classes.root}>
-        <Navbar onSearch={onSearch} searchQuery={searchQuery} />
-        <React.Fragment>
-          {<EntriesList entries={entries} />}
-          <Fab
-            aria-label="Add"
-            className={classes.fab}
-            color="primary"
-            component={Link}
-            to={`${match.url}/new`}
-          >
-            <AddIcon />
-          </Fab>
-        </React.Fragment>
-        <BottomNavbar />
-      </div>
-    )}
-  </EntriesContainer>
+  <Background>
+    <EntriesContainer>
+      {({ entries, onSearch, searchQuery }) => (
+        <div className={classes.root}>
+          <Navbar onSearch={onSearch} searchQuery={searchQuery} />
+          <React.Fragment>
+            {<EntriesList entries={entries} />}
+            <Fab
+              aria-label="Add"
+              className={classes.fab}
+              color="secondary"
+              component={Link}
+              to={`${match.url}/new`}
+            >
+              <AddIcon />
+            </Fab>
+          </React.Fragment>
+          <BottomNavbar />
+        </div>
+      )}
+    </EntriesContainer>
+  </Background>
 );
 
 export default withStyles(styles)(EntriesPage);

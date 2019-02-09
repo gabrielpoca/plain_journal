@@ -11,20 +11,33 @@ import EntriesPage from './EntriesPage';
 export default ({ match }) => (
   <Switch>
     <Route path={`${match.path}/entry/:id/edit`} component={EditEntryPage} />
-    <Route path={`${match.path}/entry/:id`} component={EntryPage} />
     <Route
       path={`${match.path}/`}
       render={() => (
         <>
           <Route path={`${match.path}/`} component={EntriesPage} />
           <Route
+            path={`${match.path}/entry/:id`}
+            children={props => (
+              <Slide
+                direction="left"
+                in={!!props.match}
+                mountOnEnter
+                unmountOnExit
+              >
+                <EntryPage {...props} />
+              </Slide>
+            )}
+          />
+          <Route
             path={`${match.path}/new`}
             children={props => (
               <Slide
-                direction='up'
+                direction="left"
                 in={!!props.match}
                 mountOnEnter
-                unmountOnExit>
+                unmountOnExit
+              >
                 <NewEntryPage {...props} />
               </Slide>
             )}

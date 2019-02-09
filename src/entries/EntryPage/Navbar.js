@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
@@ -39,7 +40,11 @@ class LongMenu extends React.PureComponent {
 
     return (
       <>
-        <IconButton color="inherit" component={Link} to="/" aria-label="Close">
+        <IconButton
+          color="inherit"
+          onClick={this.props.history.goBack}
+          aria-label="Close"
+        >
           <CloseIcon />
         </IconButton>
         <IconButton
@@ -57,7 +62,10 @@ class LongMenu extends React.PureComponent {
           open={open}
           onClose={this.onClose}
         >
-          <MenuItem component={Link} to={`${this.props.match.url}/edit`}>
+          <MenuItem
+            component={Link}
+            to={`${_.get(this.props, 'match.url')}/edit`}
+          >
             Edit
           </MenuItem>
           <MenuItem onClick={this.props.onDelete}>Delete</MenuItem>

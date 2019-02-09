@@ -13,6 +13,11 @@ const Root = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  background: white;
+  top: 0;
+  left: 0;
+  width: 100%;
+  position: fixed;
 `;
 
 const Header = styled.div`

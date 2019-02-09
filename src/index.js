@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 
 import grey from '@material-ui/core/colors/grey';
+import blue from '@material-ui/core/colors/blue';
 import pink from '@material-ui/core/colors/pink';
 
 import App from './App';
@@ -15,8 +16,13 @@ const theme = createMuiTheme({
     useNextVariants: true,
   },
   palette: {
-    primary: { main: grey[900] },
-    secondary: pink,
+    primary: blue,
+    background: {
+      default: '#F7F9FC',
+    },
+    secondary: {
+      main: '#ec407a',
+    },
   },
 });
 
