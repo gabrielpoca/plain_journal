@@ -12,7 +12,7 @@ export default ({ match }) => (
   <Switch>
     <Route path={`${match.path}/entry/:id/edit`} component={EditEntryPage} />
     <Route
-      path={`${match.path}/`}
+      path={`${match.path}`}
       render={() => (
         <>
           <Route path={`${match.path}/`} component={EntriesPage} />

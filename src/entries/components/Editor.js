@@ -2,29 +2,34 @@ import _ from 'lodash';
 import React from 'react';
 import Quill from 'quill';
 import styled from 'styled-components/macro';
+import { withStyles } from '@material-ui/core/styles';
 
 import 'quill/dist/quill.core.css';
 import 'react-quill/dist/quill.snow.css';
 
 import MarkdownShortcuts from './markdown-shortcuts';
+import Background from '../../components/Background';
 
 Quill.register('modules/markdownShortcuts', MarkdownShortcuts);
 
-const Root = styled.div`
-  height: ${({ expanded }) =>
-    expanded ? 'calc(100% - 56px)' : 'calc(100% - 432px)'};
-  position: fixed;
-  top: 56px;
-  background: white;
-  width: 100%;
-  max-width: var(--max-width);
-  transform: translateY(${({ expanded }) => (expanded ? 0 : '376px')});
-  overflow: scroll;
-
-  .quill-container {
-    height: 100%;
-  }
-`;
+const styles = theme => ({
+  root: {
+    backgroundColor: theme.palette.background.default,
+    position: 'fixed',
+    top: '56px',
+    width: '100%',
+    maxWidth: 'var(--max-width)',
+    overflow: 'scroll',
+  },
+  expanded: {
+    transform: 'translateY(0)',
+    height: 'calc(100% - 64px)',
+  },
+  notExpanded: {
+    transform: 'translateY(400px)',
+    height: 'calc(100% - 472px)',
+  },
+});
 
 class EditorElement extends React.Component {
   componentDidMount() {
@@ -73,16 +78,23 @@ class Editor extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
+
+    let rootClassName = classes.root;
+
+    if (this.props.expanded) rootClassName += ` ${classes.expanded}`;
+    else rootClassName += ` ${classes.notExpanded}`;
+
     return (
-      <Root
+      <div
+        className={rootClassName}
         ref={this.el}
         offset={_.get(this.el.current, 'offsetTop', 0)}
-        expanded={this.props.expanded}
       >
         <EditorElement {...this.props} />
-      </Root>
+      </div>
     );
   }
 }
 
-export default Editor;
+export default withStyles(styles)(Editor);

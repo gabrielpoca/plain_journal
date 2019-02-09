@@ -11,7 +11,7 @@ import db from '../db';
 const styles = theme => ({
   root: {
     height: '100%',
-    //zIndex: 1501,
+    backgroundColor: theme.palette.background.default,
     position: 'fixed',
     width: '100%',
     top: 0,

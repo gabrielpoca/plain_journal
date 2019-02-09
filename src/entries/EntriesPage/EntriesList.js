@@ -2,6 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import styled from 'styled-components/macro';
 import { Link } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -14,18 +15,38 @@ const Text = styled(Typography)`
   text-overflow: ellipsis;
 `;
 
-const Entry = ({ entry }) => {
+const styles = {
+  root: {
+    '&$selected, &$selected:hover, &$selected:focus': {
+      backgroundColor: 'red',
+    },
+  },
+  selected: {},
+};
+
+const Entry = withStyles(styles)(({ entry, classes }) => {
   const template = document.createElement('div');
   template.innerHTML = entry.body.split('</p>')[0] + '</p>';
+  console.log(classes);
 
   return (
-    <ListItem component={Link} to={`/entries/entry/${entry._id}`}>
+    <ListItem
+      classes={{
+        root: classes.root,
+        selected: classes.selected,
+        button: classes.button,
+      }}
+      button
+      disableTouchRipple
+      component={Link}
+      to={`/entries/entry/${entry._id}`}
+    >
       <ListItemText secondary={moment(entry.date).format('DD/MM/YY')}>
         <Text>{template.innerText}</Text>
       </ListItemText>
     </ListItem>
   );
-};
+});
 
 const EntriesList = props => (
   <List>

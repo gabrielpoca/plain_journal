@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import styled from 'styled-components/macro';
 import moment from 'moment';
+import { withStyles } from '@material-ui/core/styles';
 
 import Navbar from './Navbar';
 
@@ -9,16 +10,19 @@ import db from '../db';
 
 import { getCoverFromEntry } from '../helpers';
 
-const Root = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background: white;
-  top: 0;
-  left: 0;
-  width: 100%;
-  position: fixed;
-`;
+const styles = theme => ({
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    background: 'white',
+    top: '0',
+    left: '0',
+    width: '100%',
+    position: 'fixed',
+    backgroundColor: theme.palette.background.default,
+  },
+});
 
 const Header = styled.div`
   flex-basis: ${props => (props.withCover ? '300px' : '0px')};
@@ -81,13 +85,13 @@ class EntryPage extends React.Component {
   render() {
     if (!this.state.entry)
       return (
-        <Root>
+        <div className={this.props.classes.root}>
           <Navbar onDelete={this.onDelete} />
-        </Root>
+        </div>
       );
 
     return (
-      <Root>
+      <div className={this.props.classes.root}>
         <Navbar onDelete={this.onDelete} />
         <Header withCover={!!this.state.entry._attachments}>
           {this.state.entry._attachments && (
@@ -96,9 +100,9 @@ class EntryPage extends React.Component {
         </Header>
         <Title>{moment(this.state.entry.date).format('DD/MM/YY')}</Title>
         <Body dangerouslySetInnerHTML={{ __html: this.state.entry.body }} />
-      </Root>
+      </div>
     );
   }
 }
 
-export default EntryPage;
+export default withStyles(styles)(EntryPage);

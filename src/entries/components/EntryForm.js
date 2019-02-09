@@ -1,6 +1,11 @@
 import React from 'react';
 import styled from 'styled-components/macro';
 import moment from 'moment';
+import { MuiPickersUtilsProvider } from 'material-ui-pickers';
+import { DatePicker } from 'material-ui-pickers';
+import MomentUtils from '@date-io/moment';
+import TextField from '@material-ui/core/TextField';
+import { withStyles } from '@material-ui/core/styles';
 
 import Editor from './Editor';
 import CoverPicker from './CoverPicker';
@@ -14,16 +19,14 @@ const Root = styled.div`
   }
 `;
 
-const DateInput = styled.input`
-  border: 0;
-  width: 100%;
-  height: 40px;
-  color: inherit;
-  font-size: 16px;
-  font-family: inherit;
-  padding: 8px 16px;
-  background: white;
-`;
+const styles = theme => ({
+  date: {
+    border: 0,
+    width: '100%',
+    color: 'inherit',
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px`,
+  },
+});
 
 class NewEntryPage extends React.Component {
   state = {
@@ -54,7 +57,7 @@ class NewEntryPage extends React.Component {
   };
 
   render() {
-    const { disabled, cover, coverPreview, body, date } = this.props;
+    const { disabled, cover, coverPreview, body, date, classes } = this.props;
 
     return (
       <Root ref={this.root}>
@@ -68,17 +71,17 @@ class NewEntryPage extends React.Component {
             cover={cover}
             coverPreview={coverPreview}
           />
-          <DateInput
-            disabled={disabled}
-            type="date"
-            max={moment().format('YYYY-MM-DD')}
-            value={date.format('YYYY-MM-DD')}
-            onChange={event =>
-              this.props.onChange({
-                date: moment(event.target.value, 'YYYY-MM-DD'),
-              })
-            }
-          />
+          <MuiPickersUtilsProvider utils={MomentUtils}>
+            <div className={classes.date}>
+              <DatePicker
+                disabled={disabled}
+                disableFuture
+                value={date}
+                autoOk
+                onChange={date => this.props.onChange({ date })}
+              />
+            </div>
+          </MuiPickersUtilsProvider>
         </React.Fragment>
         <Editor
           theme="snow"
@@ -101,4 +104,4 @@ class NewEntryPage extends React.Component {
   }
 }
 
-export default NewEntryPage;
+export default withStyles(styles)(NewEntryPage);
