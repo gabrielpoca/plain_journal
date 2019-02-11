@@ -27,7 +27,6 @@ const styles = {
 const Entry = withStyles(styles)(({ entry, classes }) => {
   const template = document.createElement('div');
   template.innerHTML = entry.body.split('</p>')[0] + '</p>';
-  console.log(classes);
 
   return (
     <ListItem
@@ -48,12 +47,18 @@ const Entry = withStyles(styles)(({ entry, classes }) => {
   );
 });
 
-const EntriesList = props => (
-  <List>
+const listStyles = theme => ({
+  root: {
+    paddingBottom: theme.spacing.unit * 7,
+  },
+});
+
+const EntriesList = withStyles(listStyles)(props => (
+  <List className={props.classes.root}>
     {props.entries.map(entry => (
       <Entry key={entry._id} entry={entry} />
     ))}
   </List>
-);
+));
 
 export default EntriesList;

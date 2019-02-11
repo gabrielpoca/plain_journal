@@ -23,6 +23,7 @@ const styles = theme => ({
     width: '100%',
     position: 'fixed',
     backgroundColor: theme.palette.background.default,
+    overflow: 'scroll',
   },
 });
 
