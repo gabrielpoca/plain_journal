@@ -11,7 +11,7 @@ import Background from '../../components/Background';
 import EntriesList from './EntriesList';
 import Navbar from './Navbar';
 
-import db from '../db';
+import db from '../../db';
 
 const styles = theme => ({
   root: {
@@ -34,7 +34,7 @@ const styles = theme => ({
 class EntriesContainer extends React.Component {
   constructor() {
     super();
-    this.state = { entries: [], searchQuery: '', onSearch: this.onSearch };
+    this.state = { entries: [] };
   }
 
   componentWillMount() {
@@ -55,32 +55,14 @@ class EntriesContainer extends React.Component {
     async () => {
       let newEntries = [];
 
-      if (!this.state.searchQuery) {
-        newEntries = (await db.find({
-          selector: {},
-          sort: [{ date: 'desc' }],
-        })).docs;
-      } else {
-        newEntries = (await db.search({
-          query: this.state.searchQuery,
-          fields: ['body'],
-          mm: '50%',
-          sort: [{ date: 'desc' }],
-          include_docs: true,
-        })).rows.map(r => r.doc);
-      }
+      const entries = (await db.find({
+        selector: {},
+      })).docs;
 
-      this.setState({ entries: newEntries });
+      this.setState({ entries });
     },
     { wait: 100, trailing: true }
   );
-
-  onSearch = event => {
-    this.setState(
-      { searchQuery: _.get(event.target, 'value', '') },
-      this.update
-    );
-  };
 
   render() {
     return this.props.children(this.state);
@@ -90,9 +72,9 @@ class EntriesContainer extends React.Component {
 const EntriesPage = ({ classes, match }) => (
   <Background>
     <EntriesContainer>
-      {({ entries, onSearch, searchQuery }) => (
+      {({ entries }) => (
         <div className={classes.root}>
-          <Navbar onSearch={onSearch} searchQuery={searchQuery} />
+          <Navbar />
           <React.Fragment>
             {<EntriesList entries={entries} />}
             <Fab

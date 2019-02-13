@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import db from '../entries/db';
+import db from '../db';
 
 export default function useJournalEntry(id) {
   const [entry, setEntry] = useState(null);

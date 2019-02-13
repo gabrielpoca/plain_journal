@@ -22,20 +22,11 @@ const styles = theme => ({
   },
 });
 
-const Navbar = withStyles(styles)(({ classes, onSearch, searchQuery }) => {
+const Navbar = withStyles(styles)(({ classes }) => {
   return (
     <AppBar position="sticky">
       <Toolbar>
         <SidebarMenu />
-        <InputBase
-          onChange={onSearch}
-          value={searchQuery}
-          placeholder="Search…"
-          classes={{
-            root: classes.inputRoot,
-            input: classes.inputInput,
-          }}
-        />
       </Toolbar>
     </AppBar>
   );

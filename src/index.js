@@ -7,6 +7,8 @@ import grey from '@material-ui/core/colors/grey';
 import blue from '@material-ui/core/colors/blue';
 import pink from '@material-ui/core/colors/pink';
 
+import './entries/db';
+
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import { initializeFirebase } from './notifications';

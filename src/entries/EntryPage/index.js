@@ -8,7 +8,7 @@ import Navbar from './Navbar';
 import useKeyboardDetect from '../../hooks/useKeyboardDetect';
 import useJournalEntry from '../../hooks/useJournalEntry';
 
-import db from '../db';
+import db from '../../db';
 
 import { getCoverFromEntry } from '../helpers';
 

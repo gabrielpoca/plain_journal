@@ -6,7 +6,7 @@ import EntryForm from '../components/EntryForm';
 import Navbar from './Navbar';
 import { newID } from '../../utils';
 
-import db from '../db';
+import db from '../../db';
 
 const styles = theme => ({
   root: {

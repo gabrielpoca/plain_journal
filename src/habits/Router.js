@@ -7,7 +7,7 @@ import { habits, toggleHabit } from './db';
 import HabitsList from './components/HabitsList';
 import Tabs from './components/Tabs';
 import BottomNavbar from '../components/BottomNavbar';
-import entriesDB from '../entries/db';
+import entriesDB from '../db';
 
 const styles = theme => ({
   root: {

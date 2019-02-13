@@ -5,7 +5,7 @@ import moment from 'moment';
 import EntryForm from '../components/EntryForm';
 import Navbar from './Navbar';
 
-import db from '../db';
+import db from '../../db';
 import { getCoverFromEntry } from '../helpers';
 
 class EditEntryPage extends React.Component {
