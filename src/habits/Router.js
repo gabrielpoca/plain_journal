@@ -3,11 +3,10 @@ import { Route, Switch } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 
 import { KeyValueStorage } from '../KeyValueStorage';
-import { habits, toggleHabit } from './db';
+import { db, toggleHabit } from './db';
 import HabitsList from './components/HabitsList';
 import Tabs from './components/Tabs';
 import BottomNavbar from '../components/BottomNavbar';
-import entriesDB from '../db';
 
 const styles = theme => ({
   root: {
@@ -35,7 +34,7 @@ class Dashboard extends React.PureComponent {
   };
 
   componentWillMount() {
-    this.sub = habits
+    this.sub = db
       .changes({
         since: 'now',
         live: true,
@@ -49,15 +48,23 @@ class Dashboard extends React.PureComponent {
   }
 
   update = async () => {
-    const docs = await habits.allDocs({ include_docs: true });
-    this.setState({ habits: docs.rows.map(r => r.doc) });
+    const habits = (await db.find({
+      selector: {
+        doc_type: 'habit',
+      },
+    })).docs;
+    this.setState({ habits });
 
-    const entries = await entriesDB.find({ selector: {} });
-    this.setState({ journalEntries: entries.docs });
+    const journalEntries = (await db.find({
+      selector: {
+        doc_type: 'journal',
+      },
+    })).docs;
+    this.setState({ journalEntries });
   };
 
   onToggle = async habit => {
-    if (!habit.static) await habits.put(toggleHabit(habit));
+    if (!habit.static) await db.put(toggleHabit(habit));
   };
 
   render() {

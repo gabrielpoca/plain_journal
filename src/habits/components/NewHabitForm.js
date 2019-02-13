@@ -5,9 +5,8 @@ import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 
 import HabitForm from './HabitForm';
-import { newID } from '../../utils';
 
-import { habits } from '../db';
+import { newHabit } from '../db';
 
 const styles = theme => ({
   fab: {
@@ -25,7 +24,7 @@ class NewHabitForm extends React.PureComponent {
   onToggle = () => this.setState({ open: !this.state.open });
 
   onSubmit = async args => {
-    await habits.put({ ...args, _id: newID() });
+    await newHabit(args);
     this.setState({ open: false });
   };
 

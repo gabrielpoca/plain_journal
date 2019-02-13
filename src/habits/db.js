@@ -2,7 +2,11 @@ import _ from 'lodash';
 import { isSameDay, isSameWeek } from 'date-fns';
 import PouchDB from 'pouchdb';
 
-export const habits = new PouchDB('habits');
+import database from '../db';
+
+import { newID } from '../utils';
+
+export const db = database;
 
 const getComparisonFn = habit =>
   habit.type === 'daily' ? isSameDay : isSameWeek;
@@ -22,4 +26,10 @@ export const isDone = habit => {
   return !!_.find(habit.entries, entry => comparisonFn(entry, today));
 };
 
-window.habits = habits;
+export const newHabit = values => {
+  return db.put({
+    ...values,
+    doc_type: 'habit',
+    _id: `habit_${values.type}_${newID()}`,
+  });
+};

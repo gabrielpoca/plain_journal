@@ -33,6 +33,7 @@ if (localStorage.getItem('dbMigrated') !== 'true') {
           _id: `journal_${moment(doc.date).format('DD-MM-YYYY')}_${doc._id}`,
           date: doc.date,
           body: doc.body,
+          doc_type: 'journal',
         };
 
         if (_.get(doc, '_attachments.cover', false)) {

@@ -56,7 +56,9 @@ class EntriesContainer extends React.Component {
       let newEntries = [];
 
       const entries = (await db.find({
-        selector: {},
+        selector: {
+          doc_type: 'journal',
+        },
       })).docs;
 
       this.setState({ entries });
