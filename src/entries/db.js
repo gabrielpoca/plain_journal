@@ -1,58 +1,41 @@
-import _ from 'lodash';
-import moment from 'moment';
-import PouchDB from 'pouchdb';
-import Find from 'pouchdb-find';
-import QuickSearch from 'pouchdb-quick-search';
+import database from '../db';
 
-import db from '../db';
+import { decrypt, encrypt, enabled } from '../key';
 
-PouchDB.plugin(QuickSearch);
-PouchDB.plugin(Find);
+export const db = database;
 
-const entries = new PouchDB('entries');
+const convertEncrypted = async doc => {
+  if (doc.encrypted) return { ...doc, body: await decrypt(doc.body) };
+  else return doc;
+};
 
-if (localStorage.getItem('dbMigrated') !== 'true') {
-  (async () => {
-    console.log('Migrating database');
+export const all = async () => {
+  return Promise.all(
+    (await db.find({
+      selector: {
+        doc_type: 'journal',
+      },
+    })).docs.map(convertEncrypted)
+  );
+};
 
-    entries.search({
-      fields: ['body'],
-      destroy: true,
-    });
+export const get = async id => {
+  const doc = await db.get(id, {
+    attachments: true,
+  });
 
-    const rows = (await entries.allDocs({
-      include_docs: true,
-      attachments: true,
-    })).rows;
+  return convertEncrypted(doc);
+};
 
-    const res = rows
-      .map(doc => doc.doc)
-      .filter(doc => !!doc.body && !!doc.date)
-      .map(doc => {
-        const change = {
-          _id: `journal_${moment(doc.date).format('DD-MM-YYYY')}_${doc._id}`,
-          date: doc.date,
-          body: doc.body,
-          doc_type: 'journal',
-        };
+export const remove = async doc => {
+  await db.remove(doc._id, doc._rev);
+};
 
-        if (_.get(doc, '_attachments.cover', false)) {
-          change._attachments = {
-            cover: {
-              content_type: doc._attachments.cover.content_type,
-              data: doc._attachments.cover.data,
-            },
-          };
-        }
-
-        return change;
-      })
-      .map(change => db.put(change));
-
-    await Promise.all(res);
-
-    localStorage.setItem('dbMigrated', 'true');
-  })();
-}
-
-export default entries;
+export const put = async changes => {
+  const encryptionEnabled = await enabled();
+  changes.encrypted = changes.encrypted || encryptionEnabled;
+  changes.doc_type = 'journal';
+  if (changes.encrypted)
+    return db.put({ ...changes, body: await encrypt(changes.body) });
+  else return db.put(changes);
+};

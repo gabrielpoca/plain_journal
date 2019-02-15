@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import { isSameDay, isSameWeek } from 'date-fns';
-import PouchDB from 'pouchdb';
 
 import database from '../db';
 

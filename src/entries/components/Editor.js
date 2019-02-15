@@ -1,14 +1,12 @@
 import _ from 'lodash';
 import React from 'react';
 import Quill from 'quill';
-import styled from 'styled-components/macro';
 import { withStyles } from '@material-ui/core/styles';
 
 import 'quill/dist/quill.core.css';
 import 'react-quill/dist/quill.snow.css';
 
 import MarkdownShortcuts from './markdown-shortcuts';
-import Background from '../../components/Background';
 
 Quill.register('modules/markdownShortcuts', MarkdownShortcuts);
 

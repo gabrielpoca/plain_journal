@@ -6,7 +6,7 @@ import EntryForm from '../components/EntryForm';
 import Navbar from './Navbar';
 import { newID } from '../../utils';
 
-import db from '../../db';
+import { put } from '../db';
 
 const styles = theme => ({
   root: {
@@ -56,8 +56,7 @@ class NewEntryPage extends React.Component {
           },
         };
       }
-
-      await db.put(changes);
+      await put(changes);
 
       this.props.history.push('/entries');
     } catch (e) {

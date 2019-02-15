@@ -10,22 +10,21 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import SwitchInput from '@material-ui/core/Switch';
 import AlarmIcon from '@material-ui/icons/AccessAlarm';
 
+import * as key from '../key';
+
 import { askForPermissioToReceiveNotifications } from '../notifications';
 import { KeyValueStorage } from '../KeyValueStorage';
 
+import RemoteSyncDialog from './RemoteSyncDialog';
 import ErrorNotification from './ErrorNotification';
 import Navbar from './Navbar';
 
 class Dashboard extends React.PureComponent {
   static contextType = KeyValueStorage;
-
-  constructor() {
-    super();
-
-    this.state = {
-      error: null,
-    };
-  }
+  state = {
+    error: null,
+    remoteSyncOpen: false,
+  };
 
   remindersAllowed = () => {
     return (
@@ -53,15 +52,37 @@ class Dashboard extends React.PureComponent {
     }
   };
 
+  onRemoteSyncToggle = async () => {
+    if (!this.context.getItem('remoteSync'))
+      this.setState({ remoteSyncOpen: !this.state.remoteSyncOpen });
+    else {
+      await key.destroy();
+      this.context.setItem('remoteSync', false);
+    }
+  };
+
+  onRemoteSyncEnable = async values => {
+    this.onRemoteSyncToggle();
+
+    key.setup(values.username, values.password);
+    this.context.setItem('remoteSync', true);
+  };
+
   render() {
     return (
       <KeyValueStorage>
         {({ getItem, setItem }) => {
-          const journaling = getItem('trackJournaling');
-          const reminders = getItem('remindersAllowed');
+          const journaling = getItem('trackJournaling') || false;
+          const reminders = getItem('remindersAllowed') || false;
+          const remoteSync = getItem('remoteSync') || false;
 
           return (
             <>
+              <RemoteSyncDialog
+                onClose={this.onRemoteSyncToggle}
+                open={this.state.remoteSyncOpen}
+                onSubmit={this.onRemoteSyncEnable}
+              />
               <Navbar />
               <ErrorNotification
                 open={!!this.state.error}
@@ -90,6 +111,18 @@ class Dashboard extends React.PureComponent {
                     <SwitchInput
                       onChange={() => setItem('trackJournaling', !journaling)}
                       checked={journaling}
+                    />
+                  </ListItemSecondaryAction>
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon>
+                    <AlarmIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Sync to remote server" />
+                  <ListItemSecondaryAction>
+                    <SwitchInput
+                      onChange={this.onRemoteSyncToggle}
+                      checked={remoteSync}
                     />
                   </ListItemSecondaryAction>
                 </ListItem>

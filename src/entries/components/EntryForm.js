@@ -1,11 +1,9 @@
 import React from 'react';
 import { useState } from 'react';
 import styled from 'styled-components/macro';
-import moment from 'moment';
 import { MuiPickersUtilsProvider } from 'material-ui-pickers';
 import { DatePicker } from 'material-ui-pickers';
 import MomentUtils from '@date-io/moment';
-import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 
 import Editor from './Editor';
@@ -31,7 +29,7 @@ const styles = theme => ({
   },
 });
 
-const NewEntryPage = props => {
+const EntryForm = props => {
   const [ref] = useState(React.createRef());
   const [bodyFocus, setBodyFocus] = useState(false);
   const keyboardOpen = useKeyboardDetect();
@@ -82,4 +80,4 @@ const NewEntryPage = props => {
   );
 };
 
-export default withStyles(styles)(NewEntryPage);
+export default withStyles(styles)(EntryForm);

@@ -1,14 +1,12 @@
 import _ from 'lodash';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components/macro';
 import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
 
 import Navbar from './Navbar';
-import useKeyboardDetect from '../../hooks/useKeyboardDetect';
-import useJournalEntry from '../../hooks/useJournalEntry';
 
-import db from '../../db';
+import { get, remove } from '../db';
 
 import { getCoverFromEntry } from '../helpers';
 
@@ -60,15 +58,31 @@ const Img = styled.img`
 
 const onDelete = async (entry, history) => {
   try {
-    await db.remove(entry._id, entry._rev);
+    await remove(entry);
     history.push('/entries');
   } catch (e) {
     console.error(e);
   }
 };
 
+function getJournalEntry(id) {
+  const [entry, setEntry] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      if (!id) return;
+
+      const doc = await get(id);
+
+      setEntry(doc);
+    })();
+  }, id);
+
+  return entry;
+}
+
 const EntryPage = ({ classes, history, match }) => {
-  const entry = useJournalEntry(_.get(match, 'params.id'));
+  const entry = getJournalEntry(_.get(match, 'params.id'));
 
   if (!entry)
     return (

@@ -11,7 +11,7 @@ import Background from '../../components/Background';
 import EntriesList from './EntriesList';
 import Navbar from './Navbar';
 
-import db from '../../db';
+import { db, all } from '../db';
 
 const styles = theme => ({
   root: {
@@ -53,15 +53,7 @@ class EntriesContainer extends React.Component {
 
   update = _.throttle(
     async () => {
-      let newEntries = [];
-
-      const entries = (await db.find({
-        selector: {
-          doc_type: 'journal',
-        },
-      })).docs;
-
-      this.setState({ entries });
+      this.setState({ entries: await all() });
     },
     { wait: 100, trailing: true }
   );

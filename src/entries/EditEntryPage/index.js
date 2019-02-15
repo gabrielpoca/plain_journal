@@ -5,7 +5,7 @@ import moment from 'moment';
 import EntryForm from '../components/EntryForm';
 import Navbar from './Navbar';
 
-import db from '../../db';
+import { get, put } from '../db';
 import { getCoverFromEntry } from '../helpers';
 
 class EditEntryPage extends React.Component {
@@ -28,9 +28,7 @@ class EditEntryPage extends React.Component {
     if (_.get(this.state.entry, '_id', false) === this.props.match.params.id)
       return;
 
-    const doc = await db.get(this.props.match.params.id, {
-      attachments: true,
-    });
+    const doc = await get(this.props.match.params.id);
 
     this.setState({
       doc: doc,
@@ -67,7 +65,7 @@ class EditEntryPage extends React.Component {
         };
       }
 
-      await db.put(changes);
+      await put(changes);
       this.props.history.push('/entries');
     } catch (e) {
       console.error(e);

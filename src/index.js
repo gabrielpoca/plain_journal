@@ -3,9 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 
-import grey from '@material-ui/core/colors/grey';
 import blue from '@material-ui/core/colors/blue';
-import pink from '@material-ui/core/colors/pink';
 
 import './entries/db';
 
