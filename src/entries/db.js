@@ -1,6 +1,6 @@
 import database from '../db';
 
-import { decrypt, encrypt, enabled } from '../key';
+import { decrypt, encrypt, enabled } from '../core/EncryptionKey';
 
 export const db = database;
 

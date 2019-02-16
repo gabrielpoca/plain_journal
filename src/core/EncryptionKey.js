@@ -1,19 +1,19 @@
-import localforage from 'localforage';
+import localForage from 'localforage';
 
-import db from './db';
+import db from '../db';
 
-function ab2str(buf) {
-  return String.fromCharCode.apply(null, new Uint16Array(buf));
-}
+const ab2str = buf => {
+  return String.fromCharCode.apply(null, new Uint8Array(buf));
+};
 
-function str2ab(str) {
-  var buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
-  var bufView = new Uint16Array(buf);
+const str2ab = str => {
+  var buf = new ArrayBuffer(str.length); // 2 bytes for each char
+  var bufView = new Uint8Array(buf);
   for (var i = 0, strLen = str.length; i < strLen; i++) {
     bufView[i] = str.charCodeAt(i);
   }
   return buf;
-}
+};
 
 export const setup = async (username, password) => {
   const inputKey = await crypto.subtle.importKey(
@@ -40,8 +40,8 @@ export const setup = async (username, password) => {
     ['encrypt', 'decrypt']
   );
 
-  await localforage.setItem('encryptionKey', key);
-  await localforage.setItem('username', username);
+  await localForage.setItem('encryptionKey', key);
+  await localForage.setItem('username', username);
 
   return await Promise.all(
     (await db.allDocs({ include_docs: true })).rows
@@ -65,18 +65,20 @@ export const destroy = async () => {
       })
   );
 
-  await localforage.setItem('encryptionKey', false);
-  return await localforage.setItem('username', false);
+  await localForage.setItem('encryptionKey', false);
+  return await localForage.setItem('username', false);
 };
 
 export const encrypt = async data => {
-  return await window.crypto.subtle.encrypt(
-    {
-      name: 'AES-GCM',
-      iv: str2ab(await localforage.getItem('username')),
-    },
-    await localforage.getItem('encryptionKey'),
-    str2ab(data)
+  return ab2str(
+    await window.crypto.subtle.encrypt(
+      {
+        name: 'AES-GCM',
+        iv: str2ab(await localForage.getItem('username')),
+      },
+      await localForage.getItem('encryptionKey'),
+      str2ab(data)
+    )
   );
 };
 
@@ -85,14 +87,14 @@ export const decrypt = async data => {
     await window.crypto.subtle.decrypt(
       {
         name: 'AES-GCM',
-        iv: str2ab(await localforage.getItem('username')),
+        iv: str2ab(await localForage.getItem('username')),
       },
-      await localforage.getItem('encryptionKey'),
-      data
+      await localForage.getItem('encryptionKey'),
+      str2ab(data)
     )
   );
 };
 
 export const enabled = () => {
-  return localforage.getItem('encryptionKey');
+  return localForage.getItem('encryptionKey');
 };

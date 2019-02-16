@@ -10,7 +10,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import SwitchInput from '@material-ui/core/Switch';
 import AlarmIcon from '@material-ui/icons/AccessAlarm';
 
-import * as key from '../key';
+import Authentication from '../core/Authentication';
 
 import { askForPermissioToReceiveNotifications } from '../notifications';
 import { KeyValueStorage } from '../KeyValueStorage';
@@ -56,15 +56,15 @@ class Dashboard extends React.PureComponent {
     if (!this.context.getItem('remoteSync'))
       this.setState({ remoteSyncOpen: !this.state.remoteSyncOpen });
     else {
-      await key.destroy();
+      await Authentication.disable();
       this.context.setItem('remoteSync', false);
     }
   };
 
   onRemoteSyncEnable = async values => {
     this.onRemoteSyncToggle();
-
-    key.setup(values.username, values.password);
+    //const { username, password } = values;
+    await Authentication.configure(values.username, values.password);
     this.context.setItem('remoteSync', true);
   };
 
