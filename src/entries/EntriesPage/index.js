@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import Fab from '@material-ui/core/Fab';
@@ -31,61 +31,56 @@ const styles = theme => ({
   },
 });
 
-class EntriesContainer extends React.Component {
-  constructor() {
-    super();
-    this.state = { entries: [] };
-  }
+function useEntries() {
+  const [entries, setEntries] = useState([]);
 
-  componentWillMount() {
-    this.sub = db
-      .changes({
-        since: 'now',
-        live: true,
-      })
-      .on('change', this.update);
-    this.update();
-  }
-
-  componentWillUnmount() {
-    this.sub.cancel();
-  }
-
-  update = _.throttle(
+  const update = _.throttle(
     async () => {
-      this.setState({ entries: await all() });
+      const entries = await all();
+      setEntries(_.orderBy(entries, 'date', 'desc'));
     },
     { wait: 100, trailing: true }
   );
 
-  render() {
-    return this.props.children(this.state);
-  }
+  useEffect(() => {
+    const sub = db
+      .changes({
+        since: 'now',
+        live: true,
+      })
+      .on('change', update);
+
+    update();
+
+    return () => sub.cancel();
+  });
+
+  return entries;
 }
 
-const EntriesPage = ({ classes, match }) => (
-  <Background>
-    <EntriesContainer>
-      {({ entries }) => (
-        <div className={classes.root}>
-          <Navbar />
-          <React.Fragment>
-            {<EntriesList entries={entries} />}
-            <Fab
-              aria-label="Add"
-              className={classes.fab}
-              color="secondary"
-              component={Link}
-              to={`${match.url}/new`}
-            >
-              <AddIcon />
-            </Fab>
-          </React.Fragment>
-          <BottomNavbar />
-        </div>
-      )}
-    </EntriesContainer>
-  </Background>
-);
+const EntriesPage = ({ classes, match }) => {
+  const entries = useEntries();
+
+  return (
+    <Background>
+      <div className={classes.root}>
+        <Navbar />
+        <React.Fragment>
+          {<EntriesList entries={entries} />}
+          <Fab
+            aria-label="Add"
+            className={classes.fab}
+            color="secondary"
+            component={Link}
+            to={`${match.url}/new`}
+          >
+            <AddIcon />
+          </Fab>
+        </React.Fragment>
+        <BottomNavbar />
+      </div>
+    </Background>
+  );
+};
 
 export default withStyles(styles)(EntriesPage);
