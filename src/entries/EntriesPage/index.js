@@ -34,13 +34,10 @@ const styles = theme => ({
 function useEntries() {
   const [entries, setEntries] = useState([]);
 
-  const update = _.throttle(
-    async () => {
-      const entries = await all();
-      setEntries(_.orderBy(entries, 'date', 'desc'));
-    },
-    { wait: 100, trailing: true }
-  );
+  const update = async e => {
+    const entries = await all();
+    setEntries(_.orderBy(entries, 'date', 'desc'));
+  };
 
   useEffect(() => {
     const sub = db
@@ -49,11 +46,9 @@ function useEntries() {
         live: true,
       })
       .on('change', update);
-
     update();
-
     return () => sub.cancel();
-  });
+  }, []);
 
   return entries;
 }
