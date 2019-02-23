@@ -5,7 +5,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
 import EntriesRouter from './entries/Router';
-import HabitsRouter from './habits/Router';
 import SettingsRouter from './settings/Router';
 import KeyValueStorage from './KeyValueStorage';
 
@@ -40,7 +39,6 @@ class App extends Component {
           <GlobalStyle />
           <CssBaseline />
           <Switch>
-            <Route path="/habits" component={HabitsRouter} />
             <Route path="/entries" component={EntriesRouter} />
             <Route path="/settings" component={SettingsRouter} />
             <Route render={() => <Redirect to="/entries" />} />

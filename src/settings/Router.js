@@ -72,7 +72,6 @@ class Dashboard extends React.PureComponent {
     return (
       <KeyValueStorage>
         {({ getItem, setItem }) => {
-          const journaling = getItem('trackJournaling') || false;
           const reminders = getItem('remindersAllowed') || false;
           const remoteSync = getItem('remoteSync') || false;
 
@@ -99,18 +98,6 @@ class Dashboard extends React.PureComponent {
                     <SwitchInput
                       onChange={this.onReminder}
                       checked={reminders}
-                    />
-                  </ListItemSecondaryAction>
-                </ListItem>
-                <ListItem>
-                  <ListItemIcon>
-                    <AlarmIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Track Journaling" />
-                  <ListItemSecondaryAction>
-                    <SwitchInput
-                      onChange={() => setItem('trackJournaling', !journaling)}
-                      checked={journaling}
                     />
                   </ListItemSecondaryAction>
                 </ListItem>
