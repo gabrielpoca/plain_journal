@@ -112,7 +112,12 @@ export default withStyles(styles)(function RemoteSyncDialog(props) {
               Sync to remote server
             </Typography>
             <Field name="username" component={MyTextField} label="Username" />
-            <Field name="password" component={MyTextField} label="Password" />
+            <Field
+              name="password"
+              type="password"
+              component={MyTextField}
+              label="Password"
+            />
             <Button
               size="large"
               variant="outlined"
