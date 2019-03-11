@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 
-import blue from '@material-ui/core/colors/blue';
-
 import './entries/db';
 
 import App from './App';
@@ -16,12 +14,15 @@ const theme = createMuiTheme({
     useNextVariants: true,
   },
   palette: {
-    primary: blue,
-    background: {
-      default: '#F7F9FC',
+    primary: {
+      light: '#62727b',
+      dark: '#607d8b',
+      main: '#37474f',
     },
     secondary: {
-      main: '#ec407a',
+      light: '#718792',
+      dark: '#1c313a',
+      main: '#455a64',
     },
   },
 });
