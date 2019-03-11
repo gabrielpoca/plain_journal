@@ -10,6 +10,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import SwitchInput from '@material-ui/core/Switch';
 import AlarmIcon from '@material-ui/icons/AccessAlarm';
 
+import db from '../db';
 import Authentication from '../core/Authentication';
 
 import { askForPermissioToReceiveNotifications } from '../notifications';
@@ -42,7 +43,12 @@ class Dashboard extends React.PureComponent {
   onReminder = async () => {
     try {
       if (!this.remindersAllowed()) {
-        await askForPermissioToReceiveNotifications();
+        const token = await askForPermissioToReceiveNotifications();
+        await db.put({
+          _id: 'notification-journal',
+          doc_type: 'notification',
+          token,
+        });
         this.context.setItem('remindersAllowed', true);
       } else {
         this.context.setItem('remindersAllowed', false);

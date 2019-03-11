@@ -4,6 +4,11 @@ import PouchDBAuthentication from 'pouchdb-authentication';
 import * as EncryptionKey from './EncryptionKey';
 import db from '../db';
 
+const REMOTE_HOST =
+  process.env.NODE_ENV === 'production'
+    ? 'https://couch.gabrielpoca.com'
+    : 'http://localhost:5984';
+
 PouchDB.plugin(PouchDBAuthentication);
 
 class Authentication {
@@ -56,9 +61,7 @@ class Authentication {
 
   setupRemoteDB() {
     this.remoteDB = new PouchDB(
-      `https://couch.gabrielpoca.com/userdb-${new Buffer(
-        this.username
-      ).toString('hex')}`,
+      `${REMOTE_HOST}/userdb-${new Buffer(this.username).toString('hex')}`,
       {
         fetch: (url, opts) => {
           opts.credentials = 'include';
