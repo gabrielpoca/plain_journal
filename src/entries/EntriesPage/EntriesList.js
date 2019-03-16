@@ -38,7 +38,7 @@ const Entry = withStyles(styles)(({ entry, classes }) => {
       button
       disableTouchRipple
       component={Link}
-      to={`/entries/entry/${entry._id}`}
+      to={`/entries/entry/${entry.id}`}
     >
       <ListItemText secondary={moment(entry.date).format('DD/MM/YY')}>
         <Text>{template.innerText}</Text>
@@ -56,7 +56,7 @@ const listStyles = theme => ({
 const EntriesList = withStyles(listStyles)(props => (
   <List className={props.classes.root}>
     {props.entries.map(entry => (
-      <Entry key={entry._id} entry={entry} />
+      <Entry key={entry.id} entry={entry} />
     ))}
   </List>
 ));

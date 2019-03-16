@@ -8,8 +8,6 @@ import Navbar from './Navbar';
 
 import { get, remove } from '../db';
 
-import { getCoverFromEntry } from '../helpers';
-
 const styles = theme => ({
   root: {
     display: 'flex',
@@ -45,15 +43,6 @@ const Title = styled.h1`
   font-size: 16px;
   line-height: 24px;
   padding: 0 16px;
-`;
-
-const Img = styled.img`
-  object-fit: cover;
-  max-width: 100%;
-  max-height: 100%;
-  position: absolute;
-  width: 100%;
-  height: 100%;
 `;
 
 const onDelete = async (entry, history) => {
@@ -94,9 +83,6 @@ const EntryPage = ({ classes, history, match }) => {
   return (
     <div className={classes.root}>
       <Navbar onDelete={() => onDelete(entry, history)} />
-      <Header withCover={!!entry._attachments}>
-        {entry._attachments && <Img src={getCoverFromEntry(entry)} />}
-      </Header>
       <Title>{moment(entry.date).format('DD/MM/YY')}</Title>
       <Body dangerouslySetInnerHTML={{ __html: entry.body }} />
     </div>

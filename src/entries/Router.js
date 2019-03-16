@@ -1,8 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import Slide from '@material-ui/core/Slide';
-
 import EntryPage from './EntryPage';
 import EditEntryPage from './EditEntryPage';
 import NewEntryPage from './NewEntryPage';
@@ -10,39 +8,18 @@ import EntriesPage from './EntriesPage';
 
 export default ({ match }) => (
   <Switch>
-    <Route path={`${match.path}/entry/:id/edit`} component={EditEntryPage} />
     <Route
       path={`${match.path}`}
       render={() => (
-        <>
-          <Route path={`${match.path}/`} component={EntriesPage} />
+        <Switch>
+          <Route exact path={`${match.path}/`} component={EntriesPage} />
+          <Route exact path={`${match.path}/new`} component={NewEntryPage} />
           <Route
-            path={`${match.path}/entry/:id`}
-            children={props => (
-              <Slide
-                direction="left"
-                in={!!props.match}
-                mountOnEnter
-                unmountOnExit
-              >
-                <EntryPage {...props} />
-              </Slide>
-            )}
+            path={`${match.path}/entry/:id/edit`}
+            component={EditEntryPage}
           />
-          <Route
-            path={`${match.path}/new`}
-            children={props => (
-              <Slide
-                direction="left"
-                in={!!props.match}
-                mountOnEnter
-                unmountOnExit
-              >
-                <NewEntryPage {...props} />
-              </Slide>
-            )}
-          />
-        </>
+          <Route path={`${match.path}/entry/:id`} component={EntryPage} />
+        </Switch>
       )}
     />
   </Switch>

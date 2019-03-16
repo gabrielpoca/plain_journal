@@ -22,8 +22,6 @@ const styles = theme => ({
 class NewEntryPage extends React.Component {
   state = {
     body: '',
-    cover: null,
-    coverPreview: null,
     date: moment(),
     disabled: false,
     in: true,
@@ -39,24 +37,10 @@ class NewEntryPage extends React.Component {
     this.setState({ disabled: true });
 
     try {
-      const changes = {
-        _id: newID(),
+      await put({
         date: this.state.date.toDate(),
         body: this.state.body,
-      };
-
-      if (this.state.cover) {
-        changes._attachments = {
-          cover: {
-            content_type: this.state.coverType,
-            data: this.state.cover.replace(
-              `data:${this.state.coverType};base64,`,
-              ''
-            ),
-          },
-        };
-      }
-      await put(changes);
+      });
 
       this.props.history.push('/entries');
     } catch (e) {

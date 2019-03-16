@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -10,13 +9,11 @@ import Background from '../../components/Background';
 import EntriesList from './EntriesList';
 import Navbar from './Navbar';
 
-import { db, all } from '../db';
+import { all, onChange, offChange } from '../db';
 
 const styles = theme => ({
   root: {
-    // height: '100%'
     height: '100%',
-    //zIndex: 1501,
     position: 'fixed',
     width: '100%',
     top: 0,
@@ -33,20 +30,18 @@ const styles = theme => ({
 function useEntries() {
   const [entries, setEntries] = useState([]);
 
-  const update = async e => {
+  const update = async () => {
     const entries = await all();
-    setEntries(_.orderBy(entries, 'date', 'desc'));
+    setEntries(entries);
   };
 
   useEffect(() => {
-    const sub = db
-      .changes({
-        since: 'now',
-        live: true,
-      })
-      .on('change', update);
-    update();
-    return () => sub.cancel();
+    (async () => {
+      await update();
+
+      onChange(update);
+      return () => offChange(update);
+    })();
   }, []);
 
   return entries;

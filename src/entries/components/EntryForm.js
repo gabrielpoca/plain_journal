@@ -1,15 +1,14 @@
-import React from 'react';
-import { useState } from 'react';
-import styled from 'styled-components/macro';
-import { MuiPickersUtilsProvider } from 'material-ui-pickers';
-import { DatePicker } from 'material-ui-pickers';
-import MomentUtils from '@date-io/moment';
-import { withStyles } from '@material-ui/core/styles';
+import React from "react";
+import { useState } from "react";
+import styled from "styled-components/macro";
+import { MuiPickersUtilsProvider } from "material-ui-pickers";
+import { DatePicker } from "material-ui-pickers";
+import MomentUtils from "@date-io/moment";
+import { withStyles } from "@material-ui/core/styles";
 
-import Editor from './Editor';
-import CoverPicker from './CoverPicker';
+import Editor from "./Editor";
 
-import useKeyboardDetect from '../../hooks/useKeyboardDetect';
+import useKeyboardDetect from "../../hooks/useKeyboardDetect";
 
 const Root = styled.div`
   height: calc(100% - 56px);
@@ -23,10 +22,10 @@ const Root = styled.div`
 const styles = theme => ({
   date: {
     border: 0,
-    width: '100%',
-    color: 'inherit',
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px`,
-  },
+    width: "100%",
+    color: "inherit",
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px`
+  }
 });
 
 const EntryForm = props => {
@@ -34,20 +33,11 @@ const EntryForm = props => {
   const [bodyFocus, setBodyFocus] = useState(false);
   const keyboardOpen = useKeyboardDetect();
 
-  const { disabled, cover, coverPreview, body, date, classes } = props;
+  const { disabled, body, date, classes } = props;
 
   return (
     <Root ref={ref}>
       <React.Fragment>
-        <CoverPicker
-          onChange={({ file, type }) =>
-            props.onChange({ cover: file, coverType: type })
-          }
-          onPreview={file => props.onChange({ coverPreview: file })}
-          disabled={disabled}
-          cover={cover}
-          coverPreview={coverPreview}
-        />
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <div className={classes.date}>
             <DatePicker
@@ -71,9 +61,9 @@ const EntryForm = props => {
         modules={{
           toolbar: [
             [{ cover: [2, false] }],
-            ['bold', 'italic'],
-            ['link', 'image'],
-          ],
+            ["bold", "italic"],
+            ["link", "image"]
+          ]
         }}
       />
     </Root>

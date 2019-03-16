@@ -6,16 +6,11 @@ import EntryForm from '../components/EntryForm';
 import Navbar from './Navbar';
 
 import { get, put } from '../db';
-import { getCoverFromEntry } from '../helpers';
 
 class EditEntryPage extends React.Component {
   state = {
-    _id: null,
-    _rev: null,
+    id: null,
     body: null,
-    cover: null,
-    coverType: null,
-    coverPreview: null,
     date: null,
     disabled: false,
   };
@@ -25,7 +20,7 @@ class EditEntryPage extends React.Component {
   }
 
   updateEntry = async () => {
-    if (_.get(this.state.entry, '_id', false) === this.props.match.params.id)
+    if (_.get(this.state.entry, 'id', false) === this.props.match.params.id)
       return;
 
     const doc = await get(this.props.match.params.id);
@@ -35,11 +30,6 @@ class EditEntryPage extends React.Component {
       body: doc.body,
       date: moment(doc.date),
     });
-
-    if (doc._attachments) {
-      const coverPreview = getCoverFromEntry(doc);
-      this.setState({ coverPreview });
-    }
   };
 
   onSave = async () => {
@@ -52,18 +42,6 @@ class EditEntryPage extends React.Component {
         date: this.state.date.toDate(),
         body: this.state.body,
       };
-
-      if (this.state.cover) {
-        changes._attachments = {
-          cover: {
-            content_type: this.state.coverType,
-            data: this.state.cover.replace(
-              `data:${this.state.coverType};base64,`,
-              ''
-            ),
-          },
-        };
-      }
 
       await put(changes);
       this.props.history.push('/entries');

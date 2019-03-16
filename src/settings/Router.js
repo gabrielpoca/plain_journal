@@ -1,135 +1,84 @@
-import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import _ from "lodash";
+import React, { useState, useEffect } from "react";
+import { Route } from "react-router-dom";
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import SwitchInput from '@material-ui/core/Switch';
-import AlarmIcon from '@material-ui/icons/AccessAlarm';
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import SwitchInput from "@material-ui/core/Switch";
+import AlarmIcon from "@material-ui/icons/AccessAlarm";
 
-import db from '../db';
-import Authentication from '../core/Authentication';
+import * as Settings from "./db";
 
-import { askForPermissioToReceiveNotifications } from '../notifications';
-import { KeyValueStorage } from '../KeyValueStorage';
+import { askForPermissioToReceiveNotifications } from "../notifications";
 
-import RemoteSyncDialog from './RemoteSyncDialog';
-import ErrorNotification from './ErrorNotification';
-import Navbar from './Navbar';
+import Navbar from "./Navbar";
 
-class Dashboard extends React.PureComponent {
-  static contextType = KeyValueStorage;
-  state = {
-    error: null,
-    remoteSyncOpen: false,
+function useSettings() {
+  const [settings, setSettings] = useState([]);
+
+  const update = async () => {
+    const res = await Settings.all();
+    setSettings(res);
   };
 
-  remindersAllowed = () => {
-    return (
-      Notification.permission === 'granted' &&
-      this.context.getItem('remindersAllowed')
-    );
-  };
+  useEffect(() => {
+    (async () => {
+      await update();
+      Settings.onChange(update);
+      return () => Settings.off(update);
+    })();
+  }, []);
 
-  onErrorClose = (event, reason) => {
-    if (reason === 'clickaway') return;
+  return settings;
+}
 
-    this.setState({ error: false });
-  };
+function RemindersToggle() {
+  const settings = useSettings();
+  const reminders = _.find(settings, { id: "reminders" }) || { value: false };
+  const toggleReminders = async () => {
+    let token = null;
 
-  onReminder = async () => {
     try {
-      if (!this.remindersAllowed()) {
-        const token = await askForPermissioToReceiveNotifications();
-        await db.put({
-          _id: 'notification-journal',
-          doc_type: 'notification',
-          token,
-        });
-        this.context.setItem('remindersAllowed', true);
-      } else {
-        this.context.setItem('remindersAllowed', false);
-      }
+      token = await askForPermissioToReceiveNotifications();
     } catch (e) {
-      this.setState({ error: 'Something nice' });
+      console.error(e);
     }
+
+    Settings.put({
+      id: "reminders",
+      value: !reminders.value,
+      token
+    });
   };
 
-  onRemoteSyncToggle = async () => {
-    if (!this.context.getItem('remoteSync'))
-      this.setState({ remoteSyncOpen: !this.state.remoteSyncOpen });
-    else {
-      await Authentication.disable();
-      this.context.setItem('remoteSync', false);
-    }
-  };
+  return (
+    <ListItem>
+      <ListItemIcon>
+        <AlarmIcon />
+      </ListItemIcon>
+      <ListItemText primary="Journaling Reminders" />
+      <ListItemSecondaryAction>
+        <SwitchInput onChange={toggleReminders} checked={reminders.value} />
+      </ListItemSecondaryAction>
+    </ListItem>
+  );
+}
 
-  onRemoteSyncEnable = async values => {
-    this.onRemoteSyncToggle();
-    //const { username, password } = values;
-    await Authentication.configure(values.username, values.password);
-    this.context.setItem('remoteSync', true);
-  };
-
-  render() {
-    return (
-      <KeyValueStorage>
-        {({ getItem, setItem }) => {
-          const reminders = getItem('remindersAllowed') || false;
-          const remoteSync = getItem('remoteSync') || false;
-
-          return (
-            <>
-              <RemoteSyncDialog
-                onClose={this.onRemoteSyncToggle}
-                open={this.state.remoteSyncOpen}
-                onSubmit={this.onRemoteSyncEnable}
-              />
-              <Navbar />
-              <ErrorNotification
-                open={!!this.state.error}
-                message={this.state.error}
-                onClose={this.onErrorClose}
-              />
-              <List subheader={<ListSubheader>Settings</ListSubheader>}>
-                <ListItem>
-                  <ListItemIcon>
-                    <AlarmIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Journaling Reminders" />
-                  <ListItemSecondaryAction>
-                    <SwitchInput
-                      onChange={this.onReminder}
-                      checked={reminders}
-                    />
-                  </ListItemSecondaryAction>
-                </ListItem>
-                <ListItem>
-                  <ListItemIcon>
-                    <AlarmIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Sync to remote server" />
-                  <ListItemSecondaryAction>
-                    <SwitchInput
-                      onChange={this.onRemoteSyncToggle}
-                      checked={remoteSync}
-                    />
-                  </ListItemSecondaryAction>
-                </ListItem>
-              </List>
-            </>
-          );
-        }}
-      </KeyValueStorage>
-    );
-  }
+function Dashboard() {
+  return (
+    <>
+      <Navbar />
+      <List subheader={<ListSubheader>Settings</ListSubheader>}>
+        <RemindersToggle />
+      </List>
+    </>
+  );
 }
 
 export default ({ match }) => (
-  <Switch>
-    <Route path={`${match.path}/`} component={Dashboard} />
-  </Switch>
+  <Route path={`${match.path}/`} component={Dashboard} />
 );

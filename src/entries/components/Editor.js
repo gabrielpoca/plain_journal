@@ -1,44 +1,44 @@
-import _ from 'lodash';
-import React from 'react';
-import Quill from 'quill';
-import { withStyles } from '@material-ui/core/styles';
+import _ from "lodash";
+import React from "react";
+import Quill from "quill";
+import { withStyles } from "@material-ui/core/styles";
 
-import 'quill/dist/quill.core.css';
-import 'react-quill/dist/quill.snow.css';
+import "quill/dist/quill.core.css";
+import "react-quill/dist/quill.snow.css";
 
-import MarkdownShortcuts from './markdown-shortcuts';
+import MarkdownShortcuts from "./markdown-shortcuts";
 
-Quill.register('modules/markdownShortcuts', MarkdownShortcuts);
+Quill.register("modules/markdownShortcuts", MarkdownShortcuts);
 
 const styles = theme => ({
   root: {
     backgroundColor: theme.palette.background.default,
-    position: 'fixed',
-    top: '56px',
-    width: '100%',
-    maxWidth: 'var(--max-width)',
-    overflow: 'scroll',
+    position: "fixed",
+    top: "56px",
+    width: "100%",
+    maxWidth: "var(--max-width)",
+    overflow: "scroll"
   },
   expanded: {
-    transform: 'translateY(0)',
-    height: 'calc(100% - 64px)',
+    transform: "translateY(0)",
+    height: "calc(100% - 64px)"
   },
   notExpanded: {
-    transform: 'translateY(400px)',
-    height: 'calc(100% - 472px)',
-  },
+    transform: "translateY(60px)",
+    height: "calc(100% - 472px)"
+  }
 });
 
 class EditorElement extends React.Component {
   componentDidMount() {
     this.quill = new Quill(this.el, {
-      placeholder: 'Today I ...',
+      placeholder: "Today I ...",
       modules: {
-        markdownShortcuts: {},
-      },
+        markdownShortcuts: {}
+      }
     });
-    this.quill.on('text-change', this.onTextChange);
-    this.quill.on('selection-change', range =>
+    this.quill.on("text-change", this.onTextChange);
+    this.quill.on("selection-change", range =>
       range !== null ? this.props.onFocus() : this.props.onBlur()
     );
 
@@ -87,7 +87,7 @@ class Editor extends React.Component {
       <div
         className={rootClassName}
         ref={this.el}
-        offset={_.get(this.el.current, 'offsetTop', 0)}
+        offset={_.get(this.el.current, "offsetTop", 0)}
       >
         <EditorElement {...this.props} />
       </div>

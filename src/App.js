@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router';
-import { createGlobalStyle } from 'styled-components';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import React, { Component } from "react";
+import { withRouter } from "react-router";
+import { createGlobalStyle } from "styled-components";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { Route, Switch, Redirect } from "react-router-dom";
 
-import EntriesRouter from './entries/Router';
-import SettingsRouter from './settings/Router';
-import KeyValueStorage from './KeyValueStorage';
+import EntriesRouter from "./entries/Router";
+import SettingsRouter from "./settings/Router";
+import AccountRouter from "./account";
+import KeyValueStorage from "./KeyValueStorage";
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -41,6 +42,7 @@ class App extends Component {
           <Switch>
             <Route path="/entries" component={EntriesRouter} />
             <Route path="/settings" component={SettingsRouter} />
+            <Route path="/account" component={AccountRouter} />
             <Route render={() => <Redirect to="/entries" />} />
           </Switch>
         </KeyValueStorage>
