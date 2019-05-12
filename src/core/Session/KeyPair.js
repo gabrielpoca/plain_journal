@@ -68,7 +68,10 @@ export const decrypt = async data => {
     await window.crypto.subtle.decrypt(
       {
         name: "AES-GCM",
-        iv: str2ab(await localForage.getItem("email"))
+        iv: str2ab(
+          (await localForage.getItem("email")) ||
+            (await localForage.getItem("username"))
+        )
       },
       await localForage.getItem("encryptionKey"),
       str2ab(data)
