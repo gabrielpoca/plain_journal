@@ -1,23 +1,23 @@
-import _ from 'lodash';
-import React from 'react';
+import _ from "lodash";
+import React from "react";
 
-import entries from './entries';
+import entries from "./entries";
 
 const SearchContext = React.createContext();
 
 class Provider extends React.PureComponent {
   constructor() {
     super();
-    this.state = { entries: [], searchQuery: '', onSearch: this.onSearch };
+    this.state = { entries: [], searchQuery: "", onSearch: this.onSearch };
   }
 
   componentWillMount() {
     this.sub = entries
       .changes({
-        since: 'now',
-        live: true,
+        since: "now",
+        live: true
       })
-      .on('change', this.update);
+      .on("change", this.update);
     this.update();
   }
 
@@ -32,15 +32,15 @@ class Provider extends React.PureComponent {
       if (!this.state.searchQuery) {
         newEntries = (await entries.find({
           selector: {},
-          sort: [{ date: 'desc' }],
+          sort: [{ date: "desc" }]
         })).docs;
       } else {
         newEntries = (await entries.search({
           query: this.state.searchQuery,
-          fields: ['body'],
-          mm: '50%',
-          sort: [{ date: 'desc' }],
-          include_docs: true,
+          fields: ["body"],
+          mm: "50%",
+          sort: [{ date: "desc" }],
+          include_docs: true
         })).rows.map(r => r.doc);
       }
 
@@ -51,7 +51,7 @@ class Provider extends React.PureComponent {
 
   onSearch = event => {
     this.setState(
-      { searchQuery: _.get(event.target, 'value', '') },
+      { searchQuery: _.get(event.target, "value", "") },
       this.update
     );
   };

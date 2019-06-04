@@ -1,36 +1,27 @@
-import _ from 'lodash';
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components/macro';
-import moment from 'moment';
-import { withStyles } from '@material-ui/core/styles';
+import _ from "lodash";
+import React, { useState, useEffect } from "react";
+import styled from "styled-components/macro";
+import moment from "moment";
+import { withStyles } from "@material-ui/core/styles";
 
-import Navbar from './Navbar';
+import Navbar from "./Navbar";
 
-import { get, remove } from '../db';
+import { get, remove } from "../db";
 
 const styles = theme => ({
   root: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-    background: 'white',
-    top: '0',
-    left: '0',
-    width: '100%',
-    position: 'fixed',
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    background: "white",
+    top: "0",
+    left: "0",
+    width: "100%",
+    position: "fixed",
     backgroundColor: theme.palette.background.default,
-    overflow: 'scroll',
-  },
+    overflow: "scroll"
+  }
 });
-
-const Header = styled.div`
-  flex-basis: ${props => (props.withCover ? '300px' : '0px')};
-  flex-grow: 0;
-  flex-shrink: 0;
-  align-self: stretch;
-  width: 100%;
-  position: relative;
-`;
 
 const Body = styled.div`
   flex: 1;
@@ -48,7 +39,7 @@ const Title = styled.h1`
 const onDelete = async (entry, history) => {
   try {
     await remove(entry);
-    history.push('/entries');
+    history.push("/entries");
   } catch (e) {
     console.error(e);
   }
@@ -71,7 +62,7 @@ function getJournalEntry(id) {
 }
 
 const EntryPage = ({ classes, history, match }) => {
-  const entry = getJournalEntry(_.get(match, 'params.id'));
+  const entry = getJournalEntry(_.get(match, "params.id"));
 
   if (!entry)
     return (
@@ -83,7 +74,7 @@ const EntryPage = ({ classes, history, match }) => {
   return (
     <div className={classes.root}>
       <Navbar onDelete={() => onDelete(entry, history)} />
-      <Title>{moment(entry.date).format('DD/MM/YY')}</Title>
+      <Title>{moment(entry.date).format("DD/MM/YY")}</Title>
       <Body dangerouslySetInnerHTML={{ __html: entry.body }} />
     </div>
   );

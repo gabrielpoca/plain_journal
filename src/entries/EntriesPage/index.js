@@ -1,47 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import { withStyles } from '@material-ui/core/styles';
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
+import { withStyles } from "@material-ui/core/styles";
 
-import Background from '../../components/Background';
-import EntriesList from './EntriesList';
-import Navbar from './Navbar';
+import Background from "../../components/Background";
+import EntriesList from "./EntriesList";
+import Navbar from "./Navbar";
 
-import { all, onChange, offChange } from '../db';
+import { all, onChange, offChange } from "../db";
 
 const styles = theme => ({
   root: {
-    height: '100%',
-    position: 'fixed',
-    width: '100%',
+    height: "100%",
+    position: "fixed",
+    width: "100%",
     top: 0,
     left: 0,
-    overflow: 'scroll',
+    overflow: "scroll"
   },
   fab: {
-    position: 'fixed',
+    position: "fixed",
     bottom: theme.spacing.unit * 3,
-    right: theme.spacing.unit * 3,
-  },
+    right: theme.spacing.unit * 3
+  }
 });
 
 function useEntries() {
   const [entries, setEntries] = useState([]);
 
-  const update = async () => {
-    const entries = await all();
-    setEntries(entries);
-  };
-
   useEffect(() => {
-    (async () => {
-      await update();
+    const update = async () => {
+      const entries = await all();
+      setEntries(entries);
+    };
 
-      onChange(update);
-      return () => offChange(update);
-    })();
+    update();
+
+    onChange(update);
+
+    return () => offChange(update);
   }, []);
 
   return entries;

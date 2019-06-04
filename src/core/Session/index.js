@@ -1,92 +1,93 @@
 import EventEmitter from "../EventEmitter";
 import * as API from "./api";
 import * as KeyPair from "./KeyPair";
+import CurrentUser from "./CurrentUser";
+
+const emitter = new EventEmitter();
 
 class Session {
   constructor() {
-    this.loaded = false;
-    this.emitter = new EventEmitter();
-    this.loadUser();
+    this.loading = true;
   }
 
-  get keyPair() {
-    return KeyPair;
+  get currentUser() {
+    return CurrentUser.user;
   }
 
-  get api() {
-    return API;
+  async load() {
+    await CurrentUser.load();
+    if (CurrentUser.user) API.setAuthToken(CurrentUser.user.token);
+    this.loading = false;
+    this._sendChanged();
   }
 
-  valid() {
-    return (
-      localStorage.getItem("usertoken") !== null &&
-      localStorage.getItem("usertoken") !== "null"
-    );
-  }
+  signIn = async (email, password) => {
+    if (this.loading) throw new Error("Session not loaded");
+    if (CurrentUser.user) throw new Error("Already signed in");
 
-  async loadUser() {
     try {
-      this._loadUserToken();
-      if (this.valid()) {
-        const { data } = await API.currentUser();
-        if (data.id) this._sendChanged();
-      }
-      this.loaded = true;
-    } catch (e) {
-      this.loaded = true;
-      console.error(e);
+      const { data } = await API.signIn({
+        session: { email, password }
+      });
+
+      await CurrentUser.set(data);
+      await KeyPair.set(email, password);
+      API.setAuthToken(data.token);
+      this._sendChanged();
+    } catch (error) {
+      await this._unsetEverything();
+      console.error(error);
+      throw error;
     }
-  }
+  };
 
-  async signIn(email, password) {
-    const { data } = await API.signIn({
-      session: { email, password }
-    });
+  signUp = async (email, password) => {
+    if (this.loading) throw new Error("Session not loaded");
+    if (CurrentUser.user) throw new Error("Already signed in");
 
-    await KeyPair.setup(email, password);
-    this._setUserToken(data.token);
+    try {
+      const { data } = await API.signUp({
+        user: { email, password }
+      });
+
+      await CurrentUser.set(data);
+      await KeyPair.set(email, password);
+      API.setAuthToken(data.token);
+      this._sendChanged();
+    } catch (error) {
+      await this._unsetEverything();
+      console.error(error);
+      throw error;
+    }
+  };
+
+  signOut = async () => {
+    if (this.loading) throw new Error("Session not loaded");
+    if (!CurrentUser.user) throw new Error("Not signed in");
+
+    await this._unsetEverything();
     this._sendChanged();
-  }
-
-  async signUp(email, password) {
-    const { data } = await API.signUp({
-      user: { email, password }
-    });
-
-    await KeyPair.setup(email, password);
-    this._setUserToken(data.token);
-    this._sendChanged();
-  }
-
-  async signOut() {
-    await KeyPair.destroy();
-    this._setUserToken(null);
-    this._sendChanged();
-  }
+  };
 
   onChange(cb) {
-    this.emitter.addEventListener("changed", cb);
+    emitter.addEventListener("changed", cb);
   }
 
   off(cb) {
-    this.emitter.removeEventListener("changed", cb);
+    emitter.removeEventListener("changed", cb);
   }
 
-  _setUserToken(token) {
-    localStorage.setItem("usertoken", token);
-    API.setAuthToken(token);
-  }
-
-  _loadUserToken() {
-    const token = localStorage.getItem("usertoken");
-    API.setAuthToken(token);
+  async _unsetEverything() {
+    await KeyPair.unset();
+    await CurrentUser.unset();
+    API.setAuthToken(null);
   }
 
   _sendChanged() {
     const changeEvent = new CustomEvent("changed", {
       detail: {}
     });
-    this.emitter.dispatchEvent(changeEvent);
+    emitter.dispatchEvent(changeEvent);
   }
 }
 

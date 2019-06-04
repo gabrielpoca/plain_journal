@@ -7,6 +7,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import EntriesRouter from "./entries/Router";
 import SettingsRouter from "./settings/Router";
 import AccountRouter from "./account";
+import { UserContextProvider } from "./account/UserContext";
 import KeyValueStorage from "./KeyValueStorage";
 
 const GlobalStyle = createGlobalStyle`
@@ -35,7 +36,7 @@ const GlobalStyle = createGlobalStyle`
 class App extends Component {
   render() {
     return (
-      <React.Fragment>
+      <UserContextProvider>
         <KeyValueStorage>
           <GlobalStyle />
           <CssBaseline />
@@ -46,7 +47,7 @@ class App extends Component {
             <Route render={() => <Redirect to="/entries" />} />
           </Switch>
         </KeyValueStorage>
-      </React.Fragment>
+      </UserContextProvider>
     );
   }
 }

@@ -18,6 +18,7 @@ module.exports = {
   plugins: ["react", "react-hooks"],
   rules: {
     "no-unused-vars": 1,
+    "no-console": ["error", { allow: ["warn", "error"] }],
     // react plugin - options
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",

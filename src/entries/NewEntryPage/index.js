@@ -1,35 +1,29 @@
-import React from 'react';
-import moment from 'moment';
-import { withStyles } from '@material-ui/core/styles';
+import React from "react";
+import moment from "moment";
+import { withStyles } from "@material-ui/core/styles";
 
-import EntryForm from '../components/EntryForm';
-import Navbar from './Navbar';
-import { newID } from '../../utils';
+import EntryForm from "../components/EntryForm";
+import Navbar from "./Navbar";
 
-import { put } from '../db';
+import { put } from "../db";
 
 const styles = theme => ({
   root: {
-    height: '100%',
+    height: "100%",
     backgroundColor: theme.palette.background.default,
-    position: 'fixed',
-    width: '100%',
+    position: "fixed",
+    width: "100%",
     top: 0,
-    left: 0,
-  },
+    left: 0
+  }
 });
 
 class NewEntryPage extends React.Component {
   state = {
-    body: '',
+    body: "",
     date: moment(),
-    disabled: false,
-    in: true,
+    disabled: false
   };
-
-  componentWillUnmount() {
-    this.setState({ in: false });
-  }
 
   onSave = async () => {
     if (!this.state.body || !this.state.date) return false;
@@ -39,10 +33,10 @@ class NewEntryPage extends React.Component {
     try {
       await put({
         date: this.state.date.toDate(),
-        body: this.state.body,
+        body: this.state.body
       });
 
-      this.props.history.push('/entries');
+      this.props.history.push("/entries");
     } catch (e) {
       console.error(e);
       this.setState({ disabled: false });

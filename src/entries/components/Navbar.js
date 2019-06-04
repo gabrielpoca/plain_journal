@@ -1,38 +1,38 @@
-import React from 'react';
-import styled from 'styled-components/macro';
-import { Route, Link } from 'react-router-dom';
-import { withRouter } from 'react-router';
+import React from "react";
+import styled from "styled-components/macro";
+import { Route, Link } from "react-router-dom";
+import { withRouter } from "react-router";
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import InputBase from '@material-ui/core/InputBase';
-import { withStyles } from '@material-ui/core/styles';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import InputBase from "@material-ui/core/InputBase";
+import { withStyles } from "@material-ui/core/styles";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 
-import CloseIcon from '@material-ui/icons/Close';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import CloseIcon from "@material-ui/icons/Close";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 
-import { SearchConsumer } from '../Search';
+import { SearchConsumer } from "../Search";
 
 const styles = theme => ({
   inputRoot: {
-    color: 'inherit',
-    width: '100%',
+    color: "inherit",
+    width: "100%"
   },
   inputInput: {
     paddingTop: theme.spacing.unit,
     paddingRight: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
     paddingLeft: theme.spacing.unit,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: 200,
-    },
-  },
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("md")]: {
+      width: 200
+    }
+  }
 });
 
 const SpacedToolbar = styled(Toolbar)`
@@ -42,13 +42,13 @@ const SpacedToolbar = styled(Toolbar)`
   flex-direction: row;
 `;
 
-const options = ['None', 'Atria', 'Callisto', 'Dione'];
+const options = ["None", "Atria", "Callisto", "Dione"];
 
 const ITEM_HEIGHT = 48;
 
 class LongMenu extends React.Component {
   state = {
-    anchorEl: null,
+    anchorEl: null
   };
 
   handleClick = event => {
@@ -72,7 +72,7 @@ class LongMenu extends React.Component {
         </Link>
         <IconButton
           aria-label="More"
-          aria-owns={open ? 'long-menu' : undefined}
+          aria-owns={open ? "long-menu" : undefined}
           aria-haspopup="true"
           onClick={this.handleClick}
         >
@@ -86,14 +86,14 @@ class LongMenu extends React.Component {
           PaperProps={{
             style: {
               maxHeight: ITEM_HEIGHT * 4.5,
-              width: 200,
-            },
+              width: 200
+            }
           }}
         >
           {options.map(option => (
             <MenuItem
               key={option}
-              selected={option === 'Pyxis'}
+              selected={option === "Pyxis"}
               onClick={this.handleClose}
             >
               {option}
@@ -127,7 +127,7 @@ class Navbar extends React.PureComponent {
                       placeholder="Search…"
                       classes={{
                         root: classes.inputRoot,
-                        input: classes.inputInput,
+                        input: classes.inputInput
                       }}
                     />
                   )}

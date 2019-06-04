@@ -1,7 +1,6 @@
 import moment from "moment";
-import _ from "lodash";
+import uuidv1 from "uuid/v1";
 
-import pouchdb from "../db";
 import db from "../core/DB";
 import EventEmitter from "../core/EventEmitter";
 
@@ -24,26 +23,32 @@ export const onChange = cb => emitter.addEventListener("changed", cb);
 export const offChange = cb => emitter.removeEventListener("changed", cb);
 
 export const all = async () => {
-  const entries = await db.entries.toArray();
-  return _.chain(entries)
-    .map(entry => ({ ...entry, date: moment(entry.date, "YYYY-MM-DD") }))
-    .sortBy("date")
-    .value();
+  const entries = await db.entries
+    .where("deleted")
+    .equals("false")
+    .reverse()
+    .sortBy("date");
+
+  console.log(await db.entries.toArray());
+
+  return entries;
 };
 
 export const get = async id => {
-  return await db.entries.get(parseInt(id, 10));
+  return await db.entries.get(id);
 };
 
 export const remove = async doc => {
-  return db.entries.delete(doc.id);
+  return db.entries.put({ ...doc, dirty: "true", deleted: "true" });
 };
 
 export const put = async changes => {
   if (changes.date instanceof Date)
     changes.date = moment(changes.date).format("YYYY-MM-DD");
 
-  changes.version = (changes.version || 0) + 1;
+  if (!changes.id) changes.id = uuidv1();
+  changes.dirty = "true";
+  changes.deleted = "false";
   return db.entries.put(changes);
 };
 
@@ -56,8 +61,7 @@ export const encryptAll = async () => {
         return await db.entries.put({
           ...doc,
           body: encrypted,
-          encrypted: true,
-          version: doc.version + 1
+          encrypted: true
         });
       })
   );
@@ -72,38 +76,8 @@ export const decryptAll = async () => {
         return await db.entries.put({
           ...doc,
           body: decrypted,
-          encrypted: false,
-          version: doc.version + 1
+          encrypted: false
         });
       })
   );
 };
-
-(async () => {
-  try {
-    if (localStorage.getItem("toDexie") === "true") return;
-
-    var entries = await pouchdb.allDocs({
-      include_docs: true,
-      attachments: true
-    });
-
-    await db.entries.bulkAdd(
-      await Promise.all(
-        entries.rows
-          .filter(d => d.doc.doc_type === "journal")
-          .map(async e => {
-            return {
-              body: e.doc.encrypted ? await decrypt(e.doc.body) : e.doc.body,
-              date: e.doc.date,
-              cover: _.get(e.doc, "_attachments.cover")
-            };
-          })
-      )
-    );
-
-    localStorage.setItem("toDexie", "true");
-  } catch (e) {
-    console.error(e);
-  }
-})();

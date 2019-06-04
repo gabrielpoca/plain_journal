@@ -13,8 +13,8 @@ const str2ab = str => {
   return buf;
 };
 
-export const setup = async (email, password) => {
-  if (await localForage.getItem("encryptionKey"))
+export const set = async (email, password) => {
+  if (await localForage.getItem("KeyPair"))
     throw new Error("encryption is already setup");
 
   const inputKey = await crypto.subtle.importKey(
@@ -41,44 +41,39 @@ export const setup = async (email, password) => {
     ["encrypt", "decrypt"]
   );
 
-  await localForage.setItem("encryptionKey", key);
-  return await localForage.setItem("email", email);
+  return await localForage.setItem("KeyPair", { key, email });
 };
 
-export const destroy = async () => {
-  await localForage.setItem("encryptionKey", false);
-  return await localForage.setItem("email", false);
+export const unset = async () => {
+  return await localForage.setItem("KeyPair", false);
 };
 
 export const encrypt = async data => {
+  const { key, email } = await localForage.getItem("KeyPair");
+
   return ab2str(
     await window.crypto.subtle.encrypt(
       {
         name: "AES-GCM",
-        iv: str2ab(await localForage.getItem("email"))
+        iv: str2ab(email)
       },
-      await localForage.getItem("encryptionKey"),
+      key,
       str2ab(data)
     )
   );
 };
 
 export const decrypt = async data => {
+  const { key, email } = await localForage.getItem("KeyPair");
+
   return ab2str(
     await window.crypto.subtle.decrypt(
       {
         name: "AES-GCM",
-        iv: str2ab(
-          (await localForage.getItem("email")) ||
-            (await localForage.getItem("username"))
-        )
+        iv: str2ab(email)
       },
-      await localForage.getItem("encryptionKey"),
+      key,
       str2ab(data)
     )
   );
-};
-
-export const enabled = async () => {
-  return !!(await localForage.getItem("encryptionKey"));
 };
