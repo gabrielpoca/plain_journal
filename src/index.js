@@ -12,9 +12,6 @@ import registerServiceWorker from "./registerServiceWorker";
 import { initializeFirebase } from "./notifications";
 
 const theme = createMuiTheme({
-  typography: {
-    useNextVariants: true
-  },
   palette: {
     primary: {
       light: "#62727b",

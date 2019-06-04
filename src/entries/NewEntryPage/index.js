@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import moment from "moment";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -18,39 +18,37 @@ const styles = theme => ({
   }
 });
 
-class NewEntryPage extends React.Component {
-  state = {
+function NewEntryPage(props) {
+  const [state, setState] = useState({
     body: "",
     date: moment(),
     disabled: false
-  };
+  });
 
-  onSave = async () => {
+  const onSave = async () => {
     if (!this.state.body || !this.state.date) return false;
 
-    this.setState({ disabled: true });
+    setState({ disabled: true });
 
     try {
       await put({
-        date: this.state.date.toDate(),
-        body: this.state.body
+        date: state.date.toDate(),
+        body: state.body
       });
 
-      this.props.history.push("/entries");
+      props.history.push("/entries");
     } catch (e) {
       console.error(e);
-      this.setState({ disabled: false });
+      setState({ disabled: false });
     }
   };
 
-  render() {
-    return (
-      <div className={this.props.classes.root}>
-        <Navbar onSave={this.onSave} />
-        <EntryForm onChange={change => this.setState(change)} {...this.state} />
-      </div>
-    );
-  }
+  return (
+    <div className={props.classes.root}>
+      <Navbar onSave={onSave} />
+      <EntryForm onChange={change => setState(change)} {...state} />
+    </div>
+  );
 }
 
 export default withStyles(styles)(NewEntryPage);

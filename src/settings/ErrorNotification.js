@@ -1,18 +1,18 @@
-import React from 'react';
+import React from "react";
 
-import { withStyles } from '@material-ui/core/styles';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import amber from '@material-ui/core/colors/amber';
+import { withStyles } from "@material-ui/core/styles";
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import amber from "@material-ui/core/colors/amber";
 
 const styles = theme => ({
   close: {
-    padding: theme.spacing.unit / 2,
+    padding: theme.spacing(2)
   },
   root: {
-    backgroundColor: amber[700],
-  },
+    backgroundColor: amber[700]
+  }
 });
 
 class ErrorNotification extends React.Component {
@@ -22,14 +22,14 @@ class ErrorNotification extends React.Component {
     return (
       <Snackbar
         anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
+          vertical: "top",
+          horizontal: "left"
         }}
         open={this.props.open}
         autoHideDuration={6000}
         onClose={this.props.onClose}
         ContentProps={{
-          'aria-describedby': 'message-id',
+          "aria-describedby": "message-id"
         }}
         message={<span id="message-id">{this.props.message}</span>}
         action={[
@@ -41,7 +41,7 @@ class ErrorNotification extends React.Component {
             onClick={this.props.onClose}
           >
             <CloseIcon />
-          </IconButton>,
+          </IconButton>
         ]}
       />
     );

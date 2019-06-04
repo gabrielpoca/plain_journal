@@ -22,8 +22,8 @@ const styles = theme => ({
   },
   fab: {
     position: "fixed",
-    bottom: theme.spacing.unit * 3,
-    right: theme.spacing.unit * 3
+    bottom: theme.spacing(3),
+    right: theme.spacing(3)
   }
 });
 
@@ -40,7 +40,9 @@ function useEntries() {
 
     onChange(update);
 
-    return () => offChange(update);
+    return () => {
+      offChange(update);
+    };
   }, []);
 
   return entries;

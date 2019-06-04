@@ -1,43 +1,37 @@
 import React from "react";
 import { useState } from "react";
-import styled from "styled-components/macro";
-import { MuiPickersUtilsProvider } from "material-ui-pickers";
-import { DatePicker } from "material-ui-pickers";
+import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
-import { withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/styles";
 
 import Editor from "./Editor";
 
 import useKeyboardDetect from "../../hooks/useKeyboardDetect";
 
-const Root = styled.div`
-  height: calc(100% - 56px);
-  overflow: hidden;
-
-  .DateInput_input__focused {
-    border: 0;
-  }
-`;
-
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
+  root: {
+    height: "calc(100% - 56px)",
+    overflow: "hidden"
+  },
   date: {
-    border: 0,
-    width: "100%",
-    color: "inherit",
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px`
+    paddingLeft: theme.spacing(1),
+    paddingTop: theme.spacing(1)
   }
-});
+}));
 
 const EntryForm = props => {
+  const classes = useStyles();
   const [ref] = useState(React.createRef());
   const [bodyFocus, setBodyFocus] = useState(false);
   const keyboardOpen = useKeyboardDetect();
 
-  const { disabled, body, date, classes } = props;
+  const { disabled, body, date } = props;
+
+  console.log(classes);
 
   return (
-    <Root ref={ref}>
-      <React.Fragment>
+    <div className={classes.root} ref={ref}>
+      <div className={classes.date}>
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <div className={classes.date}>
             <DatePicker
@@ -49,7 +43,7 @@ const EntryForm = props => {
             />
           </div>
         </MuiPickersUtilsProvider>
-      </React.Fragment>
+      </div>
       <Editor
         theme="snow"
         disabled={disabled}
@@ -66,8 +60,8 @@ const EntryForm = props => {
           ]
         }}
       />
-    </Root>
+    </div>
   );
 };
 
-export default withStyles(styles)(EntryForm);
+export default EntryForm;

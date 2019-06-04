@@ -49,7 +49,7 @@ const Entry = withStyles(styles)(({ entry, classes }) => {
 
 const listStyles = theme => ({
   root: {
-    paddingBottom: theme.spacing.unit * 7
+    paddingBottom: theme.spacing(7)
   }
 });
 

@@ -1,13 +1,11 @@
 import Dexie from "dexie";
 import "dexie-observable";
 
-const db = new Dexie("journal");
+const db = new Dexie("journalApp");
 
 db.version(1).stores({
   entries: "id,date,dirty,deleted",
   settings: "id"
 });
-
-db.open();
 
 export default db;

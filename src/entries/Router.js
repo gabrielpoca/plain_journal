@@ -1,10 +1,10 @@
-import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import React from "react";
+import { Route, Switch } from "react-router-dom";
 
-import EntryPage from './EntryPage';
-import EditEntryPage from './EditEntryPage';
-import NewEntryPage from './NewEntryPage';
-import EntriesPage from './EntriesPage';
+import EntryPage from "./EntryPage";
+import EditEntryPage from "./EditEntryPage";
+import NewEntryPage from "./NewEntryPage";
+import EntriesPage from "./EntriesPage";
 
 export default ({ match }) => (
   <Switch>

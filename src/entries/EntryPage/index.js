@@ -45,24 +45,27 @@ const onDelete = async (entry, history) => {
   }
 };
 
-function getJournalEntry(id) {
+function useJournalEntry(id) {
   const [entry, setEntry] = useState(null);
 
-  useEffect(() => {
-    (async () => {
-      if (!id) return;
+  useEffect(
+    () => {
+      (async () => {
+        if (!id) return;
 
-      const doc = await get(id);
+        const doc = await get(id);
 
-      setEntry(doc);
-    })();
-  }, id);
+        setEntry(doc);
+      })();
+    },
+    [id]
+  );
 
   return entry;
 }
 
 const EntryPage = ({ classes, history, match }) => {
-  const entry = getJournalEntry(_.get(match, "params.id"));
+  const entry = useJournalEntry(_.get(match, "params.id"));
 
   if (!entry)
     return (

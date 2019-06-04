@@ -15,21 +15,21 @@ const styles = theme => ({
     width: "100%"
   },
   form: {
-    padding: theme.spacing.unit,
+    padding: theme.spacing(),
     maxWidth: "100%",
     display: "flex",
     flexDirection: "column",
     alignItems: "center"
   },
   formControl: {
-    margin: theme.spacing.unit
+    margin: theme.spacing()
   },
   button: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(2)
   },
   title: {
     width: "100%",
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing()
   },
   errorMessage: {
     marginTop: "8px"

@@ -16,11 +16,11 @@ const styles = theme => ({
   },
   link: {
     display: "block",
-    margin: theme.spacing.unit,
-    marginTop: theme.spacing.unit * 2
+    margin: theme.spacing(),
+    marginTop: theme.spacing()
   },
   view: {
-    margin: theme.spacing.unit
+    margin: theme.spacing()
   },
   button: {}
 });
