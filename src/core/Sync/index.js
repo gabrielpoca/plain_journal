@@ -2,6 +2,7 @@ import Nano from "nano";
 
 import Session from "../Session";
 
+import * as entriesDB from "../../entries/db";
 import remoteToLocal from "./remoteToLocal";
 import localToRemote from "./localToRemote";
 
@@ -14,34 +15,46 @@ const asciiToHex = str => {
   return arr1.join("");
 };
 
-const run = async () => {
+const getRemoteDB = currentUser => {
+  const nano = Nano({
+    url: "http://localhost:5984",
+    defaultHeaders: {
+      "X-Auth-CouchDB-UserName": currentUser.email,
+      "X-Auth-CouchDB-Token": currentUser.couch_token
+    }
+  });
+
+  return nano.use(`userdb-${asciiToHex(currentUser.email)}`);
+};
+
+const runLocalToRemote = async () => {
   try {
     if (Session.loading) return;
-
     const currentUser = Session.currentUser;
-
     if (!currentUser) return;
 
-    const nano = Nano({
-      url: "http://localhost:5984",
-      defaultHeaders: {
-        "X-Auth-CouchDB-UserName": currentUser.email,
-        "X-Auth-CouchDB-Token": currentUser.couch_token
-      }
-    });
-
-    const userDB = nano.use(`userdb-${asciiToHex(currentUser.email)}`);
-
-    await remoteToLocal(userDB);
-    await localToRemote(userDB);
+    await localToRemote(getRemoteDB(currentUser));
   } catch (e) {
     console.error(e);
   }
 };
 
-setInterval(run, 1000 * 120); // every minute
-setTimeout(run, 2000);
-run();
-//Session.onChange(run);
+const runRemoteToLocal = async () => {
+  try {
+    if (Session.loading) return;
+    const currentUser = Session.currentUser;
+    if (!currentUser) return;
 
-window.sync = run;
+    await remoteToLocal(getRemoteDB(currentUser));
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+Session.onChange(runLocalToRemote);
+Session.onChange(runRemoteToLocal);
+entriesDB.onChange(runLocalToRemote);
+
+setInterval(runRemoteToLocal, 2000 * 120); // every minute
+setTimeout(runRemoteToLocal, 100);
+setTimeout(runLocalToRemote, 100);

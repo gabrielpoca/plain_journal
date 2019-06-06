@@ -13,52 +13,50 @@ export default async userDB => {
   });
 
   await Promise.all(
-    results.map(e =>
-      e.deleted ? handleRemoteEntryDeleted(e) : handleRemoteEntry(e)
-    )
+    results.map(e => (e.deleted ? onRemoteEntryDeleted(e) : onRemoteEntry(e)))
   );
 
   return await localForage.setItem("last_seq", last_seq);
-
-  async function handleRemoteEntry(rawEntry) {
-    const entry = normalizeEntry(rawEntry);
-    const localEntry = await getLocalEntry(entry.id);
-
-    if (!localEntry) {
-      return await DB.entries.put(entry);
-    }
-
-    if (entry._rev === localEntry._rev) {
-      return true;
-    } else {
-      if (localEntry.dirty === "true") {
-        return await DB.transaction("rw", DB.entries, async () => {
-          const newEntry = _.omit(localEntry, "_rev", "id");
-          await DB.entries.put({ ...newEntry, id: uuidv1() });
-          return await DB.entries.update(entry.id, entry);
-        });
-      } else {
-        return await DB.entries.update(entry.id, entry);
-      }
-    }
-  }
-
-  async function handleRemoteEntryDeleted(entry) {
-    const localEntry = await getLocalEntry(entry.id);
-
-    if (!localEntry) return true;
-    else if (localEntry.dirty !== "true")
-      return await DB.entries.delete(localEntry.id);
-    else {
-      const newEntry = _.omit(localEntry, "_rev", "id");
-
-      await DB.transaction("rw", DB.entries, async () => {
-        await DB.entries.put({ ...newEntry, id: uuidv1() });
-        return await DB.entries.delete(entry.id);
-      });
-    }
-  }
 };
+
+async function onRemoteEntry(rawEntry) {
+  const entry = normalizeEntry(rawEntry);
+  const localEntry = await getLocalEntry(entry.id);
+
+  if (!localEntry) {
+    return await DB.entries.put(entry);
+  }
+
+  if (entry._rev === localEntry._rev) {
+    return true;
+  } else {
+    if (localEntry.dirty === "true") {
+      return await DB.transaction("rw", DB.entries, async () => {
+        const newEntry = _.omit(localEntry, "_rev", "id");
+        await DB.entries.put({ ...newEntry, id: uuidv1() });
+        return await DB.entries.update(entry.id, entry);
+      });
+    } else {
+      return await DB.entries.update(entry.id, entry);
+    }
+  }
+}
+
+async function onRemoteEntryDeleted(entry) {
+  const localEntry = await getLocalEntry(entry.id);
+
+  if (!localEntry) return true;
+  else if (localEntry.dirty !== "true")
+    return await DB.entries.delete(localEntry.id);
+  else {
+    const newEntry = _.omit(localEntry, "_rev", "id");
+
+    await DB.transaction("rw", DB.entries, async () => {
+      await DB.entries.put({ ...newEntry, id: uuidv1() });
+      return await DB.entries.delete(entry.id);
+    });
+  }
+}
 
 async function getLocalEntry(id) {
   let entry = null;

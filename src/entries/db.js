@@ -25,11 +25,9 @@ export const offChange = cb => emitter.removeEventListener("changed", cb);
 export const all = async () => {
   const entries = await db.entries
     .where("deleted")
-    .equals("false")
+    .notEqual("true")
     .reverse()
     .sortBy("date");
-
-  console.log(await db.entries.toArray());
 
   return entries;
 };
