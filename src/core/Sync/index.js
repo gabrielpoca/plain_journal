@@ -55,6 +55,6 @@ Session.onChange(runLocalToRemote);
 Session.onChange(runRemoteToLocal);
 entriesDB.onChange(runLocalToRemote);
 
-setInterval(runRemoteToLocal, 2000 * 120); // every minute
+setInterval(runRemoteToLocal, 1000 * 60); // every minute
 setTimeout(runRemoteToLocal, 100);
 setTimeout(runLocalToRemote, 100);
