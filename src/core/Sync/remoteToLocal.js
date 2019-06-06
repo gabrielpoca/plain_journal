@@ -3,6 +3,7 @@ import localForage from "localforage";
 import _ from "lodash";
 
 import DB from "../DB";
+import { decrypt } from "../Session/KeyPair";
 
 export default async userDB => {
   const localLastSeq = (await localForage.getItem("last_seq")) || 0;
@@ -22,6 +23,8 @@ export default async userDB => {
 async function onRemoteEntry(rawEntry) {
   const entry = normalizeEntry(rawEntry);
   const localEntry = await getLocalEntry(entry.id);
+
+  entry.body = await decrypt(entry.body);
 
   if (!localEntry) {
     return await DB.entries.put(entry);

@@ -27,8 +27,6 @@ const EntryForm = props => {
 
   const { disabled, body, date } = props;
 
-  console.log(classes);
-
   return (
     <div className={classes.root} ref={ref}>
       <div className={classes.date}>

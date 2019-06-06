@@ -26,7 +26,7 @@ function NewEntryPage(props) {
   });
 
   const onSave = async () => {
-    if (!this.state.body || !this.state.date) return false;
+    if (!state.body || !state.date) return false;
 
     setState({ disabled: true });
 
@@ -46,7 +46,10 @@ function NewEntryPage(props) {
   return (
     <div className={props.classes.root}>
       <Navbar onSave={onSave} />
-      <EntryForm onChange={change => setState(change)} {...state} />
+      <EntryForm
+        onChange={change => setState({ ...state, ...change })}
+        {...state}
+      />
     </div>
   );
 }
