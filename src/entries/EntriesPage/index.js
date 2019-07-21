@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
-import { withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import Background from "../../components/Background";
 import EntriesList from "./EntriesList";
@@ -11,7 +11,7 @@ import Navbar from "./Navbar";
 
 import { all, onChange, offChange } from "../db";
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
     height: "100%",
     position: "fixed",
@@ -25,7 +25,7 @@ const styles = theme => ({
     bottom: theme.spacing(3),
     right: theme.spacing(3)
   }
-});
+}));
 
 function useEntries() {
   const [entries, setEntries] = useState([]);
@@ -48,7 +48,8 @@ function useEntries() {
   return entries;
 }
 
-const EntriesPage = ({ classes, match }) => {
+const EntriesPage = ({ match }) => {
+  const classes = useStyles();
   const entries = useEntries();
 
   return (
@@ -72,4 +73,4 @@ const EntriesPage = ({ classes, match }) => {
   );
 };
 
-export default withStyles(styles)(EntriesPage);
+export default EntriesPage;

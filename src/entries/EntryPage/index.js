@@ -2,13 +2,13 @@ import _ from "lodash";
 import React, { useState, useEffect } from "react";
 import styled from "styled-components/macro";
 import moment from "moment";
-import { withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import Navbar from "./Navbar";
 
 import { get, remove } from "../db";
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
     flexDirection: "column",
@@ -21,7 +21,7 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.default,
     overflow: "scroll"
   }
-});
+}));
 
 const Body = styled.div`
   flex: 1;
@@ -64,7 +64,8 @@ function useJournalEntry(id) {
   return entry;
 }
 
-const EntryPage = ({ classes, history, match }) => {
+const EntryPage = ({ history, match }) => {
+  const classes = useStyles();
   const entry = useJournalEntry(_.get(match, "params.id"));
 
   if (!entry)
@@ -83,4 +84,4 @@ const EntryPage = ({ classes, history, match }) => {
   );
 };
 
-export default withStyles(styles)(EntryPage);
+export default EntryPage;

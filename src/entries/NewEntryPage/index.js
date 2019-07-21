@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import moment from "moment";
-import { withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import EntryForm from "../components/EntryForm";
 import Navbar from "./Navbar";
 
 import { put } from "../db";
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
     height: "100%",
     backgroundColor: theme.palette.background.default,
@@ -16,9 +16,10 @@ const styles = theme => ({
     top: 0,
     left: 0
   }
-});
+}));
 
 function NewEntryPage(props) {
+  const classes = useStyles();
   const [state, setState] = useState({
     body: "",
     date: moment(),
@@ -44,7 +45,7 @@ function NewEntryPage(props) {
   };
 
   return (
-    <div className={props.classes.root}>
+    <div className={classes.root}>
       <Navbar onSave={onSave} />
       <EntryForm
         onChange={change => setState({ ...state, ...change })}
@@ -54,4 +55,4 @@ function NewEntryPage(props) {
   );
 }
 
-export default withStyles(styles)(NewEntryPage);
+export default NewEntryPage;

@@ -10,6 +10,7 @@ import MyLink from "@material-ui/core/Link";
 
 import UserForm from "../components/UserForm";
 import UserContext from "./UserContext";
+import { useStyles } from "./styles";
 
 const validate = values => {
   const errors = {};
@@ -20,7 +21,8 @@ const validate = values => {
   return errors;
 };
 
-function SignUp(props) {
+function SignUp() {
+  const classes = useStyles();
   const { loading, user, signUp } = useContext(UserContext);
 
   if (loading) return null;
@@ -40,7 +42,7 @@ function SignUp(props) {
 
   return (
     <>
-      <AppBar className={props.classes.appBar}>
+      <AppBar className={classes.appBar}>
         <Toolbar>
           <IconButton
             component={Link}
@@ -58,11 +60,7 @@ function SignUp(props) {
         buttonText="Sign Up"
         formTitle="Sign Up"
       />
-      <MyLink
-        className={props.classes.link}
-        component={Link}
-        to="/account/sign_in"
-      >
+      <MyLink className={classes.link} component={Link} to="/account/sign_in">
         Aready registered? Click here to sign in
       </MyLink>
     </>

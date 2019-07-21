@@ -7,8 +7,10 @@ import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 
 import UserContext from "./UserContext";
+import { useStyles } from "./styles";
 
 function Dashboard(props) {
+  const classes = useStyles();
   const { loading, user, signOut } = useContext(UserContext);
 
   if (loading) return null;
@@ -19,7 +21,7 @@ function Dashboard(props) {
 
   return (
     <>
-      <AppBar className={props.classes.appBar}>
+      <AppBar className={classes.appBar}>
         <Toolbar>
           <IconButton
             component={Link}
@@ -31,7 +33,7 @@ function Dashboard(props) {
           </IconButton>
         </Toolbar>
       </AppBar>
-      <div className={props.classes.view}>
+      <div className={classes.view}>
         {email && (
           <p>
             You are logged in with <em>{email}</em>
@@ -41,7 +43,7 @@ function Dashboard(props) {
           variant="outlined"
           color="secondary"
           onClick={signOut}
-          className={props.classes.button}
+          className={classes.button}
         >
           Sign Out
         </Button>
