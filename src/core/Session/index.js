@@ -21,6 +21,14 @@ class Session {
     this._sendChanged();
   }
 
+  encrypt(...args) {
+    return KeyPair.encrypt.apply(KeyPair, args);
+  }
+
+  decrypt(...args) {
+    return KeyPair.decrypt.apply(KeyPair, args);
+  }
+
   signIn = async (email, password) => {
     if (this.loading) throw new Error("Session not loaded");
     if (CurrentUser.user) throw new Error("Already signed in");

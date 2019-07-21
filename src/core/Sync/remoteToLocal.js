@@ -3,12 +3,12 @@ import localForage from "localforage";
 import _ from "lodash";
 
 import DB from "../DB";
-import { decrypt } from "../Session/KeyPair";
+import Session from "../Session";
 
-export default async userDB => {
+export default async remoteDB => {
   const localLastSeq = (await localForage.getItem("last_seq")) || 0;
 
-  const { results, last_seq } = await userDB.changes({
+  const { results, last_seq } = await remoteDB.changes({
     include_docs: true,
     since: localLastSeq
   });
@@ -24,7 +24,7 @@ async function onRemoteEntry(rawEntry) {
   const entry = normalizeEntry(rawEntry);
   const localEntry = await getLocalEntry(entry.id);
 
-  entry.body = await decrypt(entry.body);
+  entry.body = await Session.decrypt(entry.body);
 
   if (!localEntry) {
     return await DB.entries.put(entry);
@@ -37,7 +37,7 @@ async function onRemoteEntry(rawEntry) {
       return await DB.transaction("rw", DB.entries, async () => {
         const newEntry = _.omit(localEntry, "_rev", "id");
         await DB.entries.put({ ...newEntry, id: uuidv1() });
-        return await DB.entries.update(entry.id, entry);
+        return await DB.entries.update(entry.id, { ...entry, dirty: "false" });
       });
     } else {
       return await DB.entries.update(entry.id, entry);

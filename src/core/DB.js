@@ -21,6 +21,8 @@ db.version(1).stores({
 export default db;
 
 (async function() {
+  if (process.env.NODE_ENV === "test") return;
+
   if (localStorage.getItem("toJournalApp") === "true") return;
 
   const oldDB = new Dexie("journal");

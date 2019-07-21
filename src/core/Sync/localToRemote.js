@@ -2,7 +2,7 @@ import uuidv1 from "uuid/v1";
 import _ from "lodash";
 
 import DB from "../DB";
-import { decrypt, encrypt } from "../Session/KeyPair";
+import Session from "../Session";
 
 const ALLOWED_REMOTE_FIELDS = ["_id", "_rev", "date", "body", "deleted"];
 
@@ -44,7 +44,7 @@ export async function updateEntry(remoteDB, entry) {
 
 export async function updateRemoteEntry(remoteDB, entry) {
   const parsedEntry = _.pick(entry, ALLOWED_REMOTE_FIELDS);
-  parsedEntry.body = await encrypt(parsedEntry.body);
+  parsedEntry.body = await Session.encrypt(parsedEntry.body);
 
   const response = await remoteDB.insert(parsedEntry, entry.id);
 
@@ -77,7 +77,7 @@ export async function onRemoteUpdateChanged(remoteDB, entry) {
   localEntry.dirty = "true";
 
   const remoteEntry = await remoteDB.get(entry.id + "");
-  remoteEntry.body = await decrypt(remoteEntry.body);
+  remoteEntry.body = await Session.decrypt(remoteEntry.body);
 
   return await DB.transaction("rw", DB.entries, async () => {
     await DB.entries.update(entry.id, remoteEntry);

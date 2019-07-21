@@ -1,6 +1,7 @@
 import _ from "lodash";
 import uuidv1 from "uuid/v1";
 
+import Session from "../../core/Session";
 import DB from "../DB";
 import {
   onRemoteEntryDeleted,
@@ -16,8 +17,25 @@ describe("updateRemoteEntry", () => {
 
     await updateRemoteEntry(remoteDB, entry);
 
-    const allowedFields = _.pick(entry, ["body", "date"]);
+    const allowedFields = _.pick(entry, ["body", "date", "deleted"]);
     expect(remoteDB.insert).toHaveBeenCalledWith(allowedFields, "1");
+  });
+
+  test("encrypts the body before calling the remote database", async () => {
+    const entry = buildNewEntry();
+    const remoteDB = { insert: jest.fn(() => ({ ok: true })) };
+    Session.encrypt.mockReturnValue("encrypted body");
+
+    await updateRemoteEntry(remoteDB, entry);
+
+    expect(Session.encrypt).toHaveBeenCalled();
+    expect(remoteDB.insert).toHaveBeenCalledWith(
+      {
+        ..._.pick(entry, ["date", "deleted"]),
+        body: "encrypted body"
+      },
+      "1"
+    );
   });
 
   test("updates the local entry with the new rev", async () => {
@@ -33,6 +51,15 @@ describe("updateRemoteEntry", () => {
     });
   });
 
+  test("throws if the remote databases responds not ok", async () => {
+    const entry = await insertRemoteExistingEntry();
+    const remoteDB = {
+      insert: jest.fn(() => ({ ok: false }))
+    };
+
+    expect(updateRemoteEntry(remoteDB, entry)).rejects.toThrow();
+  });
+
   test("throws if there is an error", async () => {
     const entry = await insertRemoteExistingEntry();
     const remoteDB = {
@@ -41,15 +68,6 @@ describe("updateRemoteEntry", () => {
         e.statusCode = 500;
         throw e;
       })
-    };
-
-    expect(updateRemoteEntry(remoteDB, entry)).rejects.toThrow();
-  });
-
-  test("throws if the remote response is not ok", async () => {
-    const entry = await insertRemoteExistingEntry();
-    const remoteDB = {
-      insert: jest.fn(() => ({ ok: false }))
     };
 
     expect(updateRemoteEntry(remoteDB, entry)).rejects.toThrow();
@@ -155,6 +173,19 @@ describe("onRemoteUpdateChanged", () => {
     });
     expect(previousLocalEntry).toMatchObject(remoteEntry);
   });
+
+  test("decrypts the body of the remote entry", async () => {
+    const localEntry = await insertRemoteExistingEntry();
+    const remoteEntry = { id: "1", _rev: "3", body: "Remote body" };
+    const remoteDB = { get: jest.fn(() => remoteEntry) };
+    Session.decrypt.mockReturnValue("decrypted body");
+
+    await onRemoteUpdateChanged(remoteDB, localEntry);
+
+    const previousLocalEntry = await DB.entries.get(remoteEntry.id);
+
+    expect(previousLocalEntry.body).toEqual("decrypted body");
+  });
 });
 
 const buildNewEntry = (overrides = {}) =>
@@ -162,6 +193,7 @@ const buildNewEntry = (overrides = {}) =>
     {
       id: "1",
       body: "Local body",
+      deleted: "false",
       date: "2019-12-13"
     },
     overrides
@@ -172,6 +204,7 @@ const buildRemoteExistingEntry = (overrides = {}) =>
     {
       id: "1",
       _rev: "2",
+      deleted: "false",
       body: "Local body",
       date: "2019-12-13"
     },
