@@ -6,6 +6,11 @@ import * as entriesDB from "../../entries/db";
 import remoteToLocal from "./remoteToLocal";
 import localToRemote from "./localToRemote";
 
+const baseURL =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:5984"
+    : "https://couch.gabrielpoca.com";
+
 const asciiToHex = str => {
   var arr1 = [];
   for (var n = 0, l = str.length; n < l; n++) {
@@ -17,7 +22,7 @@ const asciiToHex = str => {
 
 const getRemoteDB = currentUser => {
   const nano = Nano({
-    url: "http://localhost:5984",
+    url: baseURL,
     defaultHeaders: {
       "X-Auth-CouchDB-UserName": currentUser.email,
       "X-Auth-CouchDB-Token": currentUser.couch_token
