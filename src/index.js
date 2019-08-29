@@ -2,8 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
-import grey from "@material-ui/core/colors/grey";
-import purple from "@material-ui/core/colors/purple";
 
 import "./core/Sync";
 import "./core/Session";
