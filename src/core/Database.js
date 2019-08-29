@@ -128,7 +128,12 @@ export async function setupDB(password) {
     const entries = await oldDB.entries.toArray();
     Promise.all(
       entries.map(async ({ id, date, body }) => {
-        await db.entries.upsert({ id, date, body, modelType: "journalEntry" });
+        await db.entries.upsert({
+          id,
+          date: format(new Date(date), "yyyy-MM-dd"),
+          body,
+          modelType: "journalEntry"
+        });
       })
     );
     localStorage.setItem("old_to_new", "true");
