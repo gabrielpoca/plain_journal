@@ -2,7 +2,7 @@ import Nano from "nano";
 
 import Session from "../Session";
 
-import * as entriesDB from "../../entries/db";
+//import * as entriesDB from "../../entries/db";
 import remoteToLocal from "./remoteToLocal";
 import localToRemote from "./localToRemote";
 
@@ -56,10 +56,10 @@ const runRemoteToLocal = async () => {
   }
 };
 
-Session.onChange(runLocalToRemote);
-Session.onChange(runRemoteToLocal);
-entriesDB.onChange(runLocalToRemote);
+//Session.onChange(runLocalToRemote);
+//Session.onChange(runRemoteToLocal);
+//entriesDB.onChange(runLocalToRemote);
 
-setInterval(runRemoteToLocal, 1000 * 60); // every minute
-setTimeout(runRemoteToLocal, 100);
-setTimeout(runLocalToRemote, 100);
+//setInterval(runRemoteToLocal, 1000 * 60); // every minute
+//setTimeout(runRemoteToLocal, 100);
+//setTimeout(runLocalToRemote, 100);

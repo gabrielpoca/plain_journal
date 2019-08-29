@@ -1,4 +1,4 @@
-import uuidv1 from "uuid/v1";
+//import uuidv1 from "uuid/v1";
 import Dexie from "dexie";
 import FakeIndexedDB from "fake-indexeddb";
 import FDBKeyRange from "fake-indexeddb/lib/FDBKeyRange";
@@ -20,27 +20,27 @@ db.version(1).stores({
 
 export default db;
 
-(async function() {
-  if (process.env.NODE_ENV === "test") return;
+//(async function() {
+//if (process.env.NODE_ENV === "test") return;
 
-  if (localStorage.getItem("toJournalApp") === "true") return;
+//if (localStorage.getItem("toJournalApp") === "true") return;
 
-  const oldDB = new Dexie("journal");
+//const oldDB = new Dexie("journal");
 
-  oldDB.version(1).stores({
-    entries: "++id,date",
-    settings: "id"
-  });
+//oldDB.version(1).stores({
+//entries: "++id,date",
+//settings: "id"
+//});
 
-  oldDB.version(2).stores({});
+//oldDB.version(2).stores({});
 
-  const entries = await oldDB.entries.toArray();
+//const entries = await oldDB.entries.toArray();
 
-  entries.map(e =>
-    db.entries.put({ ...e, id: uuidv1(), deleted: "false", dirty: "true" })
-  );
+//entries.map(e =>
+//db.entries.put({ ...e, id: uuidv1(), deleted: "false", dirty: "true" })
+//);
 
-  oldDB.delete();
+//oldDB.delete();
 
-  localStorage.setItem("toJournalApp", "true");
-})();
+//localStorage.setItem("toJournalApp", "true");
+//})();

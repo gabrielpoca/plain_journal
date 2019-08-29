@@ -1,18 +1,19 @@
-import _ from 'lodash';
-import React from 'react';
-import moment from 'moment';
+import _ from "lodash";
+import React from "react";
+import moment from "moment";
 
-import EntryForm from '../components/EntryForm';
-import Navbar from './Navbar';
-
-import { get, put } from '../db';
+import EntryForm from "../components/EntryForm";
+import Navbar from "./Navbar";
+import { DBContext } from "../../core/Database";
 
 class EditEntryPage extends React.Component {
+  static contextType = DBContext;
+
   state = {
     id: null,
     body: null,
     date: null,
-    disabled: false,
+    disabled: false
   };
 
   componentWillMount() {
@@ -20,15 +21,17 @@ class EditEntryPage extends React.Component {
   }
 
   updateEntry = async () => {
-    if (_.get(this.state.entry, 'id', false) === this.props.match.params.id)
+    if (_.get(this.state.entry, "id", false) === this.props.match.params.id)
       return;
 
-    const doc = await get(this.props.match.params.id);
+    const doc = await this.context.db.entries
+      .findOne(this.props.match.params.id)
+      .exec();
 
     this.setState({
       doc: doc,
       body: doc.body,
-      date: moment(doc.date),
+      date: moment(doc.date)
     });
   };
 
@@ -37,14 +40,13 @@ class EditEntryPage extends React.Component {
 
     try {
       this.setState({ disabled: true });
-      const changes = {
-        ...this.state.doc,
-        date: this.state.date.toDate(),
-        body: this.state.body,
-      };
-
-      await put(changes);
-      this.props.history.push('/entries');
+      await this.state.doc.update({
+        $set: {
+          body: this.state.body,
+          date: this.state.date.toDate()
+        }
+      });
+      this.props.history.push("/entries");
     } catch (e) {
       console.error(e);
       this.setState({ disabled: false });

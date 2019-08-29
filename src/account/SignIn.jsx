@@ -9,8 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 import MyLink from "@material-ui/core/Link";
 
 import UserForm from "../components/UserForm";
-import UserContext from "./UserContext";
-
+import { UserContext } from "../core/User";
 import { useStyles } from "./styles";
 
 const validate = values => {

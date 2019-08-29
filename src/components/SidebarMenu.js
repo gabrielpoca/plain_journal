@@ -14,11 +14,15 @@ import Divider from "@material-ui/core/Divider";
 import { makeStyles } from "@material-ui/styles";
 import Typography from "@material-ui/core/Typography";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   list: {
-    width: 200
+    width: 200,
+    paddingTop: theme.spacing(8)
+  },
+  link: {
+    color: "inherit"
   }
-});
+}));
 
 function SidebarMenu() {
   const classes = useStyles();
@@ -33,17 +37,13 @@ function SidebarMenu() {
       </IconButton>
       <Drawer open={open} onClose={onToggle}>
         <List className={classes.list}>
-          <ListItem>
-            <Typography variant="h5">Journal</Typography>
-          </ListItem>
-          <Divider />
-          <ListItem component={Link} to="/settings">
+          <ListItem className={classes.link} component={Link} to="/settings">
             <ListItemIcon>
               <SettingsIcon />
             </ListItemIcon>
             <ListItemText primary="Settings" />
           </ListItem>
-          <ListItem component={Link} to="/account">
+          <ListItem className={classes.link} component={Link} to="/account">
             <ListItemIcon>
               <AccountCircleIcon />
             </ListItemIcon>

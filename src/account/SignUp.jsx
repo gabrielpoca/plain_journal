@@ -9,7 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 import MyLink from "@material-ui/core/Link";
 
 import UserForm from "../components/UserForm";
-import UserContext from "./UserContext";
+import { UserContext } from "../core/User";
 import { useStyles } from "./styles";
 
 const validate = values => {
@@ -23,9 +23,8 @@ const validate = values => {
 
 function SignUp() {
   const classes = useStyles();
-  const { loading, user, signUp } = useContext(UserContext);
+  const { user, signUp } = useContext(UserContext);
 
-  if (loading) return null;
   if (user) return <Redirect to="/" />;
 
   const onSubmit = async values => {

@@ -1,7 +1,6 @@
-import uuidv1 from "uuid/v1";
 import localForage from "localforage";
 import _ from "lodash";
-
+import uuidv1 from "uuid/v1";
 import DB from "../DB";
 import Session from "../Session";
 

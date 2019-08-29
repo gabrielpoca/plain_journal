@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 
 import Fab from "@material-ui/core/Fab";
@@ -8,8 +8,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Background from "../../components/Background";
 import EntriesList from "./EntriesList";
 import Navbar from "./Navbar";
-
-import { all, onChange, offChange } from "../db";
+import { DBContext } from "../../core/Database";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,35 +21,15 @@ const useStyles = makeStyles(theme => ({
   },
   fab: {
     position: "fixed",
-    bottom: theme.spacing(3),
+    bottom: theme.spacing(4),
     right: theme.spacing(3)
   }
 }));
 
-function useEntries() {
-  const [entries, setEntries] = useState([]);
-
-  useEffect(() => {
-    const update = async () => {
-      const entries = await all();
-      setEntries(entries);
-    };
-
-    update();
-
-    onChange(update);
-
-    return () => {
-      offChange(update);
-    };
-  }, []);
-
-  return entries;
-}
-
 const EntriesPage = ({ match }) => {
+  const { db } = useContext(DBContext);
+  const entries = db.entries.useEntries();
   const classes = useStyles();
-  const entries = useEntries();
 
   return (
     <Background>
@@ -59,6 +38,7 @@ const EntriesPage = ({ match }) => {
         <React.Fragment>
           {<EntriesList entries={entries} />}
           <Fab
+            size="large"
             aria-label="Add"
             className={classes.fab}
             color="secondary"

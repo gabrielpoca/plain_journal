@@ -3,12 +3,9 @@ import Axios from "axios";
 const axios = Axios.create({
   baseURL:
     process.env.NODE_ENV === "development"
-      ? "http://localhost:4000/api/"
+      ? "http://localhost:4000/"
       : "https://log.gabrielpoca.com"
 });
-
-export const handshake = data =>
-  axios.post("/api/journal_entries_batch/handshake", data);
 
 export const update = data =>
   axios.post("/api/journal_entries_batch/update", data);

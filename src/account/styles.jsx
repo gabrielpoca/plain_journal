@@ -8,12 +8,14 @@ export const useStyles = makeStyles(theme => ({
     flex: 1
   },
   link: {
+    color: theme.palette.text.primary,
     display: "block",
     margin: theme.spacing(),
     marginTop: theme.spacing()
   },
   view: {
-    margin: theme.spacing()
+    padding: theme.spacing(2),
+    paddingTop: theme.spacing(2)
   },
   button: {}
 }));

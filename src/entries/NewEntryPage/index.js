@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import moment from "moment";
 import { makeStyles } from "@material-ui/core/styles";
 
 import EntryForm from "../components/EntryForm";
+import { DBContext } from "../../core/Database";
 import Navbar from "./Navbar";
-
-import { put } from "../db";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -19,6 +18,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function NewEntryPage(props) {
+  const { db } = useContext(DBContext);
   const classes = useStyles();
   const [state, setState] = useState({
     body: "",
@@ -32,7 +32,7 @@ function NewEntryPage(props) {
     setState({ disabled: true });
 
     try {
-      await put({
+      await db.entries.insert({
         date: state.date.toDate(),
         body: state.body
       });

@@ -1,12 +1,11 @@
 import _ from "lodash";
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import styled from "styled-components/macro";
 import moment from "moment";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Navbar from "./Navbar";
-
-import { get, remove } from "../db";
+import { DBContext } from "../../core/Database";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -36,37 +35,19 @@ const Title = styled.h1`
   padding: 0 16px;
 `;
 
-const onDelete = async (entry, history) => {
+const onDelete = async (db, entry, history) => {
   try {
-    await remove(entry);
+    await db.entries.findOne(entry.id).remove();
     history.push("/entries");
   } catch (e) {
     console.error(e);
   }
 };
 
-function useJournalEntry(id) {
-  const [entry, setEntry] = useState(null);
-
-  useEffect(
-    () => {
-      (async () => {
-        if (!id) return;
-
-        const doc = await get(id);
-
-        setEntry(doc);
-      })();
-    },
-    [id]
-  );
-
-  return entry;
-}
-
 const EntryPage = ({ history, match }) => {
+  const { db } = useContext(DBContext);
+  const entry = db.entries.useEntry(_.get(match, "params.id"));
   const classes = useStyles();
-  const entry = useJournalEntry(_.get(match, "params.id"));
 
   if (!entry)
     return (
@@ -77,7 +58,7 @@ const EntryPage = ({ history, match }) => {
 
   return (
     <div className={classes.root}>
-      <Navbar onDelete={() => onDelete(entry, history)} />
+      <Navbar onDelete={() => onDelete(db, entry, history)} />
       <Title>{moment(entry.date).format("DD/MM/YY")}</Title>
       <Body dangerouslySetInnerHTML={{ __html: entry.body }} />
     </div>

@@ -101,7 +101,7 @@ export default withStyles(styles)(function RemoteSyncDialog(props) {
       <Form
         onSubmit={props.onSubmit}
         validate={validate}
-        render={({ handleSubmit, reset, submitting, pristine, values }) => (
+        render={({ handleSubmit, submitting, pristine }) => (
           <form
             noValidate
             autoComplete="off"
