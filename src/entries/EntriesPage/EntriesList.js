@@ -39,7 +39,7 @@ const Entry = withStyles(styles)(({ entry, classes }) => {
       to={`/entries/entry/${entry.id}`}
     >
       <ListItemText secondary={moment(entry.date).format("DD/MM/YY")}>
-        <Typography>{template.innerText}</Typography>
+        <Typography className={classes.text}>{template.innerText}</Typography>
       </ListItemText>
     </ListItem>
   );
