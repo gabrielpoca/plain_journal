@@ -15,9 +15,9 @@ class App extends Component {
   render() {
     return (
       <UserContextProvider>
+        <CssBaseline />
         <DBContextProvider>
           <KeyValueStorage>
-            <CssBaseline />
             <Switch>
               <Route path="/entries" component={EntriesRouter} />
               <Route path="/settings" component={SettingsRouter} />

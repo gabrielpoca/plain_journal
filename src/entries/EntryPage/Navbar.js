@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { withRouter } from "react-router";
 
 import AppBar from "@material-ui/core/AppBar";
+import Container from "@material-ui/core/Container";
 import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
@@ -80,9 +81,11 @@ class LongMenu extends React.PureComponent {
 
 const Navbar = React.memo(props => (
   <AppBar position="sticky">
-    <Toolbar className={props.classes.toolbar}>
-      <LongMenu {...props} />
-    </Toolbar>
+    <Container maxWidth="md">
+      <Toolbar className={props.classes.toolbar}>
+        <LongMenu {...props} />
+      </Toolbar>
+    </Container>
   </AppBar>
 ));
 

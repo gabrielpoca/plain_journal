@@ -3,6 +3,7 @@ import { useState } from "react";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import { makeStyles } from "@material-ui/styles";
+import Container from "@material-ui/core/Container";
 
 import Editor from "./Editor";
 
@@ -28,7 +29,7 @@ const EntryForm = props => {
   const { disabled, body, date } = props;
 
   return (
-    <div className={classes.root} ref={ref}>
+    <Container className={classes.root} ref={ref} maxWidth="md">
       <div className={classes.date}>
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <div className={classes.date}>
@@ -58,7 +59,7 @@ const EntryForm = props => {
           ]
         }}
       />
-    </div>
+    </Container>
   );
 };
 

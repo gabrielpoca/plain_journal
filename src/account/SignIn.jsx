@@ -7,6 +7,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
 import MyLink from "@material-ui/core/Link";
+import Container from "@material-ui/core/Container";
 
 import UserForm from "../components/UserForm";
 import { UserContext } from "../core/User";
@@ -43,26 +44,30 @@ function SignIn(props) {
   return (
     <>
       <AppBar className={classes.appBar}>
-        <Toolbar>
-          <IconButton
-            component={Link}
-            to="/"
-            color="inherit"
-            aria-label="Close"
-          >
-            <CloseIcon />
-          </IconButton>
-        </Toolbar>
+        <Container maxWidth="md">
+          <Toolbar>
+            <IconButton
+              component={Link}
+              to="/"
+              color="inherit"
+              aria-label="Close"
+            >
+              <CloseIcon />
+            </IconButton>
+          </Toolbar>
+        </Container>
       </AppBar>
-      <UserForm
-        validate={validate}
-        onSubmit={onSubmit}
-        buttonText="Sign In"
-        formTitle="Sign In"
-      />
-      <MyLink className={classes.link} component={Link} to="/account/sign_up">
-        Not registered? Click here to sign up
-      </MyLink>
+      <Container maxWidth="sm">
+        <UserForm
+          validate={validate}
+          onSubmit={onSubmit}
+          buttonText="Sign In"
+          formTitle="Sign In"
+        />
+        <MyLink className={classes.link} component={Link} to="/account/sign_up">
+          Not registered? Click here to sign up
+        </MyLink>
+      </Container>
     </>
   );
 }
