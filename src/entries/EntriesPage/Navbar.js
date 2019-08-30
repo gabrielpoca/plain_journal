@@ -3,20 +3,11 @@ import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core/styles";
 
 import SidebarMenu from "../../components/SidebarMenu";
-
-const useStyles = makeStyles(theme => ({
-  title: {
-    fontFamily: "Merriweather",
-    fontSize: 20
-  }
-}));
+import { NavbarTitle } from "../../components/NavbarTitle";
 
 const Navbar = () => {
-  const classes = useStyles();
-
   return (
     <AppBar position="sticky">
       <Toolbar>
@@ -29,7 +20,7 @@ const Navbar = () => {
           <div>
             <SidebarMenu />
           </div>
-          <h1 className={classes.title}>Journal</h1>
+          <NavbarTitle />
           <div style={{ width: 48 }} />
         </Grid>
       </Toolbar>

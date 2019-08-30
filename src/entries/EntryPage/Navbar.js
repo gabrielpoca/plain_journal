@@ -1,29 +1,31 @@
-import _ from 'lodash';
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { withRouter } from 'react-router';
+import _ from "lodash";
+import React from "react";
+import { Link } from "react-router-dom";
+import { withRouter } from "react-router";
 
-import AppBar from '@material-ui/core/AppBar';
-import CloseIcon from '@material-ui/icons/Close';
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import Toolbar from '@material-ui/core/Toolbar';
-import { withStyles } from '@material-ui/core/styles';
+import AppBar from "@material-ui/core/AppBar";
+import CloseIcon from "@material-ui/icons/Close";
+import IconButton from "@material-ui/core/IconButton";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import Toolbar from "@material-ui/core/Toolbar";
+import { withStyles } from "@material-ui/core/styles";
+
+import { NavbarTitle } from "../../components/NavbarTitle";
 
 const styles = theme => ({
   toolbar: {
-    display: 'flex',
+    display: "flex",
     flex: 1,
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-  },
+    justifyContent: "space-between",
+    flexDirection: "row"
+  }
 });
 
 class LongMenu extends React.PureComponent {
   state = {
-    anchorEl: null,
+    anchorEl: null
   };
 
   onClick = event => {
@@ -47,10 +49,11 @@ class LongMenu extends React.PureComponent {
         >
           <CloseIcon />
         </IconButton>
+        <NavbarTitle />
         <IconButton
           color="inherit"
           aria-label="More"
-          aria-owns={open ? 'long-menu' : undefined}
+          aria-owns={open ? "long-menu" : undefined}
           aria-haspopup="true"
           onClick={this.onClick}
         >
@@ -64,7 +67,7 @@ class LongMenu extends React.PureComponent {
         >
           <MenuItem
             component={Link}
-            to={`${_.get(this.props, 'match.url')}/edit`}
+            to={`${_.get(this.props, "match.url")}/edit`}
           >
             Edit
           </MenuItem>

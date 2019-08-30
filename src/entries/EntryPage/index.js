@@ -1,8 +1,8 @@
 import _ from "lodash";
 import React, { useContext } from "react";
-import styled from "styled-components/macro";
 import moment from "moment";
 import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 
 import Navbar from "./Navbar";
 import { DBContext } from "../../core/Database";
@@ -19,21 +19,19 @@ const useStyles = makeStyles(theme => ({
     position: "fixed",
     backgroundColor: theme.palette.background.default,
     overflow: "scroll"
+  },
+  date: {
+    marginTop: theme.spacing(4),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2)
+  },
+  body: {
+    flex: 1,
+    alignSelf: "stretch",
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2)
   }
 }));
-
-const Body = styled.div`
-  flex: 1;
-  align-self: stretch;
-  padding: 0 16px;
-`;
-
-const Title = styled.h1`
-  margin-top: 32px;
-  font-size: 16px;
-  line-height: 24px;
-  padding: 0 16px;
-`;
 
 const onDelete = async (db, entry, history) => {
   try {
@@ -59,8 +57,13 @@ const EntryPage = ({ history, match }) => {
   return (
     <div className={classes.root}>
       <Navbar onDelete={() => onDelete(db, entry, history)} />
-      <Title>{moment(entry.date).format("DD/MM/YY")}</Title>
-      <Body dangerouslySetInnerHTML={{ __html: entry.body }} />
+      <Typography className={classes.date}>
+        {moment(entry.date).format("DD/MM/YY")}
+      </Typography>
+      <div
+        className={classes.body}
+        dangerouslySetInnerHTML={{ __html: entry.body }}
+      />
     </div>
   );
 };

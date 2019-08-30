@@ -3,9 +3,6 @@ import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 
-import "./core/Sync";
-import "./core/Session";
-
 import App from "./App";
 import registerServiceWorker from "./registerServiceWorker";
 import { initializeFirebase } from "./notifications";

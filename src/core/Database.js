@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
+import moment from "moment";
 import RxDB from "rxdb";
 import PouchDBIDB from "pouchdb-adapter-idb";
-import { format } from "date-fns";
 import uuidv1 from "uuid/v1";
 import PouchDB from "pouchdb";
 
@@ -116,12 +116,12 @@ export async function setupDB(password) {
     if (!newEntryRaw.id) newEntryRaw.id = uuidv1();
 
     if (typeof newEntryRaw.date !== "string")
-      newEntryRaw.date = format(newEntryRaw.date, "yyyy-MM-dd");
+      newEntryRaw.date = moment(newEntryRaw.date).format("YYYY-MM-DD");
   }, true);
 
   db.entries.preSave(newEntryRaw => {
     if (typeof newEntryRaw.date !== "string")
-      newEntryRaw.date = format(newEntryRaw.date, "yyyy-MM-dd");
+      newEntryRaw.date = moment(newEntryRaw.date).format("YYYY-MM-DD");
   }, true);
 
   if (localStorage.getItem("old_to_new") !== "true") {
@@ -130,7 +130,7 @@ export async function setupDB(password) {
       entries.map(async ({ id, date, body }) => {
         await db.entries.upsert({
           id,
-          date: format(new Date(date), "yyyy-MM-dd"),
+          date: moment(date).format("YYYY-MM-DD"),
           body,
           modelType: "journalEntry"
         });
@@ -145,14 +145,12 @@ export async function setupDB(password) {
 }
 
 export async function setupSync(db, user) {
-  console.log(user);
   const dbName = `${baseURL}/userdb-${asciiToHex(user.name)}`;
 
   const remoteDB = new PouchDB(dbName, {
     fetch: function(url, opts) {
       opts.headers["X-Auth-CouchDB-UserName"] = user.name;
       opts.headers["X-Auth-CouchDB-Token"] = user.couch_token;
-      console.log("sldajldasdkajlskdjakls", opts);
       return PouchDB.fetch(url, opts);
     }
   });
@@ -217,7 +215,6 @@ export function DBContextProvider(props) {
   }, [user, state.db]);
 
   const setPassword = async password => {
-    console.log(password);
     localStorage.setItem("enc_key", password);
 
     if (!password) setState({ loading: false });
