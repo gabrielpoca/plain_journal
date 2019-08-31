@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import moment from "moment";
 import RxDB from "rxdb";
 import PouchDBIDB from "pouchdb-adapter-idb";
+import PouchDBHTTP from "pouchdb-adapter-http";
 import uuidv1 from "uuid/v1";
 import PouchDB from "pouchdb";
 
@@ -24,6 +25,7 @@ const baseURL =
     : "https://couch.gabrielpoca.com";
 
 RxDB.plugin(PouchDBIDB);
+RxDB.plugin(PouchDBHTTP);
 
 export async function setupDB(password) {
   const db = await RxDB.create({
@@ -148,9 +150,10 @@ export async function setupSync(db, user) {
   const dbName = `${baseURL}/userdb-${asciiToHex(user.name)}`;
 
   const remoteDB = new PouchDB(dbName, {
+    skipSetup: true,
     fetch: function(url, opts) {
-      opts.headers["X-Auth-CouchDB-UserName"] = user.name;
-      opts.headers["X-Auth-CouchDB-Token"] = user.couch_token;
+      opts.headers.set("X-Auth-CouchDB-UserName", user.name);
+      opts.headers.set("X-Auth-CouchDB-Token", user.couch_token);
       return PouchDB.fetch(url, opts);
     }
   });
@@ -161,7 +164,7 @@ export async function setupSync(db, user) {
       views: {
         journal: {
           map: `function(doc) {
-            if (doc.type === "journalEntry") emit(doc);
+            if (doc.modelType === "journalEntry") emit(doc);
           }`
         }
       }
@@ -174,7 +177,9 @@ export async function setupSync(db, user) {
     remote: remoteDB,
     options: {
       filter: "_view",
-      view: "journal"
+      view: "journal",
+      live: true,
+      retry: true
     }
   });
 }
