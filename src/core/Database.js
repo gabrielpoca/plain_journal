@@ -167,7 +167,7 @@ export async function setupSync(db, user) {
       views: {
         journal: {
           map: `function(doc) {
-            if (doc.modelType === "journalEntry") emit(doc);
+            if (doc._id === "_design/journal" || doc.modelType === "journalEntry") emit(doc);
           }`
         }
       }
