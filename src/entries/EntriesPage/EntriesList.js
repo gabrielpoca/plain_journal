@@ -38,7 +38,7 @@ const Entry = withStyles(styles)(({ entry, classes }) => {
       component={Link}
       to={`/entries/entry/${entry.id}`}
     >
-      <ListItemText secondary={moment(entry.date).format("DD/MM/YY")}>
+      <ListItemText secondary={moment(entry.date).format("DD/MM/YY, h:mm a")}>
         <Typography className={classes.text}>{template.innerText}</Typography>
       </ListItemText>
     </ListItem>

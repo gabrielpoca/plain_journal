@@ -33,7 +33,7 @@ function NewEntryPage(props) {
 
     try {
       await db.entries.insert({
-        date: state.date.toDate(),
+        date: state.date.format(),
         body: state.body
       });
 

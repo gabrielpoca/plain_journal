@@ -38,7 +38,7 @@ export async function setupDB(password) {
     name: "entries",
     schema: {
       title: "entries",
-      version: 2,
+      version: 3,
       type: "object",
       properties: {
         id: {
@@ -48,7 +48,7 @@ export async function setupDB(password) {
         date: {
           type: "string",
           index: true,
-          format: "date"
+          format: "date-time"
         },
         body: {
           type: "string",
@@ -64,7 +64,10 @@ export async function setupDB(password) {
     },
     migrationStrategies: {
       1: fn => fn,
-      2: fn => fn
+      2: fn => fn,
+      3: doc => {
+        return { ...doc, date: moment(doc.date, "YYYY-MM-DD").format() };
+      }
     },
     statics: {
       useEntry: id => {

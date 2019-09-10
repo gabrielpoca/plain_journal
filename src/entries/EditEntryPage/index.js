@@ -43,7 +43,7 @@ class EditEntryPage extends React.Component {
       await this.state.doc.update({
         $set: {
           body: this.state.body,
-          date: this.state.date.toDate()
+          date: this.state.date.format()
         }
       });
       this.props.history.push("/entries");
