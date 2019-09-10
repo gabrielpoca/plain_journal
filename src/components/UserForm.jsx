@@ -60,7 +60,12 @@ function UserForm(props) {
             </Typography>
           </Box>
           <Box mb={2} width="100%">
-            <Field name="email" component={MyTextField} label="Email" />
+            <Field
+              name="email"
+              type="email"
+              component={MyTextField}
+              label="Email"
+            />
           </Box>
           <Box mb={2} width="100%">
             <Field
