@@ -82,7 +82,7 @@ class LongMenu extends React.PureComponent {
 const Navbar = React.memo(props => (
   <AppBar position="sticky">
     <Container maxWidth="md">
-      <Toolbar className={props.classes.toolbar}>
+      <Toolbar disableGutters className={props.classes.toolbar}>
         <LongMenu {...props} />
       </Toolbar>
     </Container>

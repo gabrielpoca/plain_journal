@@ -19,10 +19,16 @@ body {
 }
 
 :root {
-  --max-width: 640px;
+  --max-width: 950px;
   --nav-height: 56px;
 }
 
 .ql-editor.ql-blank::before {
   color: inherit;
+  left: 0;
+}
+
+.ql-editor {
+  padding-left: 0;
+  padding-right: 0;
 }

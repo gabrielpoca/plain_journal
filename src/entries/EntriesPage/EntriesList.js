@@ -33,6 +33,7 @@ const Entry = withStyles(styles)(({ entry, classes }) => {
         selected: classes.selected,
         button: classes.button
       }}
+      disableGutters
       button
       disableTouchRipple
       component={Link}

@@ -22,15 +22,11 @@ const useStyles = makeStyles(theme => ({
     overflow: "scroll"
   },
   date: {
-    marginTop: theme.spacing(4),
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2)
+    marginTop: theme.spacing(4)
   },
   body: {
     flex: 1,
-    alignSelf: "stretch",
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2)
+    alignSelf: "stretch"
   }
 }));
 

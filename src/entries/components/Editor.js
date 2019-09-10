@@ -12,20 +12,11 @@ Quill.register("modules/markdownShortcuts", MarkdownShortcuts);
 
 const styles = theme => ({
   root: {
+    paddingTop: theme.spacing(1),
+    flex: 1,
     backgroundColor: theme.palette.background.default,
-    position: "fixed",
-    top: "56px",
     width: "100%",
-    maxWidth: "var(--max-width)",
     overflow: "scroll"
-  },
-  expanded: {
-    transform: "translateY(0)",
-    height: "calc(100% - 64px)"
-  },
-  notExpanded: {
-    transform: "translateY(60px)",
-    height: "calc(100% - 472px)"
   }
 });
 
@@ -78,14 +69,9 @@ class Editor extends React.Component {
   render() {
     const { classes } = this.props;
 
-    let rootClassName = classes.root;
-
-    if (this.props.expanded) rootClassName += ` ${classes.expanded}`;
-    else rootClassName += ` ${classes.notExpanded}`;
-
     return (
       <div
-        className={rootClassName}
+        className={classes.root}
         ref={this.el}
         offset={_.get(this.el.current, "offsetTop", 0)}
       >

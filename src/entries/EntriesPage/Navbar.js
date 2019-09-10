@@ -12,7 +12,7 @@ const Navbar = () => {
   return (
     <AppBar position="sticky">
       <Container maxWidth="md">
-        <Toolbar>
+        <Toolbar disableGutters>
           <Grid
             container
             direction="row"

@@ -44,7 +44,7 @@ function SignUp() {
     <>
       <AppBar className={classes.appBar}>
         <Container maxWidth="md">
-          <Toolbar>
+          <Toolbar disableGutters>
             <IconButton
               component={Link}
               to="/"

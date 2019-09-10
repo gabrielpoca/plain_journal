@@ -12,11 +12,12 @@ import useKeyboardDetect from "../../hooks/useKeyboardDetect";
 const useStyles = makeStyles(theme => ({
   root: {
     height: "calc(100% - 56px)",
-    overflow: "hidden"
+    overflow: "hidden",
+    display: "flex",
+    flexDirection: "column"
   },
   date: {
-    paddingLeft: theme.spacing(1),
-    paddingTop: theme.spacing(1)
+    paddingTop: theme.spacing(2)
   }
 }));
 
@@ -27,12 +28,13 @@ const EntryForm = props => {
   const keyboardOpen = useKeyboardDetect();
 
   const { disabled, body, date } = props;
+  const expanded = bodyFocus && keyboardOpen;
 
   return (
     <Container className={classes.root} ref={ref} maxWidth="md">
-      <div className={classes.date}>
-        <MuiPickersUtilsProvider utils={MomentUtils}>
-          <div className={classes.date}>
+      {!expanded && (
+        <div className={classes.date}>
+          <MuiPickersUtilsProvider utils={MomentUtils}>
             <DatePicker
               disabled={disabled}
               disableFuture
@@ -40,14 +42,14 @@ const EntryForm = props => {
               autoOk
               onChange={date => props.onChange({ date })}
             />
-          </div>
-        </MuiPickersUtilsProvider>
-      </div>
+          </MuiPickersUtilsProvider>
+        </div>
+      )}
       <Editor
         theme="snow"
         disabled={disabled}
         value={body}
-        expanded={bodyFocus && keyboardOpen}
+        expanded={expanded}
         onChange={newBody => props.onChange({ body: newBody })}
         onFocus={() => setBodyFocus(true)}
         onBlur={() => setBodyFocus(false)}
