@@ -11,7 +11,6 @@ import ListSubheader from "@material-ui/core/ListSubheader";
 import SwitchInput from "@material-ui/core/Switch";
 import AlarmIcon from "@material-ui/icons/AccessAlarm";
 
-import * as Settings from "./db";
 
 import { askForPermissioToReceiveNotifications } from "../notifications";
 
