@@ -7,7 +7,6 @@ import uuidv1 from "uuid/v1";
 import PouchDB from "pouchdb";
 import { useObservable } from "rxjs-hooks";
 import { map } from "rxjs/operators";
-import PouchDBUpsert from "pouchdb-upsert";
 
 import { UserContext } from "./User";
 import { EncryptionPassword } from "../account/EncryptionPassword";
@@ -27,7 +26,6 @@ const baseURL =
     ? "http://localhost:5984"
     : "https://couch.gabrielpoca.com";
 
-PouchDB.plugin(PouchDBUpsert);
 RxDB.plugin(PouchDBIDB);
 RxDB.plugin(PouchDBHTTP);
 
@@ -176,7 +174,14 @@ export async function setupSync(db, user) {
   });
 
   try {
-    await remoteDB.upsert({
+    let journalView = {};
+
+    try {
+      journalView = (await remoteDB.get("_design/journal")) || {};
+    } catch (_e) {}
+
+    await remoteDB.put({
+      ...journalView,
       _id: "_design/journal",
       views: {
         journal: {
@@ -186,9 +191,38 @@ export async function setupSync(db, user) {
         }
       }
     });
+
+    let settingsView = {};
+
+    try {
+      settingsView = (await remoteDB.get("_design/settings")) || {};
+    } catch (_e) {}
+    console.log(settingsView);
+
+    await remoteDB.put({
+      ...settingsView,
+      _id: "_design/settings",
+      views: {
+        settings: {
+          map: `function(doc) {
+            if (doc._id === "_design/settings" || doc.modelType === "setting") emit(doc);
+          }`
+        }
+      }
+    });
   } catch (e) {
     console.error(e);
   }
+
+  await db.settings.sync({
+    remote: remoteDB,
+    options: {
+      filter: "_view",
+      view: "settings",
+      live: true,
+      retry: true
+    }
+  });
 
   await db.entries.sync({
     remote: remoteDB,
