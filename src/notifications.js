@@ -1,15 +1,18 @@
-import firebase from 'firebase/app';
-import 'firebase/messaging';
+import firebase from "firebase/app";
+import "firebase/messaging";
+
+window.firebase = firebase;
 
 export const initializeFirebase = () => {
   firebase.initializeApp({
-    messagingSenderId: process.env.REACT_APP_SENDER_ID,
+    messagingSenderId: process.env.REACT_APP_SENDER_ID
   });
 };
 
 export const askForPermissioToReceiveNotifications = async () => {
   try {
     const messaging = firebase.messaging();
+    window.messaging = messaging;
     await messaging.requestPermission();
     return await messaging.getToken();
   } catch (error) {

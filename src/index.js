@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 
 import App from "./App";
-import registerServiceWorker from "./registerServiceWorker";
+import { register } from "./registerServiceWorker";
 import { initializeFirebase } from "./notifications";
 
 const theme = createMuiTheme({
@@ -34,4 +34,4 @@ ReactDOM.render(
 );
 
 initializeFirebase();
-registerServiceWorker();
+register();
