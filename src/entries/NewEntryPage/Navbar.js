@@ -21,7 +21,7 @@ const styles = theme => ({
 const Navbar = props => (
   <AppBar position="sticky">
     <Container maxWidth="md">
-      <Toolbar disableGutters className={props.classes.toolbar} disableGutters>
+      <Toolbar disableGutters className={props.classes.toolbar}>
         <IconButton
           color="inherit"
           component={Link}

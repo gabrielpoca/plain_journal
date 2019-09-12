@@ -5,15 +5,23 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import Container from "@material-ui/core/Container";
 
-const Navbar = ({ onSearch, searchQuery }) => {
+const Navbar = () => {
   return (
     <AppBar position="sticky">
-      <Toolbar>
-        <IconButton component={Link} to="/" color="inherit" aria-label="Close">
-          <CloseIcon />
-        </IconButton>
-      </Toolbar>
+      <Container maxWidth="md">
+        <Toolbar disableGutters>
+          <IconButton
+            component={Link}
+            to="/"
+            color="inherit"
+            aria-label="Close"
+          >
+            <CloseIcon />
+          </IconButton>
+        </Toolbar>
+      </Container>
     </AppBar>
   );
 };
