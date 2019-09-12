@@ -5,6 +5,9 @@ import PouchDBIDB from "pouchdb-adapter-idb";
 import PouchDBHTTP from "pouchdb-adapter-http";
 import uuidv1 from "uuid/v1";
 import PouchDB from "pouchdb";
+import { useObservable } from "rxjs-hooks";
+import { map } from "rxjs/operators";
+import PouchDBUpsert from "pouchdb-upsert";
 
 import { UserContext } from "./User";
 import { EncryptionPassword } from "../account/EncryptionPassword";
@@ -24,14 +27,57 @@ const baseURL =
     ? "http://localhost:5984"
     : "https://couch.gabrielpoca.com";
 
+PouchDB.plugin(PouchDBUpsert);
 RxDB.plugin(PouchDBIDB);
 RxDB.plugin(PouchDBHTTP);
 
-export async function setupDB(password) {
+async function setupDB(password) {
   const db = await RxDB.create({
     name: "journal",
     adapter: "idb",
     password
+  });
+
+  await db.collection({
+    name: "settings",
+    schema: {
+      title: "settings",
+      version: 2,
+      type: "object",
+      properties: {
+        id: {
+          type: "string",
+          primary: true
+        },
+        value: {
+          type: "string"
+        },
+        modelType: {
+          type: "string",
+          final: true,
+          default: "setting"
+        }
+      },
+      required: ["id", "value", "modelType"]
+    },
+    migrationStrategies: {
+      1: fn => fn,
+      2: doc => {
+        return { ...doc, modelType: "setting" };
+      }
+    },
+    statics: {
+      useSetting: id => {
+        const value = useObservable(
+          () =>
+            db.settings.findOne(id).$.pipe(map(found => ({ setting: found }))),
+          { setting: undefined },
+          [id]
+        );
+
+        return value.setting;
+      }
+    }
   });
 
   await db.collection({
@@ -71,48 +117,16 @@ export async function setupDB(password) {
     },
     statics: {
       useEntry: id => {
-        const [entry, setEntry] = useState();
-
-        useEffect(() => {
-          let unmounted = false;
-
-          const query = db.entries.findOne(id);
-
-          const subscription = query.$.subscribe(result => {
-            if (unmounted) return;
-            if (result) setEntry(result);
-            else setEntry([]);
-          });
-
-          return () => {
-            unmounted = true;
-            subscription.unsubscribe();
-          };
-        }, [id]);
+        const { entry } = useObservable(
+          () => db.entries.findOne(id).$.pipe(map(found => ({ entry: found }))),
+          { entry: undefined },
+          [id]
+        );
 
         return entry;
       },
       useEntries: () => {
-        const [entries, setEntries] = useState([]);
-
-        useEffect(() => {
-          let unmounted = false;
-
-          const query = db.entries.find().sort("date");
-
-          const subscription = query.$.subscribe(result => {
-            if (unmounted) return;
-            if (result) setEntries(result.reverse());
-            else setEntries([]);
-          });
-
-          return () => {
-            unmounted = true;
-            subscription.unsubscribe();
-          };
-        }, []);
-
-        return entries;
+        return useObservable(() => db.entries.find().sort("date").$, []);
       }
     }
   });
@@ -162,7 +176,7 @@ export async function setupSync(db, user) {
   });
 
   try {
-    await remoteDB.put({
+    await remoteDB.upsert({
       _id: "_design/journal",
       views: {
         journal: {

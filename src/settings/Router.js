@@ -1,5 +1,4 @@
-import _ from "lodash";
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { Route } from "react-router-dom";
 
 import List from "@material-ui/core/List";
@@ -10,34 +9,16 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import SwitchInput from "@material-ui/core/Switch";
 import AlarmIcon from "@material-ui/icons/AccessAlarm";
+import Container from "@material-ui/core/Container";
 
-
+import { DBContext } from "../core/Database";
 import { askForPermissioToReceiveNotifications } from "../notifications";
-
 import Navbar from "./Navbar";
 
-function useSettings() {
-  const [settings, setSettings] = useState([]);
-
-  const update = async () => {
-    const res = await Settings.all();
-    setSettings(res);
-  };
-
-  useEffect(() => {
-    (async () => {
-      await update();
-      Settings.onChange(update);
-      return () => Settings.off(update);
-    })();
-  }, []);
-
-  return settings;
-}
-
 function RemindersToggle() {
-  const settings = useSettings();
-  const reminders = _.find(settings, { id: "reminders" }) || { value: false };
+  const { db } = useContext(DBContext);
+  const reminders = db.settings.useSetting("journalReminders");
+
   const toggleReminders = async () => {
     let token = null;
 
@@ -47,21 +28,41 @@ function RemindersToggle() {
       console.error(e);
     }
 
-    Settings.put({
-      id: "reminders",
-      value: !reminders.value,
-      token
+    if (!reminders) {
+      return await db.settings.insert({
+        id: "journalReminders",
+        value: token
+      });
+    }
+
+    if (reminders && !!reminders.value) {
+      return await reminders.update({
+        $set: {
+          value: ""
+        }
+      });
+    }
+
+    return await reminders.update({
+      $set: {
+        value: token || ""
+      }
     });
   };
 
+  if (reminders === undefined) return null;
+
   return (
-    <ListItem>
+    <ListItem disableGutters>
       <ListItemIcon>
         <AlarmIcon />
       </ListItemIcon>
       <ListItemText primary="Journaling Reminders" />
       <ListItemSecondaryAction>
-        <SwitchInput onChange={toggleReminders} checked={reminders.value} />
+        <SwitchInput
+          onChange={toggleReminders}
+          checked={reminders ? !!reminders.value : false}
+        />
       </ListItemSecondaryAction>
     </ListItem>
   );
@@ -71,9 +72,13 @@ function Dashboard() {
   return (
     <>
       <Navbar />
-      <List subheader={<ListSubheader>Settings</ListSubheader>}>
-        <RemindersToggle />
-      </List>
+      <Container maxWidth="md">
+        <List
+          subheader={<ListSubheader disableGutters>Settings</ListSubheader>}
+        >
+          <RemindersToggle />
+        </List>
+      </Container>
     </>
   );
 }
