@@ -124,7 +124,14 @@ async function setupDB(password) {
         return entry;
       },
       useEntries: () => {
-        return useObservable(() => db.entries.find().sort("date").$, []);
+        return useObservable(
+          () =>
+            db.entries
+              .find()
+              .sort("date")
+              .$.pipe(map(val => val.reverse())),
+          []
+        );
       }
     }
   });
