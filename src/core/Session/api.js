@@ -7,15 +7,6 @@ const axios = Axios.create({
       : "https://log.gabrielpoca.com"
 });
 
-export const update = data =>
-  axios.post("/api/journal_entries_batch/update", data);
+export const signIn = data => axios.post("/sign_in", data);
 
-export const signIn = data => axios.post("/api/sessions", data);
-
-export const signUp = data => axios.post("/api/users", data);
-
-export const currentUser = () => axios.get("/api/current_user");
-
-export const setAuthToken = token => {
-  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-};
+export const signUp = data => axios.post("/sign_up", data);

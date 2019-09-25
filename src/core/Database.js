@@ -175,7 +175,7 @@ export async function setupSync(db, user) {
     skipSetup: true,
     fetch: function(url, opts) {
       opts.headers.set("X-Auth-CouchDB-UserName", user.name);
-      opts.headers.set("X-Auth-CouchDB-Token", user.couch_token);
+      opts.headers.set("X-Auth-CouchDB-Token", user.token);
       return PouchDB.fetch(url, opts);
     }
   });

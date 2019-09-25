@@ -15,21 +15,19 @@ subject.subscribe({
   next: user => {
     if (!user) {
       localForage.setItem("currentUser", undefined);
-      api.setAuthToken(undefined);
     } else {
       localForage.setItem("currentUser", user);
-      api.setAuthToken(user.token);
     }
   }
 });
 
 const signIn = async (email, password) => {
-  const { data } = await api.signIn({ session: { email, password } });
+  const { data } = await api.signIn({ email, password });
   subject.next(data);
 };
 
 const signUp = async (email, password) => {
-  const { data } = await api.signUp({ user: { email, password } });
+  const { data } = await api.signUp({ email, password });
   subject.next(data);
 };
 
