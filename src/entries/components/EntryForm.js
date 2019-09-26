@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
+import { MuiPickersUtilsProvider, DateTimePicker } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import { makeStyles } from "@material-ui/styles";
 import Container from "@material-ui/core/Container";
@@ -17,6 +17,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column"
   },
   date: {
+    maxWidth: 200,
     paddingTop: theme.spacing(2)
   }
 }));
@@ -35,7 +36,8 @@ const EntryForm = props => {
       {!expanded && (
         <div className={classes.date}>
           <MuiPickersUtilsProvider utils={MomentUtils}>
-            <DatePicker
+            <DateTimePicker
+              fullWidth
               disabled={disabled}
               disableFuture
               value={date}
