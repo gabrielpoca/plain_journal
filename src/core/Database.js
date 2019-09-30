@@ -82,7 +82,7 @@ async function setupDB(password) {
     name: "entries",
     schema: {
       title: "entries",
-      version: 3,
+      version: 4,
       type: "object",
       properties: {
         id: {
@@ -98,6 +98,12 @@ async function setupDB(password) {
           type: "string",
           encrypted: true
         },
+        latitude: {
+          type: "number"
+        },
+        longitude: {
+          type: "number"
+        },
         modelType: {
           type: "string",
           final: true,
@@ -111,7 +117,8 @@ async function setupDB(password) {
       2: fn => fn,
       3: doc => {
         return { ...doc, date: moment(doc.date, "YYYY-MM-DD").format() };
-      }
+      },
+      4: doc => doc
     },
     statics: {
       useEntry: id => {

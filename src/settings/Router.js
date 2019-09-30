@@ -15,6 +15,62 @@ import { DBContext } from "../core/Database";
 import { askForPermissioToReceiveNotifications } from "../notifications";
 import Navbar from "./Navbar";
 
+function GeolocationToggle() {
+  const { db } = useContext(DBContext);
+  const geolocation = db.settings.useSetting("journalGeolocation");
+
+  const toggleGeolocation = async () => {
+    if (!geolocation)
+      return await db.settings.insert({
+        id: "journalGeolocation",
+        value: "enabled"
+      });
+
+    if (geolocation.value === "enabled")
+      return geolocation.update({
+        $set: {
+          value: "disabled"
+        }
+      });
+
+    try {
+      new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+
+      return geolocation.update({
+        $set: {
+          value: "enabled"
+        }
+      });
+    } catch (e) {
+      console.error(e);
+      return geolocation.update({
+        $set: {
+          value: "disabled"
+        }
+      });
+    }
+  };
+
+  if (geolocation === undefined || !navigator.geolocation) return null;
+
+  return (
+    <ListItem disableGutters>
+      <ListItemIcon>
+        <AlarmIcon />
+      </ListItemIcon>
+      <ListItemText primary="Capture GPS location for entriess" />
+      <ListItemSecondaryAction>
+        <SwitchInput
+          onChange={toggleGeolocation}
+          checked={geolocation && geolocation.value === "enabled"}
+        />
+      </ListItemSecondaryAction>
+    </ListItem>
+  );
+}
+
 function RemindersToggle() {
   const { db } = useContext(DBContext);
   const reminders = db.settings.useSetting("journalReminders");
@@ -77,6 +133,11 @@ function Dashboard() {
           subheader={<ListSubheader disableGutters>Settings</ListSubheader>}
         >
           <RemindersToggle />
+        </List>
+        <List
+          subheader={<ListSubheader disableGutters>Geolocation</ListSubheader>}
+        >
+          <GeolocationToggle />
         </List>
       </Container>
     </>

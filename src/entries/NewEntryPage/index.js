@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import EntryForm from "../components/EntryForm";
 import { DBContext } from "../../core/Database";
+import { GeolocationContext } from "../../core/Geolocation";
 import Navbar from "./Navbar";
 
 const useStyles = makeStyles(theme => ({
@@ -18,6 +19,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function NewEntryPage(props) {
+  const geolocation = useContext(GeolocationContext);
   const { db } = useContext(DBContext);
   const classes = useStyles();
   const [state, setState] = useState({
@@ -34,12 +36,13 @@ function NewEntryPage(props) {
     try {
       await db.entries.insert({
         date: state.date.format(),
-        body: state.body
+        body: state.body,
+        latitude: geolocation.latitude,
+        longitude: geolocation.longitude
       });
 
       props.history.push("/entries");
     } catch (e) {
-      console.error(e);
       setState({ disabled: false });
     }
   };
