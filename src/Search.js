@@ -2,7 +2,6 @@ import React from "react";
 
 import { DBContext } from "./core/Database";
 import SearchWorker from "./search.worker";
-import { setInterval } from "timers";
 
 const worker = new SearchWorker();
 window.worker = worker;
