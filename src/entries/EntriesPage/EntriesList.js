@@ -1,14 +1,17 @@
 import React from "react";
 import moment from "moment";
 import { Link } from "react-router-dom";
-import { withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
+import IconButton from "@material-ui/core/IconButton";
+import HighlightOffOutlinedIcon from "@material-ui/icons/HighlightOffOutlined";
 
-const styles = {
+const useEntryStyles = makeStyles(() => ({
   root: {
     "&$selected, &$selected:hover, &$selected:focus": {
       backgroundColor: "red"
@@ -20,9 +23,10 @@ const styles = {
     overflow: "hidden",
     textOverflow: "ellipsis"
   }
-};
+}));
 
-const Entry = withStyles(styles)(({ entry, classes }) => {
+const Entry = ({ entry }) => {
+  const classes = useEntryStyles();
   const template = document.createElement("div");
   template.innerHTML = entry.body.split("</p>")[0] + "</p>";
 
@@ -44,20 +48,61 @@ const Entry = withStyles(styles)(({ entry, classes }) => {
       </ListItemText>
     </ListItem>
   );
-});
+};
 
-const listStyles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
     paddingBottom: theme.spacing(7)
+  },
+  search: {
+    flex: 1
+  },
+  searchRoot: {
+    display: "flex",
+    marginTop: theme.spacing(2),
+    width: "100%",
+    position: "relative"
+  },
+  searchClear: {
+    position: "absolute",
+    top: "50%",
+    right: 0,
+    transform: "translateY(-50%)"
   }
-});
+}));
 
-const EntriesList = withStyles(listStyles)(props => (
-  <List className={props.classes.root}>
-    {props.entries.map(entry => (
-      <Entry key={entry.id} entry={entry} />
-    ))}
-  </List>
-));
+const EntriesList = ({ entries, q, onSearch }) => {
+  const classes = useStyles();
+
+  return (
+    <>
+      <div className={classes.searchRoot}>
+        <TextField
+          variant="outlined"
+          margin="dense"
+          placeholder="Search..."
+          className={classes.search}
+          value={q}
+          onChange={event => onSearch(event.target.value)}
+        />
+        <IconButton
+          className={classes.searchClear}
+          onClick={() => onSearch("")}
+          aria-label="Clear search"
+          disableRipple
+          disableFocusRipple
+          size="medium"
+        >
+          {q && <HighlightOffOutlinedIcon />}
+        </IconButton>
+      </div>
+      <List className={classes.root}>
+        {entries.map(entry => (
+          <Entry key={entry.id} entry={entry} />
+        ))}
+      </List>
+    </>
+  );
+};
 
 export default EntriesList;

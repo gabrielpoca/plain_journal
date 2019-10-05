@@ -139,6 +139,25 @@ async function setupDB(password) {
               .$.pipe(map(val => val.reverse())),
           []
         );
+      },
+      useSearchEntries: searchResult => {
+        const [res, setRes] = useState([]);
+
+        useEffect(() => {
+          const query = db.entries.find({
+            id: {
+              $in: searchResult.map(r => r.ref)
+            }
+          });
+
+          const sub = query.$.subscribe(newRes => setRes(newRes));
+
+          return () => {
+            sub.unsubscribe();
+          };
+        }, [searchResult]);
+
+        return res;
       }
     }
   });
