@@ -14,3 +14,21 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const messaging = firebase.messaging();
+
+messaging.setBackgroundMessageHandler(function(payload) {
+  console.log(
+    "[firebase-messaging-sw.js] Received background message ",
+    payload
+  );
+
+  const notificationTitle = "Your friendly journaling reminder";
+  const notificationOptions = {
+    body: "If you can, take some time to journal.",
+    icon: "/icon-512.png"
+  };
+
+  return self.registration.showNotification(
+    notificationTitle,
+    notificationOptions
+  );
+});
