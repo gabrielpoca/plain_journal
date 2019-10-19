@@ -1,16 +1,23 @@
 import React from "react";
+import { filter, switchMap } from "rxjs/operators";
 
-import { DBContext } from "./Database";
+import { db$ } from "./Database";
 import SearchWorker from "../search.worker";
 
 const worker = new SearchWorker();
-window.worker = worker;
+
+db$
+  .pipe(
+    filter(db => !!db),
+    switchMap(db => db.entries.dump(true))
+  )
+  .subscribe(entries => {
+    worker.postMessage(entries);
+  });
 
 export const SearchContext = React.createContext({});
 
 export class SearchContextProvider extends React.Component {
-  static contextType = DBContext;
-
   constructor(props) {
     super(props);
     this.state = {
@@ -23,10 +30,6 @@ export class SearchContextProvider extends React.Component {
 
   async componentDidMount() {
     this.listener = worker.addEventListener("message", this.onResult);
-
-    setTimeout(async () => {
-      worker.postMessage(await this.context.db.entries.dump(true));
-    }, 5000);
   }
 
   componentWillUnmount() {

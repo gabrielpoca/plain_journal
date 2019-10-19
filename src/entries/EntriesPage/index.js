@@ -28,20 +28,18 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const querySubject = new BehaviorSubject("");
+const quer$ = new BehaviorSubject("");
 
 const EntriesPage = ({ match }) => {
   const classes = useStyles();
   const { db } = useContext(DBContext);
   const { doSearch, res, enabled } = useContext(SearchContext);
-  const q = useObservable(() => querySubject);
-  const qDebounced = useObservable(() =>
-    querySubject
-      .pipe(debounce(() => interval(300)))
-      .pipe(tap(q => q && doSearch(q)))
+  const q = useObservable(() => quer$);
+  const debouncedQuery$ = useObservable(() =>
+    quer$.pipe(debounce(() => interval(300))).pipe(tap(q => q && doSearch(q)))
   );
 
-  const entries = db.entries.useSearchEntries(qDebounced, res);
+  const entries = db.entries.useSearchEntries(debouncedQuery$, res);
 
   return (
     <React.Fragment>
@@ -51,7 +49,7 @@ const EntriesPage = ({ match }) => {
           showSearch={enabled}
           entries={entries}
           q={q}
-          onSearch={value => querySubject.next(value)}
+          onSearch={value => quer$.next(value)}
         />
         <Fab
           size="large"

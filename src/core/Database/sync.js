@@ -1,4 +1,21 @@
 import PouchDB from "pouchdb";
+import { combineLatest } from "rxjs";
+import { filter } from "rxjs/operators";
+
+import { user$ } from "../User";
+import { db$ } from "./setup";
+
+let synced = false;
+
+const $sync = combineLatest(user$, db$).pipe(
+  filter(([user, db]) => user && db)
+);
+
+$sync.subscribe(([user, db]) => {
+  if (synced) return console.error("sync already setup");
+  sync(db, user);
+  synced = true;
+});
 
 const asciiToHex = str => {
   var arr1 = [];
@@ -14,7 +31,7 @@ const baseURL =
     ? "http://localhost:5984"
     : "https://couch.gabrielpoca.com";
 
-export default async (db, user) => {
+const sync = async (db, user) => {
   const dbName = `${baseURL}/userdb-${asciiToHex(user.name)}`;
 
   const remoteDB = new PouchDB(dbName, {

@@ -4,14 +4,14 @@ import localForage from "localforage";
 
 import * as api from "./Session/api";
 
-const subject = new BehaviorSubject();
+export const user$ = new BehaviorSubject();
 
-localForage.getItem("currentUser").then(user => subject.next(user));
+localForage.getItem("currentUser").then(user => user$.next(user));
 
 const initialState = { user: null, loading: true };
 export const UserContext = React.createContext(initialState);
 
-subject.subscribe({
+user$.subscribe({
   next: user => {
     if (!user) {
       localForage.setItem("currentUser", undefined);
@@ -23,16 +23,16 @@ subject.subscribe({
 
 const signIn = async (email, password) => {
   const { data } = await api.signIn({ email, password });
-  subject.next(data);
+  user$.next(data);
 };
 
 const signUp = async (email, password) => {
   const { data } = await api.signUp({ email, password });
-  subject.next(data);
+  user$.next(data);
 };
 
 const signOut = async () => {
-  subject.next(undefined);
+  user$.next(undefined);
 };
 
 export function UserContextProvider(props) {
@@ -44,7 +44,7 @@ export function UserContextProvider(props) {
   });
 
   useEffect(() => {
-    const subscription = subject.subscribe({
+    const subscription = user$.subscribe({
       next: user => {
         setState({ ...state, user, loading: false });
       }

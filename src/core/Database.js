@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 
-import { UserContext } from "./User";
 import { EncryptionPassword } from "../account/EncryptionPassword";
 
-import setupDB from "./Database/setup";
-import setupSync from "./Database/sync";
+import "./Database/sync";
+import { setup as setupDB } from "./Database/setup";
+export { db$ } from "./Database/setup";
 
 export const DBContext = React.createContext({ db: null, loading: true });
 
 export function DBContextProvider(props) {
-  const { user } = useContext(UserContext);
   const [state, setState] = useState({
     db: null,
     loading: true,
@@ -34,12 +33,6 @@ export function DBContextProvider(props) {
       }
     })();
   }, []);
-
-  useEffect(() => {
-    if (!user || !state.db) return;
-
-    setupSync(state.db, user).catch(e => console.error(e));
-  }, [user, state.db]);
 
   const setPassword = async password => {
     localStorage.setItem("enc_key", password);
