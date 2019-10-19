@@ -10,7 +10,6 @@ import { map } from "rxjs/operators";
 
 import { UserContext } from "./User";
 import { EncryptionPassword } from "../account/EncryptionPassword";
-import oldDB from "./DB";
 
 const asciiToHex = str => {
   var arr1 = [];
@@ -169,21 +168,6 @@ async function setupDB(password) {
     if (typeof newEntryRaw.date !== "string")
       newEntryRaw.date = moment(newEntryRaw.date).format("YYYY-MM-DD");
   }, true);
-
-  if (localStorage.getItem("old_to_new") !== "true") {
-    const entries = await oldDB.entries.toArray();
-    Promise.all(
-      entries.map(async ({ id, date, body }) => {
-        await db.entries.upsert({
-          id,
-          date: moment(date).format("YYYY-MM-DD"),
-          body,
-          modelType: "journalEntry"
-        });
-      })
-    );
-    localStorage.setItem("old_to_new", "true");
-  }
 
   window.db = db;
 
