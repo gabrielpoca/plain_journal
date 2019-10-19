@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 
 import Fab from "@material-ui/core/Fab";
@@ -9,7 +9,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import EntriesList from "./EntriesList";
 import Navbar from "./Navbar";
 import { DBContext } from "../../core/Database";
-import { SearchContext } from "../../Search";
+import { SearchContext } from "../../core/Search";
+
+import { BehaviorSubject } from "rxjs";
+import { interval } from "rxjs";
+import { debounce, tap } from "rxjs/operators";
+import { useObservable } from "rxjs-hooks";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,45 +28,31 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function useDebounce(value, delay) {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value]);
-
-  return debouncedValue;
-}
+const querySubject = new BehaviorSubject("");
 
 const EntriesPage = ({ match }) => {
   const classes = useStyles();
   const { db } = useContext(DBContext);
-  const { search, res } = useContext(SearchContext);
-  const [q, setSearchQuery] = useState("");
-  const entries = db.entries.useEntries();
-  const searchEntries = db.entries.useSearchEntries(res);
-  const debouncedQuery = useDebounce(q, 500);
+  const { doSearch, res, enabled } = useContext(SearchContext);
+  const q = useObservable(() => querySubject);
+  const qDebounced = useObservable(() =>
+    querySubject
+      .pipe(debounce(() => interval(300)))
+      .pipe(tap(q => q && doSearch(q)))
+  );
 
-  useEffect(() => {
-    if (debouncedQuery) search(debouncedQuery);
-  }, [debouncedQuery]);
+  const entries = db.entries.useSearchEntries(qDebounced, res);
 
   return (
     <React.Fragment>
       <Navbar />
       <Container className={classes.root} maxWidth="md">
-        {entries.length > 0 && (
-          <EntriesList
-            entries={q ? searchEntries : entries}
-            q={q}
-            onSearch={setSearchQuery}
-          />
-        )}
+        <EntriesList
+          showSearch={enabled}
+          entries={entries}
+          q={q}
+          onSearch={value => querySubject.next(value)}
+        />
         <Fab
           size="large"
           aria-label="Add"

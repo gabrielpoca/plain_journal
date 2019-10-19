@@ -1,7 +1,7 @@
 import React from "react";
 
-import { DBContext } from "./core/Database";
-import SearchWorker from "./search.worker";
+import { DBContext } from "./Database";
+import SearchWorker from "../search.worker";
 
 const worker = new SearchWorker();
 window.worker = worker;
@@ -14,7 +14,9 @@ export class SearchContextProvider extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      search: this.search,
+      doSearch: this.doSearch,
+      toggle: this.toggle,
+      enabled: false,
       res: []
     };
   }
@@ -31,12 +33,16 @@ export class SearchContextProvider extends React.Component {
     worker.removeEventListener(this.listener);
   }
 
-  search = query => {
+  doSearch = query => {
     worker.postMessage({ q: query });
   };
 
   onResult = ({ data }) => {
     this.setState({ res: [...data.res] });
+  };
+
+  toggle = () => {
+    this.setState({ enabled: !this.state.enabled });
   };
 
   render() {

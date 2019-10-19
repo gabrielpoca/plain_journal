@@ -1,14 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Grid from "@material-ui/core/Grid";
+import SearchIcon from "@material-ui/icons/Search";
 import Container from "@material-ui/core/Container";
+import IconButton from "@material-ui/core/IconButton";
 
 import SidebarMenu from "../../components/SidebarMenu";
 import { NavbarTitle } from "../../components/NavbarTitle";
+import { SearchContext } from "../../core/Search";
 
 const Navbar = () => {
+  const { toggle } = useContext(SearchContext);
+
   return (
     <AppBar position="sticky">
       <Container maxWidth="md">
@@ -23,7 +28,9 @@ const Navbar = () => {
               <SidebarMenu />
             </div>
             <NavbarTitle />
-            <div style={{ width: 48 }} />
+            <IconButton onClick={() => toggle()}>
+              <SearchIcon />
+            </IconButton>
           </Grid>
         </Toolbar>
       </Container>

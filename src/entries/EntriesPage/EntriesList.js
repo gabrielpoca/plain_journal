@@ -71,20 +71,22 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const EntriesList = ({ entries, q, onSearch }) => {
+const EntriesList = ({ entries, q, onSearch, showSearch }) => {
   const classes = useStyles();
 
   return (
     <>
       <div className={classes.searchRoot}>
-        <TextField
-          variant="outlined"
-          margin="dense"
-          placeholder="Search..."
-          className={classes.search}
-          value={q}
-          onChange={event => onSearch(event.target.value)}
-        />
+        {showSearch && (
+          <TextField
+            variant="outlined"
+            margin="dense"
+            placeholder="Search..."
+            className={classes.search}
+            value={q}
+            onChange={event => onSearch(event.target.value)}
+          />
+        )}
         <IconButton
           className={classes.searchClear}
           onClick={() => onSearch("")}

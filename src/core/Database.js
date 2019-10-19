@@ -130,32 +130,28 @@ async function setupDB(password) {
 
         return entry;
       },
-      useEntries: () => {
-        return useObservable(
-          () =>
-            db.entries
-              .find()
-              .sort("date")
-              .$.pipe(map(val => val.reverse())),
-          []
-        );
-      },
-      useSearchEntries: searchResult => {
+      useSearchEntries: (q, searchResult) => {
         const [res, setRes] = useState([]);
 
         useEffect(() => {
-          const query = db.entries.find({
-            id: {
-              $in: searchResult.map(r => r.ref)
-            }
-          });
+          let query = null;
+
+          if (q) {
+            query = db.entries.find({
+              id: {
+                $in: searchResult.map(r => r.ref)
+              }
+            });
+          } else {
+            query = db.entries.find();
+          }
 
           const sub = query.$.subscribe(newRes => setRes(newRes));
 
           return () => {
             sub.unsubscribe();
           };
-        }, [searchResult]);
+        }, [q, searchResult]);
 
         return res;
       }
