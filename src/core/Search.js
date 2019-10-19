@@ -1,5 +1,7 @@
-import React from "react";
-import { filter, switchMap } from "rxjs/operators";
+import React, { useState, useEffect } from "react";
+import { filter, switchMap, startWith, debounce } from "rxjs/operators";
+import { useObservable } from "rxjs-hooks";
+import { BehaviorSubject, interval } from "rxjs";
 
 import { db$ } from "./Database";
 import SearchWorker from "../search.worker";
@@ -15,44 +17,44 @@ db$
     worker.postMessage(entries);
   });
 
+const results$ = new BehaviorSubject([]);
+
+worker.addEventListener("message", ({ data }) => {
+  results$.next([...data.res]);
+});
+
+const query$ = new BehaviorSubject("");
+const debouncedQuery$ = query$.pipe(debounce(() => interval(300)));
+const enabled$ = new BehaviorSubject(false);
+
+debouncedQuery$
+  .pipe(filter(q => !!q))
+  .subscribe(q => worker.postMessage({ q }));
+
+enabled$.subscribe(enabled => {
+  if (!enabled) query$.next("");
+});
+
 export const SearchContext = React.createContext({});
 
-export class SearchContextProvider extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      doSearch: this.doSearch,
-      toggle: this.toggle,
-      enabled: false,
-      res: []
-    };
-  }
+export function SearchContextProvider(props) {
+  const enabled = useObservable(() => enabled$);
+  const q = useObservable(() => query$);
+  const debouncedQuery = useObservable(() => debouncedQuery$);
+  const res = useObservable(() => results$);
 
-  async componentDidMount() {
-    this.listener = worker.addEventListener("message", this.onResult);
-  }
-
-  componentWillUnmount() {
-    worker.removeEventListener(this.listener);
-  }
-
-  doSearch = query => {
-    worker.postMessage({ q: query });
+  const state = {
+    q,
+    debouncedQuery,
+    res,
+    toggle: () => enabled$.next(!enabled),
+    setQuery: newQuery => query$.next(newQuery),
+    enabled
   };
 
-  onResult = ({ data }) => {
-    this.setState({ res: [...data.res] });
-  };
-
-  toggle = () => {
-    this.setState({ enabled: !this.state.enabled });
-  };
-
-  render() {
-    return (
-      <SearchContext.Provider value={this.state}>
-        {this.props.children}
-      </SearchContext.Provider>
-    );
-  }
+  return (
+    <SearchContext.Provider value={state}>
+      {props.children}
+    </SearchContext.Provider>
+  );
 }

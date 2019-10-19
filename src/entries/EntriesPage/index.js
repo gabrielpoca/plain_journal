@@ -11,11 +11,6 @@ import Navbar from "./Navbar";
 import { DBContext } from "../../core/Database";
 import { SearchContext } from "../../core/Search";
 
-import { BehaviorSubject } from "rxjs";
-import { interval } from "rxjs";
-import { debounce, tap } from "rxjs/operators";
-import { useObservable } from "rxjs-hooks";
-
 const useStyles = makeStyles(theme => ({
   root: {
     position: "relative",
@@ -28,18 +23,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const quer$ = new BehaviorSubject("");
-
 const EntriesPage = ({ match }) => {
   const classes = useStyles();
   const { db } = useContext(DBContext);
-  const { doSearch, res, enabled } = useContext(SearchContext);
-  const q = useObservable(() => quer$);
-  const debouncedQuery$ = useObservable(() =>
-    quer$.pipe(debounce(() => interval(300))).pipe(tap(q => q && doSearch(q)))
+  const { res, enabled, q, debouncedQuery, setQuery } = useContext(
+    SearchContext
   );
 
-  const entries = db.entries.useSearchEntries(debouncedQuery$, res);
+  const entries = db.entries.useSearchEntries(debouncedQuery, res);
 
   return (
     <React.Fragment>
@@ -49,7 +40,7 @@ const EntriesPage = ({ match }) => {
           showSearch={enabled}
           entries={entries}
           q={q}
-          onSearch={value => quer$.next(value)}
+          onSearch={setQuery}
         />
         <Fab
           size="large"
