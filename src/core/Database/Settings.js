@@ -57,6 +57,13 @@ export const setup = async db => {
   combineLatest(token$, db.settings.findOne("journalReminders").$)
     .pipe(filter(([token, reminder]) => token && !!reminder))
     .subscribe(([token, reminder]) => {
+      if (!reminder.values)
+        reminder.update({
+          $set: {
+            values: { token, enabled: true }
+          }
+        });
+
       if (token === reminder.values.token || !reminder.values.enabled) return;
 
       reminder.update({
