@@ -27,8 +27,24 @@ messaging.setBackgroundMessageHandler(function(payload) {
     icon: "/icon-512.png"
   };
 
+  if ("actions" in Notification.prototype) {
+    notificationOptions.actions = [{ action: "write", title: "Write" }];
+  }
+
   return self.registration.showNotification(
     notificationTitle,
     notificationOptions
   );
 });
+
+self.addEventListener(
+  "notificationclick",
+  function(event) {
+    event.notification.close();
+
+    if (event.action === "write") {
+      clients.openWindow("/entries/new");
+    }
+  },
+  false
+);
