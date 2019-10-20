@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { map } from "rxjs/operators";
 import { useObservable } from "rxjs-hooks";
 
@@ -11,7 +11,6 @@ import SwitchInput from "@material-ui/core/Switch";
 
 import { DBContext } from "../core/Database";
 import { askForPermissioToReceiveNotifications } from "../notifications";
-import { token$ } from "../notifications";
 
 function useJournalSetting(db) {
   const value = useObservable(
@@ -29,18 +28,6 @@ function useJournalSetting(db) {
 export function RemindersToggle() {
   const { db } = useContext(DBContext);
   const reminder = useJournalSetting(db);
-  const token = useObservable(() => token$);
-
-  useEffect(() => {
-    if (!reminder || !token) return;
-    if (!reminder.values.enabled) return;
-
-    reminder.update({
-      $set: {
-        "values.token": token
-      }
-    });
-  }, [reminder, token]);
 
   const toggleReminders = async () => {
     askForPermissioToReceiveNotifications();

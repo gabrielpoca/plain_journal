@@ -1,8 +1,11 @@
 import { useObservable } from "rxjs-hooks";
-import { map } from "rxjs/operators";
+import { map, filter } from "rxjs/operators";
+import { combineLatest } from "rxjs";
+
+import { token$ } from "../../notifications";
 
 export const setup = async db => {
-  return await db.collection({
+  await db.collection({
     name: "settings",
     schema: {
       title: "settings",
@@ -50,4 +53,16 @@ export const setup = async db => {
       }
     }
   });
+
+  combineLatest(token$, db.settings.findOne("journalReminders").$)
+    .pipe(filter(([token, reminder]) => token && !!reminder))
+    .subscribe(([token, reminder]) => {
+      if (token === reminder.values.token || !reminder.values.enabled) return;
+
+      reminder.update({
+        $set: {
+          "values.token": token
+        }
+      });
+    });
 };
