@@ -11,11 +11,19 @@ import MenuIcon from "@material-ui/icons/Menu";
 import SettingsIcon from "@material-ui/icons/Settings";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { makeStyles } from "@material-ui/styles";
+import Button from "@material-ui/core/Button";
+
+import { Installer } from "../core/Installer";
 
 const useStyles = makeStyles(theme => ({
   list: {
     width: 200,
     paddingTop: theme.spacing(8)
+  },
+  install: {
+    width: 150,
+    marginTop: theme.spacing(2),
+    marginLeft: theme.spacing(2)
   },
   link: {
     color: "inherit"
@@ -48,6 +56,20 @@ function SidebarMenu() {
             <ListItemText primary="Account" />
           </ListItem>
         </List>
+        <Installer>
+          {({ onInstall }) => (
+            <div className={classes.install}>
+              <Button
+                onClick={onInstall}
+                variant="contained"
+                size="small"
+                color="secondary"
+              >
+                Install
+              </Button>
+            </div>
+          )}
+        </Installer>
       </Drawer>
     </>
   );
