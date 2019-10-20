@@ -6,7 +6,7 @@ export const setup = async db => {
     name: "settings",
     schema: {
       title: "settings",
-      version: 2,
+      version: 3,
       type: "object",
       properties: {
         id: {
@@ -15,6 +15,10 @@ export const setup = async db => {
         },
         value: {
           type: "string"
+        },
+        values: {
+          type: "object",
+          additionalProperties: true
         },
         modelType: {
           type: "string",
@@ -28,6 +32,9 @@ export const setup = async db => {
       1: fn => fn,
       2: doc => {
         return { ...doc, modelType: "setting" };
+      },
+      3: doc => {
+        return { ...doc, value: doc.value || "", values: {} };
       }
     },
     statics: {

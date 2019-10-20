@@ -12,8 +12,8 @@ import AlarmIcon from "@material-ui/icons/AccessAlarm";
 import Container from "@material-ui/core/Container";
 
 import { DBContext } from "../core/Database";
-import { askForPermissioToReceiveNotifications } from "../notifications";
 import Navbar from "./Navbar";
+import { RemindersToggle } from "./Reminders";
 
 function GeolocationToggle() {
   const { db } = useContext(DBContext);
@@ -65,59 +65,6 @@ function GeolocationToggle() {
         <SwitchInput
           onChange={toggleGeolocation}
           checked={geolocation && geolocation.value === "enabled"}
-        />
-      </ListItemSecondaryAction>
-    </ListItem>
-  );
-}
-
-function RemindersToggle() {
-  const { db } = useContext(DBContext);
-  const reminders = db.settings.useSetting("journalReminders");
-
-  const toggleReminders = async () => {
-    let token = null;
-
-    try {
-      token = await askForPermissioToReceiveNotifications();
-    } catch (e) {
-      console.error(e);
-    }
-
-    if (!reminders) {
-      return await db.settings.insert({
-        id: "journalReminders",
-        value: token
-      });
-    }
-
-    if (reminders && !!reminders.value) {
-      return await reminders.update({
-        $set: {
-          value: ""
-        }
-      });
-    }
-
-    return await reminders.update({
-      $set: {
-        value: token || ""
-      }
-    });
-  };
-
-  if (reminders === undefined) return null;
-
-  return (
-    <ListItem disableGutters>
-      <ListItemIcon>
-        <AlarmIcon />
-      </ListItemIcon>
-      <ListItemText primary="Journaling Reminders" />
-      <ListItemSecondaryAction>
-        <SwitchInput
-          onChange={toggleReminders}
-          checked={reminders ? !!reminders.value : false}
         />
       </ListItemSecondaryAction>
     </ListItem>

@@ -1,5 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/messaging";
+import { BehaviorSubject } from "rxjs";
 
 window.firebase = firebase;
 
@@ -13,17 +14,40 @@ const firebaseConfig = {
   appId: "1:223437832654:web:289e30e4892bcd45c72b9f"
 };
 
+export const token$ = new BehaviorSubject();
+
 export const initializeFirebase = () => {
   firebase.initializeApp(firebaseConfig);
+
+  const messaging = firebase.messaging();
+  window.messaging = messaging;
+
+  messaging
+    .getToken()
+    .then(token => token$.next(token))
+    .catch(() => console.log("token not available yet"));
+
+  messaging.onTokenRefresh(() => {
+    messaging
+      .getToken()
+      .then(refreshedToken => {
+        token$.next(refreshedToken);
+      })
+      .catch(err => {
+        console.log("Unable to retrieve refreshed token ", err);
+      });
+  });
 };
 
 export const askForPermissioToReceiveNotifications = async () => {
   try {
     const messaging = firebase.messaging();
-    window.messaging = messaging;
     await messaging.requestPermission();
-    return await messaging.getToken();
+    const token = await messaging.getToken();
+    token$.next(token);
   } catch (error) {
     console.error(error);
   }
 };
+
+export { firebase };
