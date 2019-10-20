@@ -15,7 +15,7 @@ const Navbar = () => {
   const { toggle } = useContext(SearchContext);
 
   return (
-    <AppBar position="sticky">
+    <AppBar position="fixed">
       <Container maxWidth="md">
         <Toolbar disableGutters>
           <Grid

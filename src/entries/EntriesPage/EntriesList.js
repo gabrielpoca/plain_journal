@@ -79,7 +79,6 @@ const EntriesList = ({ entries, q, onSearch, showSearch }) => {
       <div className={classes.searchRoot}>
         {showSearch && (
           <TextField
-            variant="outlined"
             margin="dense"
             placeholder="Search..."
             className={classes.search}

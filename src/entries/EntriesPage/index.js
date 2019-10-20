@@ -14,7 +14,8 @@ import { SearchContext } from "../../core/Search";
 const useStyles = makeStyles(theme => ({
   root: {
     position: "relative",
-    height: "100%"
+    height: "100%",
+    paddingTop: 50
   },
   fab: {
     position: "fixed",
