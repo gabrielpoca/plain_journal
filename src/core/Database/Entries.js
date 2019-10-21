@@ -73,7 +73,10 @@ export const setup = async db => {
             query = db.entries.find();
           }
 
-          const sub = query.$.subscribe(newRes => setRes(newRes));
+          const sub = query
+            .sort("date")
+            .$.pipe(map(val => val.reverse()))
+            .subscribe(newRes => setRes(newRes));
 
           return () => {
             sub.unsubscribe();
