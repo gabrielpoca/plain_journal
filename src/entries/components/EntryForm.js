@@ -4,8 +4,10 @@ import { MuiPickersUtilsProvider, DateTimePicker } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import { makeStyles } from "@material-ui/styles";
 import Container from "@material-ui/core/Container";
+import { MuiThemeProvider } from "@material-ui/core/styles";
 
 import Editor from "./Editor";
+import { theme } from "../../theme";
 
 import useKeyboardDetect from "../../hooks/useKeyboardDetect";
 
@@ -35,16 +37,25 @@ const EntryForm = props => {
     <Container className={classes.root} ref={ref} maxWidth="md">
       {!expanded && (
         <div className={classes.date}>
-          <MuiPickersUtilsProvider utils={MomentUtils}>
-            <DateTimePicker
-              fullWidth
-              disabled={disabled}
-              disableFuture
-              value={date}
-              autoOk
-              onChange={date => props.onChange({ date })}
-            />
-          </MuiPickersUtilsProvider>
+          <MuiThemeProvider
+            theme={{
+              ...theme,
+              palette: {
+                ...theme.palette,
+                background: { ...theme.palette.background, paper: "#333" }
+              }
+            }}
+          >
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <DateTimePicker
+                fullWidth
+                disabled={disabled}
+                disableFuture
+                value={date}
+                onChange={date => props.onChange({ date })}
+              />
+            </MuiPickersUtilsProvider>
+          </MuiThemeProvider>
         </div>
       )}
       <Editor

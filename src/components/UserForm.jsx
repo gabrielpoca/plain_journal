@@ -73,6 +73,7 @@ function UserForm(props) {
               type="password"
               component={MyTextField}
               label="Password"
+              autoComplete="new-password"
             />
           </Box>
           {submitError && (

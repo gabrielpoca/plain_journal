@@ -1,28 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
-import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
+import { MuiThemeProvider } from "@material-ui/core/styles";
 
 import App from "./App";
 import { register } from "./registerServiceWorker";
 import { initializeFirebase } from "./notifications";
-
-const theme = createMuiTheme({
-  palette: {
-    type: "dark",
-    background: {
-      default: "#151515",
-      paper: "#151515"
-    },
-    primary: {
-      main: "#151515",
-      dark: "#000"
-    },
-    secondary: {
-      main: "#FFF"
-    }
-  }
-});
+import { theme } from "./theme";
 
 ReactDOM.render(
   <MuiThemeProvider theme={theme}>

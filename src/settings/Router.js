@@ -13,7 +13,7 @@ import Container from "@material-ui/core/Container";
 
 import { DBContext } from "../core/Database";
 import Navbar from "./Navbar";
-import { RemindersToggle } from "./Reminders";
+import { Reminders } from "./Reminders";
 
 function GeolocationToggle() {
   const { db } = useContext(DBContext);
@@ -77,12 +77,12 @@ function Dashboard() {
       <Navbar />
       <Container maxWidth="md">
         <List
-          subheader={<ListSubheader disableGutters>Settings</ListSubheader>}
+          subheader={<ListSubheader disableGutters>Reminders</ListSubheader>}
         >
-          <RemindersToggle />
+          <Reminders />
         </List>
         <List
-          subheader={<ListSubheader disableGutters>Geolocation</ListSubheader>}
+          subheader={<ListSubheader disableGutters>Journaling</ListSubheader>}
         >
           <GeolocationToggle />
         </List>
