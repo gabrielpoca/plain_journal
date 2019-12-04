@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { filter, switchMap, startWith, debounce } from "rxjs/operators";
+import React from "react";
+import { filter, switchMap, debounce } from "rxjs/operators";
 import { useObservable } from "rxjs-hooks";
 import { BehaviorSubject, interval } from "rxjs";
 

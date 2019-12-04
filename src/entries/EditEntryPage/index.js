@@ -16,7 +16,7 @@ class EditEntryPage extends React.Component {
     disabled: false
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.updateEntry();
   }
 

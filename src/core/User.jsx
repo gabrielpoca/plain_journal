@@ -46,12 +46,12 @@ export function UserContextProvider(props) {
   useEffect(() => {
     const subscription = user$.subscribe({
       next: user => {
-        setState({ ...state, user, loading: false });
+        setState(state => ({ ...state, user, loading: false }));
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [state]);
+  }, []);
 
   if (state.loading) return null;
 

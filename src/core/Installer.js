@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { BehaviorSubject, combineLatest } from "rxjs";
 import { filter, map } from "rxjs/operators";
 import { useObservable } from "rxjs-hooks";
