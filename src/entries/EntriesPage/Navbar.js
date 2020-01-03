@@ -9,7 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 
 import SidebarMenu from "../../components/SidebarMenu";
 import { NavbarTitle } from "../../components/NavbarTitle";
-import { SearchContext } from "../../core/Search";
+import { SearchContext } from "../Search";
 
 const Navbar = () => {
   const { toggle } = useContext(SearchContext);

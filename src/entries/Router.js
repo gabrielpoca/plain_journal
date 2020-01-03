@@ -11,15 +11,21 @@ export default ({ match }) => (
     <Route
       path={`${match.path}`}
       render={() => (
-        <Switch>
-          <Route exact path={`${match.path}/`} component={EntriesPage} />
-          <Route exact path={`${match.path}/new`} component={NewEntryPage} />
+        <>
           <Route
-            path={`${match.path}/entry/:id/edit`}
-            component={EditEntryPage}
+            exact
+            path={`${match.path}/`}
+            children={props => <EntriesPage {...props} />}
           />
-          <Route path={`${match.path}/entry/:id`} component={EntryPage} />
-        </Switch>
+          <Switch>
+            <Route exact path={`${match.path}/new`} component={NewEntryPage} />
+            <Route
+              path={`${match.path}/entry/:id/edit`}
+              component={EditEntryPage}
+            />
+            <Route path={`${match.path}/entry/:id`} component={EntryPage} />
+          </Switch>
+        </>
       )}
     />
   </Switch>

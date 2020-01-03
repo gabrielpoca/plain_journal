@@ -4,6 +4,8 @@ import moment from "moment";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
+import { useObservable } from "rxjs-hooks";
+import { map } from "rxjs/operators";
 
 import Navbar from "./Navbar";
 import { DBContext } from "../../core/Database";
@@ -30,6 +32,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const useEntry = (db, id) => {
+  const { entry } = useObservable(
+    () => db.entries.findOne(id).$.pipe(map(found => ({ entry: found }))),
+    { entry: undefined },
+    [id]
+  );
+
+  return entry;
+};
+
 const onDelete = async (db, entry, history) => {
   try {
     await db.entries.findOne(entry.id).remove();
@@ -41,7 +53,7 @@ const onDelete = async (db, entry, history) => {
 
 const EntryPage = ({ history, match }) => {
   const { db } = useContext(DBContext);
-  const entry = db.entries.useEntry(_.get(match, "params.id"));
+  const entry = useEntry(db, _.get(match, "params.id"));
   const classes = useStyles();
 
   if (!entry)

@@ -5,7 +5,6 @@ import { MuiThemeProvider } from "@material-ui/core/styles";
 
 import App from "./App";
 import { register } from "./registerServiceWorker";
-import { initializeFirebase } from "./notifications";
 import { theme } from "./theme";
 
 ReactDOM.render(
@@ -17,5 +16,4 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
-initializeFirebase();
 register();

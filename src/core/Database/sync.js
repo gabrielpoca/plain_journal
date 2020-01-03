@@ -3,12 +3,12 @@ import { combineLatest } from "rxjs";
 import { filter } from "rxjs/operators";
 
 import { user$ } from "../User";
-import { db$ } from "./setup";
+import { remoteDB$ } from "./setup";
 
 let synced = false;
 
-const $sync = combineLatest(user$, db$).pipe(
-  filter(([user, db]) => user && db)
+const $sync = combineLatest(user$, remoteDB$).pipe(
+  filter(([{ user }, db]) => user && db)
 );
 
 $sync.subscribe(([user, db]) => {
@@ -31,7 +31,7 @@ const baseURL =
     ? "http://localhost:5984"
     : "https://couch.gabrielpoca.com";
 
-const sync = async (db, user) => {
+const sync = async (db, { user }) => {
   const dbName = `${baseURL}/userdb-${asciiToHex(user.name)}`;
 
   const remoteDB = new PouchDB(dbName, {
@@ -67,7 +67,6 @@ const sync = async (db, user) => {
     try {
       settingsView = (await remoteDB.get("_design/settings")) || {};
     } catch (_e) {}
-    console.log(settingsView);
 
     await remoteDB.put({
       ...settingsView,
@@ -76,6 +75,25 @@ const sync = async (db, user) => {
         settings: {
           map: `function(doc) {
             if (doc._id === "_design/settings" || doc.modelType === "setting") emit(doc);
+          }`
+        }
+      }
+    });
+
+    let pushNotificationsView = {};
+
+    try {
+      pushNotificationsView =
+        (await remoteDB.get("_design/push_notifications")) || {};
+    } catch (_e) {}
+
+    await remoteDB.put({
+      ...pushNotificationsView,
+      _id: "_design/push_notifications",
+      views: {
+        push_notifications: {
+          map: `function(doc) {
+            if (doc._id === "_design/push_notifications" || doc.modelType === "pushNotifications") emit(doc);
           }`
         }
       }
@@ -99,6 +117,16 @@ const sync = async (db, user) => {
     options: {
       filter: "_view",
       view: "journal",
+      live: true,
+      retry: true
+    }
+  });
+
+  await db.push_notifications.sync({
+    remote: remoteDB,
+    options: {
+      filter: "_view",
+      view: "push_notifications",
       live: true,
       retry: true
     }

@@ -57,10 +57,18 @@ class EditEntryPage extends React.Component {
     if (!this.state.body) return <Navbar onSave={this.onSave} />;
 
     return (
-      <>
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%"
+        }}
+      >
         <Navbar onSave={this.onSave} />
         <EntryForm onChange={change => this.setState(change)} {...this.state} />
-      </>
+      </div>
     );
   }
 }

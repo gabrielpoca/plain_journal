@@ -16,7 +16,8 @@ const useStyles = makeStyles(theme => ({
     height: "calc(100% - 56px)",
     overflow: "hidden",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    position: "relative"
   },
   date: {
     maxWidth: 200,

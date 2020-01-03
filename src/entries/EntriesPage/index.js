@@ -1,15 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
+import { map } from "rxjs/operators";
 
 import EntriesList from "./EntriesList";
 import Navbar from "./Navbar";
 import { DBContext } from "../../core/Database";
-import { SearchContext } from "../../core/Search";
+import { SearchContext } from "../Search";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,6 +24,35 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const useSearchEntries = (db, q, searchResult) => {
+  const [res, setRes] = useState([]);
+
+  useEffect(() => {
+    let query = null;
+
+    if (q) {
+      query = db.entries.find({
+        id: {
+          $in: searchResult.map(r => r.ref)
+        }
+      });
+    } else {
+      query = db.entries.find();
+    }
+
+    const sub = query
+      .sort("date")
+      .$.pipe(map(val => val.reverse()))
+      .subscribe(newRes => setRes(newRes));
+
+    return () => {
+      sub.unsubscribe();
+    };
+  }, [q, searchResult]);
+
+  return res;
+};
+
 const EntriesPage = ({ match }) => {
   const classes = useStyles();
   const { db } = useContext(DBContext);
@@ -31,12 +60,16 @@ const EntriesPage = ({ match }) => {
     SearchContext
   );
 
-  const entries = db.entries.useSearchEntries(debouncedQuery, res);
+  const entries = useSearchEntries(db, debouncedQuery, res);
 
   return (
-    <React.Fragment>
-      <Navbar />
-      <Container className={classes.root} maxWidth="md">
+    <>
+      {match ? <Navbar /> : null}
+      <Container
+        style={!match ? { overflow: "hidden", visibility: "hidden" } : {}}
+        className={classes.root}
+        maxWidth="md"
+      >
         <EntriesList
           showSearch={enabled}
           entries={entries}
@@ -49,12 +82,12 @@ const EntriesPage = ({ match }) => {
           className={classes.fab}
           color="secondary"
           component={Link}
-          to={`${match.url}/new`}
+          to={`${match ? match.url : ""}/new`}
         >
           <AddIcon />
         </Fab>
       </Container>
-    </React.Fragment>
+    </>
   );
 };
 

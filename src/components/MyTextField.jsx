@@ -33,6 +33,7 @@ export const MyTextField = withStyles(styles)(
           value={value}
           className={classes.textField}
           variant="outlined"
+          color="secondary"
         />
       </FormControl>
     );

@@ -1,8 +1,6 @@
 ![Journal](./readme/banner.jpg)
 
-Journal is an offline-first web application for journaling. It works out of the box in your device from the browser. Your entries are stored encrypted in your device. If you wish, you can create an account in a remote server to back-up your data and access from other devices. Only the encrypted data reaches the remote server, so your entries are safe. 
-
-
+Journal is an offline-first web application for journaling. It works out of the box in your device from the browser. Your entries are stored encrypted in your device. If you wish, you can create an account in a remote server to back-up your data and access from other devices. Only the encrypted data reaches the remote server, so your entries are safe.
 
 Here's a screenshot:
 
