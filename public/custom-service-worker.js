@@ -13,3 +13,15 @@ self.addEventListener("push", function(event) {
 
   event.waitUntil(self.registration.showNotification(title, options));
 });
+
+self.addEventListener(
+  "notificationclick",
+  function(event) {
+    event.notification.close();
+
+    if (event.action === "write") {
+      clients.openWindow("/entries/new");
+    }
+  },
+  false
+);
