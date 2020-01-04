@@ -25,9 +25,11 @@ const isLocalhost = Boolean(
 export function register(config) {
   window.addEventListener("load", () => {
     const swUrl = `${process.env.PUBLIC_URL}/custom-service-worker.js`;
-    navigator.serviceWorker.register(swUrl).then(serviceWorkerRegistration => {
-      initialize(serviceWorkerRegistration);
-    });
+    navigator.serviceWorker
+      .register(swUrl, { scope: "/entries" })
+      .then(serviceWorkerRegistration => {
+        initialize(serviceWorkerRegistration);
+      });
   });
 
   if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
