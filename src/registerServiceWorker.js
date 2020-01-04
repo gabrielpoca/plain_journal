@@ -26,7 +26,7 @@ export function register(config) {
   window.addEventListener("load", () => {
     const swUrl = `${process.env.PUBLIC_URL}/custom-service-worker.js`;
     navigator.serviceWorker
-      .register(swUrl, { scope: "/entries" })
+      .register(swUrl, { scope: "/ignored" })
       .then(serviceWorkerRegistration => {
         initialize(serviceWorkerRegistration);
       });
