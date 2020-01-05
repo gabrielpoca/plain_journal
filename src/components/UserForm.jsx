@@ -4,7 +4,7 @@ import { Form, Field } from "react-final-form";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 import { MyTextField } from "./MyTextField";
 

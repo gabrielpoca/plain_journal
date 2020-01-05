@@ -7,7 +7,7 @@ import IconButton from "@material-ui/core/IconButton";
 import SaveIcon from "@material-ui/icons/Save";
 import Toolbar from "@material-ui/core/Toolbar";
 import Container from "@material-ui/core/Container";
-import { withStyles } from "@material-ui/core/styles";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 const styles = theme => ({
   toolbar: {

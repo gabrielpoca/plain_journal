@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { MuiPickersUtilsProvider, DateTimePicker } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
-import { makeStyles } from "@material-ui/styles";
+import makeStyles from "@material-ui/styles/makeStyles";
 import Container from "@material-ui/core/Container";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 

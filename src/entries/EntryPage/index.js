@@ -1,7 +1,7 @@
-import _ from "lodash";
+import get from "lodash/get";
 import React, { useContext } from "react";
 import moment from "moment";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@material-ui/styles/makeStyles";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import { useObservable } from "rxjs-hooks";
@@ -53,7 +53,7 @@ const onDelete = async (db, entry, history) => {
 
 const EntryPage = ({ history, match }) => {
   const { db } = useContext(DBContext);
-  const entry = useEntry(db, _.get(match, "params.id"));
+  const entry = useEntry(db, get(match, "params.id"));
   const classes = useStyles();
 
   if (!entry)

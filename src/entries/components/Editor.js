@@ -1,7 +1,7 @@
-import _ from "lodash";
+import get from "lodash/get";
 import React from "react";
 import Quill from "quill";
-import { withStyles } from "@material-ui/core/styles";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 import "quill/dist/quill.core.css";
 import "react-quill/dist/quill.snow.css";
@@ -73,7 +73,7 @@ class Editor extends React.Component {
       <div
         className={classes.root}
         ref={this.el}
-        offset={_.get(this.el.current, "offsetTop", 0)}
+        offset={get(this.el.current, "offsetTop", 0)}
       >
         <EditorElement {...this.props} />
       </div>

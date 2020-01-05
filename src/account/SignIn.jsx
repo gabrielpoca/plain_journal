@@ -1,4 +1,4 @@
-import _ from "lodash";
+import get from "lodash/get";
 import React, { useContext } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { FORM_ERROR } from "final-form";
@@ -33,7 +33,7 @@ function SignIn(props) {
     try {
       return await signIn(values.email, values.password);
     } catch (e) {
-      let message = _.get(e, "response.data.reason");
+      let message = get(e, "response.data.reason");
 
       if (!message) message = e.message;
 

@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Field } from "react-final-form";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 import Button from "@material-ui/core/Button";
 import AppBar from "@material-ui/core/AppBar";
 import Grid from "@material-ui/core/Grid";

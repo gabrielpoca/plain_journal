@@ -1,4 +1,4 @@
-import _ from "lodash";
+import get from "lodash/get";
 import React from "react";
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router";
@@ -11,7 +11,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Toolbar from "@material-ui/core/Toolbar";
-import { withStyles } from "@material-ui/core/styles";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 import { NavbarTitle } from "../../components/NavbarTitle";
 
@@ -68,7 +68,7 @@ class LongMenu extends React.PureComponent {
         >
           <MenuItem
             component={Link}
-            to={`${_.get(this.props, "match.url")}/edit`}
+            to={`${get(this.props, "match.url")}/edit`}
           >
             Edit
           </MenuItem>

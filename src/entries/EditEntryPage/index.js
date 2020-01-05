@@ -1,4 +1,4 @@
-import _ from "lodash";
+import get from "lodash/get";
 import React from "react";
 import moment from "moment";
 
@@ -21,7 +21,7 @@ class EditEntryPage extends React.Component {
   }
 
   updateEntry = async () => {
-    if (_.get(this.state.entry, "id", false) === this.props.match.params.id)
+    if (get(this.state.entry, "id", false) === this.props.match.params.id)
       return;
 
     const doc = await this.context.db.entries

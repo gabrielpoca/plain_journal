@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import moment from "moment";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 
 import EntryForm from "../components/EntryForm";
 import { DBContext } from "../../core/Database";
