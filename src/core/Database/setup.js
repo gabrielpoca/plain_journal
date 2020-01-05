@@ -36,73 +36,78 @@ export const setup = async () => {
   if (password && syncDB) return;
   if (!password && localDB) return;
 
-  const db = await RxDB.create({
-    name: password ? "journal" : "local_journal",
-    adapter: "idb",
-    password: password || undefined
-  });
+  try {
+    const db = await RxDB.create({
+      name: password ? "journal" : "local_journal",
+      adapter: "idb",
+      password: password || undefined
+    });
 
-  await Settings.setup(db);
-  await Entries.setup(db, !!password);
-  await PushNotificatios.setup(db);
+    await Entries.setup(db, !!password);
+    await Settings.setup(db);
+    await PushNotificatios.setup(db);
 
-  if (password) {
-    remoteDB$.next(db);
+    if (password) {
+      syncDB = db;
+      remoteDB$.next(db);
 
-    if (localStorage.getItem("localToRemote") !== "true") {
-      if (!localDB && !creatingLocalDBs) {
-        creatingLocalDBs = true;
-        try {
-          localDB = await RxDB.create({
-            name: "local_journal",
-            adapter: "idb"
-          });
-        } catch (e) {
-          creatingLocalDBs = false;
-          console.error(e);
+      if (localStorage.getItem("localToRemote") !== "true") {
+        if (!localDB && !creatingLocalDBs) {
+          creatingLocalDBs = true;
+          try {
+            localDB = await RxDB.create({
+              name: "local_journal",
+              adapter: "idb"
+            });
+
+            await Settings.setup(localDB);
+            await PushNotificatios.setup(localDB);
+            await Entries.setup(localDB);
+          } catch (e) {
+            creatingLocalDBs = false;
+            console.error(e);
+          }
         }
-      }
 
-      await Settings.setup(localDB);
-      await PushNotificatios.setup(localDB);
-      await Entries.setup(localDB);
-
-      localDB.settings.sync({
-        remote: db.settings,
-        direction: {
-          push: true,
-          pull: false
-        }
-      });
-
-      localDB.push_notifications.sync({
-        remote: db.push_notifications,
-        direction: {
-          push: true,
-          pull: false
-        }
-      });
-
-      const localEntries = await localDB.entries.find().exec();
-
-      localEntries.forEach(doc => {
-        const { body, id, date, latitude, longitude } = doc;
-        db.entries.insert({
-          id,
-          date,
-          body,
-          latitude,
-          longitude
+        localDB.settings.sync({
+          remote: db.settings,
+          direction: {
+            push: true,
+            pull: false
+          }
         });
-      });
 
-      localStorage.setItem("localToRemote", "true");
+        localDB.push_notifications.sync({
+          remote: db.push_notifications,
+          direction: {
+            push: true,
+            pull: false
+          }
+        });
+
+        const localEntries = await localDB.entries.find().exec();
+
+        localEntries.forEach(doc => {
+          const { body, id, date, latitude, longitude } = doc;
+          db.entries.insert({
+            id,
+            date,
+            body,
+            latitude,
+            longitude
+          });
+        });
+
+        localStorage.setItem("localToRemote", "true");
+      }
+    } else {
+      localDB = db;
     }
-  } else {
-    syncDB = db;
+
+    db$.next(db);
+
+    window.db = db;
+  } catch (e) {
+    console.error(e);
   }
-
-  db$.next(db);
-
-  window.db = db;
 };

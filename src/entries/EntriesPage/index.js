@@ -48,7 +48,7 @@ const useSearchEntries = (db, q, searchResult) => {
     return () => {
       sub.unsubscribe();
     };
-  }, [q, searchResult]);
+  }, [db, q, searchResult]);
 
   return res;
 };
