@@ -10,7 +10,7 @@ import Button from "@material-ui/core/Button";
 import { UserContext } from "../core/User";
 import { useStyles } from "./styles";
 
-function Dashboard() {
+function Dashboard(props) {
   const classes = useStyles();
   const { user, signOut } = useContext(UserContext);
 
@@ -42,7 +42,7 @@ function Dashboard() {
           variant="outlined"
           color="secondary"
           size="large"
-          onClick={signOut}
+          onClick={() => signOut() && props.history.push("/")}
           className={classes.button}
         >
           Sign Out

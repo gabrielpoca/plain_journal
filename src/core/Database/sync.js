@@ -1,21 +1,9 @@
 import PouchDB from "pouchdb";
-import { combineLatest } from "rxjs";
-import { filter } from "rxjs/operators";
 
-import { user$ } from "../User";
-import { remoteDB$ } from "./setup";
-
-let synced = false;
-
-const $sync = combineLatest(user$, remoteDB$).pipe(
-  filter(([{ user }, db]) => user && db)
-);
-
-$sync.subscribe(([user, db]) => {
-  if (synced) return console.error("sync already setup");
-  sync(db, user);
-  synced = true;
-});
+let remoteDB;
+let settingsReplicationState;
+let entriesReplicationState;
+let pushNotificationsReplicationState;
 
 const asciiToHex = str => {
   var arr1 = [];
@@ -31,10 +19,10 @@ const baseURL =
     ? "http://localhost:5984"
     : "https://couch.gabrielpoca.com";
 
-const sync = async (db, { user }) => {
+export async function startSync(db, user) {
   const dbName = `${baseURL}/userdb-${asciiToHex(user.name)}`;
 
-  const remoteDB = new PouchDB(dbName, {
+  remoteDB = new PouchDB(dbName, {
     skipSetup: true,
     fetch: function(url, opts) {
       opts.headers.set("X-Auth-CouchDB-UserName", user.name);
@@ -102,7 +90,7 @@ const sync = async (db, { user }) => {
     console.error(e);
   }
 
-  await db.settings.sync({
+  settingsReplicationState = await db.settings.sync({
     remote: remoteDB,
     options: {
       filter: "_view",
@@ -112,7 +100,7 @@ const sync = async (db, { user }) => {
     }
   });
 
-  await db.entries.sync({
+  entriesReplicationState = await db.entries.sync({
     remote: remoteDB,
     options: {
       filter: "_view",
@@ -122,7 +110,7 @@ const sync = async (db, { user }) => {
     }
   });
 
-  await db.push_notifications.sync({
+  pushNotificationsReplicationState = await db.push_notifications.sync({
     remote: remoteDB,
     options: {
       filter: "_view",
@@ -131,4 +119,15 @@ const sync = async (db, { user }) => {
       retry: true
     }
   });
-};
+}
+
+export async function cancelSync() {
+  try {
+    if (settingsReplicationState) await settingsReplicationState.cancel();
+    if (entriesReplicationState) await entriesReplicationState.cancel();
+    if (pushNotificationsReplicationState)
+      await pushNotificationsReplicationState.cancel();
+    if (remoteDB) await remoteDB.remove();
+  } catch (_e) {}
+  return;
+}
