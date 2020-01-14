@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { Route, Switch, Redirect } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import EntriesRouter from "./entries/Router";
 import SettingsRouter from "./settings/Router";
@@ -16,6 +18,11 @@ class App extends Component {
   render() {
     return (
       <UserContextProvider>
+        <ToastContainer
+          hideProgressBar
+          position={toast.POSITION.BOTTOM_CENTER}
+          newestOnTop
+        />
         <CssBaseline />
         <DBContextProvider>
           <SearchContextProvider>

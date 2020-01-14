@@ -1,7 +1,7 @@
 import { filter } from "rxjs/operators";
 import { combineLatest } from "rxjs";
 
-import { subscription$ } from "../../notifications";
+import { PushNotifications } from "../PushNotifications";
 
 export const setup = async db => {
   await db.collection({
@@ -45,7 +45,7 @@ export const setup = async db => {
   });
 
   combineLatest(
-    subscription$,
+    PushNotifications.$,
     db.push_notifications.findOne("journalReminder").$
   )
     .pipe(filter(([subscription, reminder]) => subscription && reminder))
@@ -56,7 +56,6 @@ export const setup = async db => {
       )
         return;
 
-      console.log("asdsda");
       reminder.update({
         $set: {
           subscription: JSON.stringify(subscription)

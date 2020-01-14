@@ -5,6 +5,8 @@ import { useObservable } from "rxjs-hooks";
 import SwitchInput from "@material-ui/core/Switch";
 import MomentUtils from "@date-io/moment";
 import moment from "moment";
+import { toast } from "react-toastify";
+
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker
@@ -16,7 +18,7 @@ import Box from "@material-ui/core/Box";
 
 import { DBContext } from "../core/Database";
 import { user$ } from "../core/User";
-import { askForPermissioToReceiveNotifications } from "../notifications";
+import { PushNotifications } from "../core/PushNotifications";
 import { theme } from "../theme";
 
 function useReminder(db) {
@@ -35,21 +37,36 @@ function useReminder(db) {
 export function Reminders() {
   const { db } = useContext(DBContext);
   const reminder = useReminder(db);
-  const currentUser = useObservable(() => user$);
+  const userObserver = useObservable(() => user$);
 
-  const toggleReminders = async () => {
-    askForPermissioToReceiveNotifications();
+  const currentUser = get(userObserver, "user");
 
-    if (!reminder) {
-      return await db.push_notifications.insert({
-        id: "journalReminder",
-        enabled: true
+  const enableReminders = async () => {
+    try {
+      await PushNotifications.askForPermission();
+
+      if (!reminder) {
+        return await db.push_notifications.insert({
+          id: "journalReminder",
+          enabled: true
+        });
+      }
+
+      await reminder.update({
+        $set: {
+          enabled: !reminder.enabled
+        }
       });
+    } catch (e) {
+      if (e.name === "AbortError")
+        toast.error("This browser does not support reminders", {});
     }
+  };
 
-    return await reminder.update({
+  const disableReminders = () => {
+    reminder.update({
       $set: {
-        enabled: !reminder.enabled
+        enabled: false
       }
     });
   };
@@ -65,6 +82,13 @@ export function Reminders() {
     });
   };
 
+  const available = currentUser && PushNotifications.available();
+  const enabled =
+    currentUser &&
+    get(reminder, "enabled", false) &&
+    get(reminder, "subscription") &&
+    PushNotifications.enabled();
+
   return (
     <>
       <Grid container justify="space-between" spacing={1}>
@@ -74,25 +98,27 @@ export function Reminders() {
         <Grid item xs={3} sm={2}>
           <Box display="flex" justifyContent="flex-end">
             <SwitchInput
-              disabled={!currentUser}
-              onChange={toggleReminders}
-              checked={
-                get(reminder, "enabled", false) &&
-                !!get(reminder, "subscription")
-              }
+              disabled={!available}
+              onChange={enabled ? disableReminders : enableReminders}
+              checked={!!enabled}
             />
           </Box>
         </Grid>
       </Grid>
-      {!currentUser && (
+      {!PushNotifications.available() && (
+        <Box paddingLeft="20px" maxWidth="600px">
+          <Typography>Reminders are not supported in your platform.</Typography>
+        </Box>
+      )}
+      {!currentUser && PushNotifications.available() && (
         <Box paddingLeft="20px" maxWidth="600px">
           <Typography>
             I only can send you reminders, if you create an account. This is an
-            unfortunate limitation of the platform."{" "}
+            unfortunate limitation of the platform.
           </Typography>
         </Box>
       )}
-      {currentUser && get(reminder, "enabled", false) && (
+      {enabled && (
         <Grid container>
           <Grid container item xs={12} sm={6}>
             <Grid item xs={11}>
@@ -117,7 +143,6 @@ export function Reminders() {
                   >
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                       <KeyboardTimePicker
-                        //autoOk
                         margin="normal"
                         id="time-picker"
                         label="Time picker"

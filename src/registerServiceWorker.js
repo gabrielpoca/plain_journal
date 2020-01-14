@@ -10,7 +10,7 @@
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read https://bit.ly/CRA-PWA
 
-import { initialize } from "./notifications";
+import { PushNotifications } from "./core/PushNotifications";
 
 const isLocalhost = Boolean(
   window.location.hostname === "localhost" ||
@@ -28,7 +28,7 @@ export function register(config) {
     navigator.serviceWorker
       .register(swUrl, { scope: "/ignored" })
       .then(serviceWorkerRegistration => {
-        initialize(serviceWorkerRegistration);
+        PushNotifications.initialize(serviceWorkerRegistration);
       });
   });
 
