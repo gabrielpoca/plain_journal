@@ -17,8 +17,6 @@ window.addEventListener("appinstalled", () => {
   installed$.next(true);
 });
 
-if (process.env.NODE_ENV === "development") promptEvent$.next("gogogo");
-
 export function Installer(props) {
   const { db } = useContext(DBContext);
   const installed = useObservable(() => installed$);

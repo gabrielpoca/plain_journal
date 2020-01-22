@@ -60,6 +60,9 @@ export function Reminders() {
     } catch (e) {
       if (e.name === "AbortError")
         toast.error("This browser does not support reminders", {});
+      else if (e.name === "NotAllowedError")
+        toast.error("You must allow sending notifications", {});
+      else console.error(e.name);
     }
   };
 
