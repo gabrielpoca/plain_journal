@@ -7,6 +7,7 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import Navbar from "./Navbar";
 import { Reminders } from "./Reminders";
 import { Geolocation } from "./Geolocation";
+import { Data } from "./Data";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -14,7 +15,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export function Dashboard() {
+export function Dashboard(props) {
   const classes = useStyles();
 
   return (
@@ -26,6 +27,9 @@ export function Dashboard() {
         </div>
         <div className={classes.root}>
           <Geolocation />
+        </div>
+        <div className={classes.root}>
+          <Data {...props} />
         </div>
       </Container>
     </>
