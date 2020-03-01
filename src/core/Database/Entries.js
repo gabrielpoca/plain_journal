@@ -20,7 +20,7 @@ export const setup = async (db, encrypted = false) => {
     name: "entries",
     schema: {
       title: "entries",
-      version: 4,
+      version: 5,
       type: "object",
       properties: {
         id: {
@@ -37,10 +37,12 @@ export const setup = async (db, encrypted = false) => {
           encrypted: encrypted
         },
         latitude: {
-          type: "number"
+          type: "number",
+          encrypted: encrypted
         },
         longitude: {
-          type: "number"
+          type: "number",
+          encrypted: encrypted
         },
         modelType: {
           type: "string",
@@ -56,7 +58,8 @@ export const setup = async (db, encrypted = false) => {
       3: doc => {
         return { ...doc, date: moment(doc.date, "YYYY-MM-DD").format() };
       },
-      4: doc => doc
+      4: doc => doc,
+      5: doc => doc
     }
   });
 
