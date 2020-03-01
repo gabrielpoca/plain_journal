@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import moment from "moment";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 
 import EntryForm from "../components/EntryForm";
@@ -24,7 +23,7 @@ function NewEntryPage(props) {
   const classes = useStyles();
   const [state, setState] = useState({
     body: "",
-    date: moment(),
+    date: new Date(),
     disabled: false
   });
 
@@ -35,7 +34,7 @@ function NewEntryPage(props) {
 
     try {
       await db.entries.insert({
-        date: state.date.format(),
+        date: state.date,
         body: state.body,
         latitude: geolocation.latitude,
         longitude: geolocation.longitude

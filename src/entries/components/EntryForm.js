@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { MuiPickersUtilsProvider, DateTimePicker } from "@material-ui/pickers";
-import MomentUtils from "@date-io/moment";
+import DateFnsUtils from "@date-io/date-fns";
 import makeStyles from "@material-ui/styles/makeStyles";
 import Container from "@material-ui/core/Container";
 import { MuiThemeProvider } from "@material-ui/core/styles";
@@ -47,7 +47,7 @@ const EntryForm = props => {
               }
             }}
           >
-            <MuiPickersUtilsProvider utils={MomentUtils}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <DateTimePicker
                 fullWidth
                 disabled={disabled}

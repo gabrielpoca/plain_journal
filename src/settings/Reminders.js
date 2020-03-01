@@ -3,8 +3,8 @@ import React, { useContext } from "react";
 import { map } from "rxjs/operators";
 import { useObservable } from "rxjs-hooks";
 import SwitchInput from "@material-ui/core/Switch";
-import MomentUtils from "@date-io/moment";
-import moment from "moment";
+import DateFnsUtils from "@date-io/date-fns";
+import { set } from "date-fns/esm";
 import { toast } from "react-toastify";
 
 import {
@@ -144,14 +144,15 @@ export function Reminders() {
                       }
                     }}
                   >
-                    <MuiPickersUtilsProvider utils={MomentUtils}>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardTimePicker
                         margin="normal"
                         id="time-picker"
                         label="Time picker"
-                        value={moment()
-                          .hour(get(reminder, "time.hour", 20))
-                          .minute(get(reminder, "time.minute", 30))}
+                        value={set(new Date(), {
+                          hours: get(reminder, "time.hour", 20),
+                          minutes: get(reminder, "time.minute", 30)
+                        })}
                         onChange={setTime}
                         KeyboardButtonProps={{
                           color: "secondary",

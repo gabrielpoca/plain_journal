@@ -1,5 +1,5 @@
 import React from "react";
-import moment from "moment";
+import { format, parseISO } from "date-fns/esm";
 import { Link } from "react-router-dom";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 
@@ -30,6 +30,7 @@ const Entry = ({ entry }) => {
   const template = document.createElement("div");
   template.innerHTML = entry.body.split("</p>")[0] + "</p>";
 
+  console.log(entry.date, typeof entry.date);
   return (
     <ListItem
       classes={{
@@ -43,7 +44,9 @@ const Entry = ({ entry }) => {
       component={Link}
       to={`/entries/entry/${entry.id}`}
     >
-      <ListItemText secondary={moment(entry.date).format("DD/MM/YY, h:mm a")}>
+      <ListItemText
+        secondary={format(parseISO(entry.date), "dd/MM/yy, h:mm a")}
+      >
         <Typography className={classes.text}>{template.innerText}</Typography>
       </ListItemText>
     </ListItem>

@@ -1,6 +1,6 @@
 import get from "lodash/get";
 import React, { useContext } from "react";
-import moment from "moment";
+import { format, parseISO } from "date-fns/esm";
 import makeStyles from "@material-ui/styles/makeStyles";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
@@ -68,7 +68,7 @@ const EntryPage = ({ history, match }) => {
       <Navbar onDelete={() => onDelete(db, entry, history)} />
       <Container maxWidth="md">
         <Typography className={classes.date}>
-          {moment(entry.date).format("DD/MM/YY")}
+          {format(parseISO(entry.date), "dd/MM/yy")}
         </Typography>
         <div
           className={classes.body}

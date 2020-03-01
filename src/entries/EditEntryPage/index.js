@@ -1,6 +1,5 @@
 import get from "lodash/get";
 import React from "react";
-import moment from "moment";
 
 import EntryForm from "../components/EntryForm";
 import Navbar from "./Navbar";
@@ -31,7 +30,7 @@ class EditEntryPage extends React.Component {
     this.setState({
       doc: doc,
       body: doc.body,
-      date: moment(doc.date)
+      date: doc.date
     });
   };
 
@@ -43,7 +42,7 @@ class EditEntryPage extends React.Component {
       await this.state.doc.update({
         $set: {
           body: this.state.body,
-          date: this.state.date.format()
+          date: this.state.date
         }
       });
       this.props.history.push("/entries");

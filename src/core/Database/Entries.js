@@ -1,17 +1,19 @@
 import uuidv1 from "uuid/v1";
-import moment from "moment";
+import { formatISO, format, parse } from "date-fns/esm";
 
 const setupHooks = collection => {
   collection.preInsert(newEntryRaw => {
     if (!newEntryRaw.id) newEntryRaw.id = uuidv1();
 
     if (typeof newEntryRaw.date !== "string")
-      newEntryRaw.date = moment(newEntryRaw.date).format("YYYY-MM-DD");
+      // newEntryRaw.date = format(newEntryRaw.date, "YYYY-MM-DD");
+      newEntryRaw.date = formatISO(newEntryRaw.date);
   }, true);
 
   collection.preSave(newEntryRaw => {
     if (typeof newEntryRaw.date !== "string")
-      newEntryRaw.date = moment(newEntryRaw.date).format("YYYY-MM-DD");
+      // newEntryRaw.date = format(newEntryRaw.date, "YYYY-MM-DD");
+      newEntryRaw.date = formatISO(newEntryRaw.date);
   }, true);
 };
 
@@ -56,7 +58,7 @@ export const setup = async (db, encrypted = false) => {
       1: fn => fn,
       2: fn => fn,
       3: doc => {
-        return { ...doc, date: moment(doc.date, "YYYY-MM-DD").format() };
+        return { ...doc, date: parse(doc.date, "YYYY-MM-DD", new Date()) };
       },
       4: doc => doc,
       5: doc => doc
