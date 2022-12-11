@@ -28,7 +28,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
     "react-toastify": "^5.5.0",
-    "rxdb": "^8.7.5",
+    "rxdb": "^13.15.0",
     "rxjs-hooks": "^0.5.2",
     "string-strip-html": "^4.3.16",
     "uuid": "^3.4.0",
